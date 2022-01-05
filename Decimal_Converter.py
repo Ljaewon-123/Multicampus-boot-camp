@@ -43,18 +43,21 @@ def divide(num):
     return b    # 무엇을 리턴해야 할까?
 
 
-a = divide(286)
+def Re_converter(return_num):
+    # a = divide(286)
+    # print(a)          # 그냥 return 을 바꿔서 한번에
+    y = []
+    for i in range(len(return_num)):
+        if return_num[i] == 0:
+           y.append(0)
+        else:
+           y.append(2**i)
+    print(y)
+    cnt = 0
+    for i in y:             # lambda? # 리스트 컴프리헨션(list comprehension) ?? 리스트가 필요없음
+        cnt += i
+    print(cnt)
 
-print(a)          # 그냥 return 을 바꿔서 한번에
-
-
-for i in range(len(a)):
-    if a[i] == 0:
-        pass
-    else:
-       pass
-
-
-
+Re_converter(divide(286))
 
 
