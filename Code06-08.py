@@ -1,4 +1,4 @@
-#### 스택 심화
+#### 스택 심화    함수화
 ## 함수
 def isStackFull():
     global SIZE,stack,top
