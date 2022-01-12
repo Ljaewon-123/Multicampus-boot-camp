@@ -1,11 +1,19 @@
 #### 큐 심화       함수화
+### 큐가 꽉차는 경우 상세
 
 ## 함수
-def isQueueFull():
-    global SIZE,queue,front,rear
-    if rear == SIZE-1:
+def  isQueueFull() :
+    global SIZE, queue, front, rear
+    if (rear != SIZE-1) :
+        return False
+    elif (rear == SIZE-1 and front == -1) :
         return True
     else:
+        for i in range(front+1, SIZE) :
+            queue[i-1] = queue[i]
+            queue[i] = None
+        front -= 1
+        rear -= 1
         return False
 
 def enQueue(data):
