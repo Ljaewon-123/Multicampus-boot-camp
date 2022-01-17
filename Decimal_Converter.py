@@ -1,24 +1,15 @@
-# a = divmod(147,2)
-# print(a[0])
-# print(a[1])
-# print(a)
-# b = a[0]
-# print(b)
+
 
 # B = [list(map(int, x)) for x in a]      ##### !! 중요 문자열 -> int 로 반환
 
 b =[]*8
 
-def divide(num):
+def binary(num):
     while(True):
         a = divmod(num, 2)
 
         while (num > 1):
-            # print(a)
-            # a1 = a[1]
-            # a0 = a[0]
-            # print(a1)
-            # print(a0)
+
             if 0 in a:
                 print(0, end = "")
                 b.append(0)
@@ -58,6 +49,6 @@ def Re_converter(return_num):
         cnt += i
     print(cnt)
 
-Re_converter(divide(286))
+Re_converter(binary(286))
 
 
