@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        button{
+            width: 100px;
+        
+        }
+    </style>
+    <script>
+        function ifTest(){
+            var i = prompt('숫자 1이나 2를 입력해 주세요 ')
+            if(i ==1){
+                alert('1 입니다')
+            }
+            else if (i==2){
+                alert('2 입니다')
+            }
+            else{
+                alert('다른 숫자 입니다')
+            }
+        }
+        
+        function switchTest(){
+            var season = prompt('봄 여름 가을 겨울 중 좋아하는 계절을 입력해 주세요')
+            switch(season){
+                case '봄':
+                    alert('봄에는 벚꽃엔딩')
+                    break
+                case '여름':
+                    alert('여름에는 바다')
+                    break
+                case '가을':
+                    alert('가을에는 단풍')
+                    break
+                case '겨울':
+                    alert('여름에는 스키장')
+                    break
+                default:
+                    alert(' 봄 여름 가을 겨울 중 하나만 입력')
+
+            }
+        }
+
+        function forTest(){
+            //   초기값    조건식   증감
+            i = 0
+            j = 0
+
+            for (var i=1 ; i< 10 ; i++){
+                
+                for (var j =1 ; i<10 ; j++){
+                    console.log(i + '*' + j +'=' + (i*j))
+                }
+
+            }
+            
+            
+        }
+
+        function whileTest(){
+            var i =0 
+            while(i< 10){
+                console.log(i)
+                i++
+            }
+
+
+            var j = 10
+            do{
+                console.log(j)
+                j--
+            }while(j>0)
+
+
+        }
+
+    </script>
+
+</head>
+<body>
+    
+    <button onclick="ifTest()">IF</button>
+    <br>    
+    <button onclick="switchTest()">SWITCH</button>
+    <br>
+    <button onclick="forTest()">FOR</button>
+    <br>
+    <button onclick="whileTest()">WHILE</button>
+    <br>
+
+
+</body>
+</html>
