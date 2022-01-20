@@ -1,0 +1,80 @@
+/*  타입 */
+pre{
+    text-align: center;
+}
+
+/* id 는 #
+유일한 하나를 잡을때 id */
+#s-id01{
+    color: hotpink;
+}
+
+#s-id02{
+    color: darkred;
+}
+
+/* class 는 .
+class는 같은 여러개의  */
+.s-cls01{
+    background-color: black;
+    color: white;
+}
+
+/* id의 속성이 class의 속성보다 우선 순위가 높습니다.
+따라서 id의 속성은 해당 요소에 부여된 class 속성에 관계 없이 작동합니다.  */
+
+
+
+/* 전체 */
+*{
+    text-align: right;
+}
+
+/* 자식 */
+/* atc 태그의 자식 p*/
+#atc > p   {
+    color: yellowgreen;
+}
+
+/* 인접
+span 태그 바로 다음에 나오는 태그가 pre 태그이면  */
+span + pre{
+    background-color: cornflowerblue;
+}
+
+/* 하위 */
+#atc02 span{
+    color: chocolate;
+}
+
+/* 속성 */
+p[title]{
+    background-color: gray;
+}
+
+/* 가상 클래스 선택자 */
+/* 안가본데 */
+a:link{
+    color: green;
+    font-size: 20pt
+}
+
+a:visited{
+    color: gold;
+}
+
+a:hover{
+    background-color: black;
+    color: white;
+}
+
+a:active{
+    background-color: firebrick;
+    color: tomato;
+}
+
+input:checked{
+    width: 100px;
+    height: 100px;
+} 
+
