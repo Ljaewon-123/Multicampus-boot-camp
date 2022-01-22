@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type = 'text/javascript'>
+        onload = function(){
+            document.getElementsByTagName('button')[0].onclick = testDate01
+            document.getElementsByTagName('button')[1].onclick = testDate02
+            document.getElementsByTagName('button')[2].onclick = testDate03
+            document.getElementsByTagName('button')[3].onclick = testDate04
+            document.getElementsByTagName('button')[4].onclick = testDate05
+        }
+
+        function testDate01(){
+            var inputDate = document.getElementById('today')
+            var date = new Date()
+            inputDate.innerHTML = date.toDateString() + '<br/>'
+            inputDate.innerHTML += date.toLocaleDateString() + '<br/>'
+            inputDate.innerHTML += date.toLocaleString() + '<br/>'
+            inputDate.innerHTML += date.toLocaleTimeString() + '<br/>'
+
+        }
+
+        function testDate02(){
+            var date = new Date()
+            var year = date.getFullYear()
+            var month =  date.getMonth() +1
+            var day = date.getDate()
+            var week = date.getDay()
+            var dayOfweek = ['일','월','화','수','목','금','토']
+
+            document.getElementById('today').innerHTML = year + '/' + month + '/' + day  + '/' + dayOfweek[week]
+            date.prn()
+        }
+        Date.prototype.prn = function(){
+            alert('데이트 객체 공부하고 있습니다!!')
+        }
+
+        function testDate03(){
+            var year = 2022
+            var month = 5
+            var day = 13
+
+            var date = new Date(year,month-1,day)
+
+            document.getElementById('specific').innerHTML = '수료일시 : ' + date
+        }
+
+        function testDate04(){
+            var dates = document.getElementById('dates').value
+            var inputdate = document.getElementById('inputdate').value
+            
+            var date = new Date(dates)
+            date.setDate(date.getDate() + parseInt(inputdate))
+
+            document.getElementById('result').value = date.toLocaleDateString()
+
+        }
+
+        function testDate05(){
+            var dates02 = document.getElementById('dates02').value
+            var inputdate02 = document.getElementById('inputdate02').value
+
+            var nowDate = new Date(dates02)
+            var afterDate = new Date(inputdate02)
+            
+            // getTime() : milliscends
+            var resultVal = (afterDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60* 24)  
+                                                                        // 초   분   시간  일
+            document.getElementById('result02').value = resultVal
+
+        }
+
+
+    </script>
+        
+</head>
+<body>
+    
+    <h2>오늘 날짜 출력하기 </h2>
+    <span id = 'today'></span>
+    <br>
+    <button>오늘날짜</button>
+    <button>오늘날짜(표현)</button>
+
+    <h2>특정 날짜 출력하기</h2>
+    <span id = 'specific'></span>
+    <br>
+    <button>특정 날짜</button>
+
+    <h2>경과 날짜 출력하기</h2>
+    <label >지정 날짜</label>
+    <input type="date" id='dates' size ='50'>
+    <br>
+    <label >경과일</label>
+    <input type="number" id = 'inputdate' >
+    <br>
+    <label >경과 후 날짜</label>
+    <input type="text" id = 'result' readonly = 'readonly'>
+    <button>경과 날짜</button>
+
+
+    <h2>D-day</h2>
+    <label for="">시작 날짜</label>
+    <input type="date" id ='dates02' size = '50'>
+    <br>
+    
+    <label for="">종료 날짜</label>
+    <input type="date" id = 'inputdate02'>
+    <br>
+    <label for="">남은 일수</label>
+    <input type="text" id ='result02' readonly='readonly'>
+    <button>남은 일수 구하기 </button>
+
+
+</body>
+</html>

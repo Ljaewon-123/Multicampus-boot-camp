@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function strTest01(){
+            var str01 = 'String'
+            var str02 = 'Test'
+
+            var str03 = str01 + str02
+            // alert(str03)
+
+            var newstring = str01.concat(" test ","java ","script")
+            alert(newstring)
+
+            //배열.join('문자') : 배열 사이사이에 문자가 삽입됨  (그리고 문자열로 반환됨)
+            var joinTest = ['5','10','15','20'].join('+')
+            alert(joinTest)
+        }
+        function strTest02(){
+            var numVal = 12.5
+            var bool = true
+            //문자열과 다른 타입이 만나면 문자열로 합쳐짐
+            var result = 'string'+ numVal + bool +10 +20
+            alert(result)
+            alert(typeof(result))
+        }
+
+        function strTest03(){
+            var str = prompt('이름을 입력하세요')
+            var span = document.getElementById('res')
+
+            if (str == "멀캠"){
+                span.textContent = str + '님 환영합니다'
+            }
+            else if (str.toLowerCase() == 'multicampus'){
+                span.textContent = str + ',Hello'
+            }
+            else{
+                span.textContent = '이름을 다시한번 확인해 주세요!!'
+            }
+            //자동 형변환
+            var numVal = 10
+            if (numVal == '10'){
+                alert('== 연산자 사용: 숫자10입니다 ')
+            }
+            else{
+                alert('== 연산자 사용 : 숫자 10이 아닙니다')
+            }
+            // ===  엄격하게 비교  자료형 까지 
+            if(numVal === '10'){
+                alert('=== 연산자 사용: 숫자10입니다 ')
+
+            }
+            else{
+                alert('=== 연산자 사용 : 숫자 10이 아닙니다')
+            }
+
+            //문자열 객체
+            var strObj = new String('멀캠') //객체
+            var strLiteral = '멀캠'
+
+            if (strObj == strLiteral){
+                alert('문자가 같습니다')
+            }
+            else {
+                alert('문자가 다르다')
+            }
+            if (strObj === strLiteral){
+                alert('문자가 같습니다 ===')
+            }
+            else {
+                alert('문자가 다르다 ===')
+            }
+
+
+        }
+
+
+        function strTest04(){
+            var strVal = '홍길동 이순신 유재석 강호동 홍길동'
+            var prop = prompt('검색할 이름을 입력해주세요')
+            // 값이 존재하지 않으면 -1 리턴
+            // indexOf 는 문자 개개인이 배열에 들어가있는것 홍길동012 3 456(이순신)
+            alert('indexOf: ' + strVal.indexOf(prop))
+            // lastIndexOf 오른쪽에서 부터 거꾸로 탐색 그후 찾아진 단어의 인덱스 리턴
+            // 가장 빨리 찾는 단어부터 리턴 
+            alert('lastIndexOf : ' + strVal.lastIndexOf(prop))
+        }
+
+        function strTest05(){
+            var strVal = '문자열 추출하기. 관련 매소드:indexOf,substring'
+            var startIndex = strVal.indexOf(':')
+            var endIndex = strVal.lastIndexOf(',')
+            // == [':' : ',']  substring  가 슬라이싱? 
+            var res = strVal.substring(startIndex,endIndex)
+            // alert(res)
+
+            var splitVal = strVal.split(' ')
+            alert(splitVal[1])
+
+        }
+
+        function strTest06(){
+            var prop = prompt("쉼표로 구분하여 키워드를 입력해주세요","사과,바나나,키위,수박")
+            var propArr = prop.split(",")
+            
+            
+            var proResult = ''
+            for (var i = 0; i < propArr.length; i++){
+                proResult += propArr[i] + '<br/>'
+            }
+            
+            var doc = document.getElementById('key').innerHTML = proResult
+            // var sp = document.getElementById('key').textContent = proResult
+          
+        }
+            
+
+    </script>
+
+</head>
+<body>
+    
+    <p>문자열 합치기
+        <button onclick='strTest01()'>클릭</button>
+    </p>
+
+    <p> 다른 자료형 합치기
+        <button onclick='strTest02()'>클릭</button>
+    </p>
+
+    <p>문자열 비교하기
+        <button onclick='strTest03()'>클릭</button>
+        <span id ='res'></span>
+    </p>
+
+    <p>문자열 검색하기
+        <button onclick='strTest04()'>클릭</button>
+    </p>
+
+    <p>문자열 추출하기
+        <button onclick='strTest05()'>클릭</button>
+    </p>
+
+
+    <p>키워드 나누기
+        <button onclick='strTest06()'>클릭</button>
+    </p>
+    <div id = 'key'></div>
+
+</body>
+</html>
