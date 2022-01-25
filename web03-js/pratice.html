@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function ajaxTest() {
+            var respXml = ''
+            // xhr 변수에 XMLHttpRequest 객체 선언
+            // xhr. readystatec 확인 하는 익명 함수 
+            // respXml 변수에 ajax응답 받음
+            // 테이블 접근 
+            // 반응한 respXml 에 접근 
+            // tr 속성  생성 
+            // 컬럼 만들기 돌면서 th 생성 
+            // th 하위에 제목 만듬
+            // tr 하위에 th 들어감
+            // 이중 for문 1단에 tr 2단에 td 만듬  
+            // 컬럼 만들기 돌면서 th 생성 
+            // th 하위에 제목 만듬
+            // tr 하위에 th 들어감
+            var xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4){
+                    if(xhr.status == 200){
+                        var resXml = xhr.responseXML
+                        var table = document.getElementById('tb')
+                        var rows = resXml.getElementsByTagName('ROW')
+                        var tr = document.createElement('tr')
+                        for(var i = 0; i < rows[0].children.length; i++){
+                            var th = document.createElement('th')
+                            th.appendChild(document.createTextNode(rows[0].children[i].nodeName))
+                            tr.appendChild(th)
+                        }
+                        table.appendChild(tr)
+                        for(var i =0;i < rows.length;i++) {
+                            var tr2 = document.createElement('tr')
+                            for(var j =0;j< rows[i].children.length ; j++){
+                                var td = document.createElement('td')
+                                td.appendChild(document.createTextNode(rows[i].children[j].textContent))
+                                tr2.appendChild(td)
+                            }
+                            table.appendChild(tr2)
+                        }
+                    }
+                }
+                
+            }
+            
+           
+
+            // get방식으로 요청, 해당 경로에 
+            xhr.open('GET','emplist.xml')
+            xhr.send()
+            
+            
+        }
+        
+       
+
+    </script>
+</head>
+<body>
+    <!-- 
+        ajax : Asynchronous Javascript And Xml
+        비 동기 통신     클라이언트와 서버끼리 동기화 되지 않음
+        서버는 그대로고 내부 데이터만 바뀜 
+        클라이언트의 반응없이 응답을 가져옴?
+        클라이언트와 서버상황이 동기화 되지않음
+     -->
+    <button onclick="ajaxTest()">ajax</button>
+    <form>
+        <table id = 'tb' border="1">
+               
+                
+                
+        </table>
+    </form>
+</body>
+</html>

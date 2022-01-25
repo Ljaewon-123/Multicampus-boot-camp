@@ -33,8 +33,15 @@
             img.setAttribute('src',radioVal)
 
             var div = document.getElementById('imgview')
-            var chd = document.querySelector('#imgview > img')
+            var chd = document.querySelector('#imgview > img')         
             div.replaceChild(img,chd)
+
+
+            // querySelector 와 querySelectorAll의 차이
+            // querySelector 는 특정 name 이나 id 를 제한하지않고 css선택자를 사용하여 요소를 찾습니다.
+            // querySelectorAll 은 querySelect 과 동일하게 작동하나 차이점은 해당 선택자에 해당하는 모든 요소를 가져옵니다.
+            // 반환객체는 nodeList이기때문에 for문 또는 foreach 문을 사용해야 합니다.
+
 
 
         }
@@ -51,7 +58,7 @@
 </head>
 <body>
     
-    <!-- 라디오는 같은 이름중에 하나 벨류가 그림이름임 -->
+    <!-- 라디오는 같은 이름중에 하나하나의 벨류가 그림이름임 -->
     <input type="radio" name = 'rdobtn' value='img01.png'>img01 <br>
     <input type="radio" name = 'rdobtn' value='img02.png'>img02 <br>
     <input type="radio" name = 'rdobtn' value='img03.png'>img03 <br>

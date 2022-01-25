@@ -8,7 +8,7 @@
     <script>
         function ajaxTest() {
             var respXml = ''
-            var xhr = new XMLHttpRequest() //http 데이터 송수신 지원 객체
+            var xhr = new XMLHttpRequest() //http 데이터 송수신 지원 객체   // 객체 만들때 new
             // html 은 다 문자열 전송과 응답 
             xhr.onreadystatechange = function() {
                 // 4: 요청의 완료 
@@ -23,7 +23,7 @@
                         // console.log(respXml.getElementsByTagName('ROW')[0] )     
                         // var node = rows.children                  
                         var table = document.getElementById('tb')
-                        var rows = respXml.getElementsByTagName('ROW') // getElementsByTagName => 노드리스트 
+                        var rows = respXml.getElementsByTagName('ROW') // getElementsByTagName => 노드리스트 , element의 집합
                         
                         // console.log(node)
                        

@@ -27,8 +27,8 @@
 
             newP.textContent = '엘리먼트의 앞에 넣어진다'+ (count++)
 
-            var oldDiv = document.querySelector('fieldset > div')
-            fieldset.insertBefore(newP,oldDiv)
+            var oldDiv = document.querySelector('fieldset > div')   // document.query 명령어들은 기본적으로 하위 자식같은거 > 가능
+            fieldset.insertBefore(newP,oldDiv)   // 변수는 따옴표가 필요없다 
             // 자식노드를 oldDiv 앞으로
         }
         function moveElement() {
@@ -37,11 +37,11 @@
             addEle.appendChild(moveEle)
             /* 
             childNodes 와 children 차이점
-            childNodes: 자식 노드에 접근 
-            현재 요소의 자식 노드가 포함된 NodeList를 반환합니다.
-            이때 반환되는 NodeList에는 요소 노드뿐만 아니라 주석 노드와 같은 비 요소 노드를 포함합니다. 
+            childNodes: 자식 노드에 접근 노드리스트로 리턴
+            주석 텍스트(띄어쓰기 포함) 요소 등등 전부 가져옴
             children: 자식 요소에 접근 
             현재 요소의 자식 요소가 포함된 HTMLCollection을 반환합니다. 비 요소 노드는 모두 제외됩니다.
+            ==> 현재 fieldset.children의 요소는 legend 와 div 밖에 없음 fieldset.children[1] == div
              */
             
         }

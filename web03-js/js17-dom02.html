@@ -9,7 +9,7 @@
     <script>
         function searchaPar() {
             var child02 = document.getElementsByTagName('p')[1]
-            var div = child02.parentNode
+            var div = child02.parentNode  // 여기서 이미 가지고있으니까 필요없다 바로 엑세스 가능
             alert(div)
             alert(typeof(div))
             alert(div.nodeName)
@@ -38,7 +38,7 @@
     
     <h1>부모탐색 , 자식탐색</h1>
 
-    <div>j
+    <div>
         <p>child01</p>
         <p>child02</p>
         <p>child03</p>
