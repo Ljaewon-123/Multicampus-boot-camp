@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img,#imgview{
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+    <script>
+        function createImg() {
+            // 1. 이름이 rdobtn인 요소들을 가지고 온다
+            var radio =  document.getElementsByName('rdobtn')
+
+            // 2. 가지고온 요소들의 length만큼 반복하여 라디오 버튼이 체크되어있는지 확인하고
+            // 만일 체크되었다면 자신의 이미지를 가지고 온다 
+            // 힌트 radioVal = 'resources/img/img0' + num + '.png'
+            var radioVal = ''
+            for (var i = 0;i <radio.length ; i++ ){
+                if(radio[i].checked){
+                    radioVal = './rescources/img/' + radio[i].value
+                }
+                
+            }
+            
+
+            // 3. img태그를 생성하고, src 속성에 위의 값(radioVal)을 저장하여 화면에 그림이 출력 되도록
+            var img  = document.createElement('img')
+            img.setAttribute('src',radioVal)
+
+            var div = document.getElementById('imgview')
+            var chd = document.querySelector('#imgview > img')
+            div.replaceChild(img,chd)
+
+
+        }
+        function deleteImg() {
+            var chd = document.querySelector('#imgview > img')
+            chd.src = ''
+
+            // document.getElementById('imgview').innerHTML = "<img src=''/>"
+            
+
+        }
+
+    </script>
+</head>
+<body>
+    
+    <!-- 라디오는 같은 이름중에 하나 벨류가 그림이름임 -->
+    <input type="radio" name = 'rdobtn' value='img01.png'>img01 <br>
+    <input type="radio" name = 'rdobtn' value='img02.png'>img02 <br>
+    <input type="radio" name = 'rdobtn' value='img03.png'>img03 <br>
+
+    <button onclick="createImg()">이미지 생성</button>
+    <button onclick="deleteImg()">이미지 삭제</button>
+
+    <div id = 'imgview'><img src="" ></div>
+
+</body>
+</html>

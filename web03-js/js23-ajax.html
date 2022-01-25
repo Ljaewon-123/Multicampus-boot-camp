@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function ajaxTest() {
+            var respXml = ''
+            var xhr = new XMLHttpRequest() //http 데이터 송수신 지원 객체
+            // html 은 다 문자열 전송과 응답 
+            xhr.onreadystatechange = function() {
+                // 4: 요청의 완료 
+                if(xhr.readyState == 4){   // 요청
+                    // 200: 정상응답 
+                    if(xhr.status == 200){  // 응답 
+                        // alert(xhr.responseText) // 응답을 문자열로 받음 
+                        var respXml = xhr.responseXML  // 응답을 XML객체로 바꿔서 받음
+                        // console.log(respXml)
+                        // console.log(typeof(respXml))
+                        // console.log(respXml)
+                        // console.log(respXml.getElementsByTagName('ROW')[0] )     
+                        // var node = rows.children                  
+                        var table = document.getElementById('tb')
+                        var rows = respXml.getElementsByTagName('ROW') // getElementsByTagName => 노드리스트 
+                        
+                        // console.log(node)
+                       
+                       // coulum 이름 만들기
+                        var columnsTr = document.createElement('tr')
+                        for (var i =0 ; i < rows[0].children.length;i++){
+                            // console.log(rows[0].children[i].nodeName)
+                            var th = document.createElement('th')
+                            th.appendChild(document.createTextNode(rows[0].children[i].nodeName))
+
+                            columnsTr.appendChild(th)
+                        }
+                        table.appendChild(columnsTr)
+
+                       // data 만들기 
+                       for(var i = 0; i <  rows.length; i++) {
+                           var tr = document.createElement('tr')
+                           for (var j = 0; j < rows[i].children.length; j++){
+                               var td = document.createElement('td')
+                               td.appendChild(document.createTextNode(rows[i].children[j].textContent))
+                               tr.appendChild(td)
+                           }
+                           table.appendChild(tr)
+                       }
+                        
+                        
+                    }
+                }
+            }
+
+           
+
+            // get방식으로 요청, 해당 경로에 
+            xhr.open('GET','emplist.xml')
+            xhr.send()
+            
+            
+        }
+        
+       
+
+    </script>
+</head>
+<body>
+    <!-- 
+        ajax : Asynchronous Javascript And Xml
+        비 동기 통신     클라이언트와 서버끼리 동기화 되지 않음
+        서버는 그대로고 내부 데이터만 바뀜 
+        클라이언트의 반응없이 응답을 가져옴?
+        클라이언트와 서버상황이 동기화 되지않음
+     -->
+    <button onclick="ajaxTest()">ajax</button>
+    <form>
+        <table id = 'tb' border="1">
+               
+                
+                
+        </table>
+    </form>
+</body>
+</html>
