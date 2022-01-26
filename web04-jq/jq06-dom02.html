@@ -8,12 +8,12 @@
     <script src="./rescources/js/jquery-3.6.0.min.js"></script>
 
     <script>
-        // $('') 는 한개인지 다수인지 알수가 없음 
+        // $('선택자') 는 한개인지 다수인지 알수가 없음 
         $(document).ready(function(){
             $('div').find('b').css({'font-size':'30px','color':'red'}) // find 자식들 전부 중에 b 
             $('div').children('#chd').text('2.children()')
             $('p > b').parent().css('background-color','hotpink')
-            $('p > b').parents('div').css('background-color','yellow')  // 조상들 전부 중에 div
+            $('p > b').parents('div').css('background-color','yellow')  // 조상들 전부 중에 div 위노드 전부
             $('p').eq(0).next().css('color','blue')
         })
     </script>

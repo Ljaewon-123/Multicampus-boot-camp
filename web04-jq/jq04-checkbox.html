@@ -40,7 +40,17 @@
             // 모두 선택되어있므녀 name이 all 인 체크박스도 체크
             // 하나라도 체크 해제되면 name이 all인 체크박스 체크 해제
             $('input[name=chk]').click(function(){
-                
+                // $(선택자).is(":checked");
+                // 클릭될때마다 검사 if에서 통과 하면 체크되있는한 항상 true
+                var a = $('input[name=chk]')
+                if(a.eq(0).is(':checked')&& a.eq(1).is(':checked') &&a.eq(2).is(':checked')  ){
+                    // alert('aef')
+                    $('input[name=all]:checkbox').prop('checked',true)
+                }else{
+                    $('input[name=all]:checkbox').prop('checked',false)
+                }
+
+
             })
 
             
@@ -49,7 +59,14 @@
 
         // 
         function allChk(bool){
-            
+            // var checkAll = $('input[name=all]:checked')   
+            var checkAll = $('input[name=all]') 
+            if (checkAll.is(':checked')){
+                $('input[name=chk]:checkbox').prop('checked',true)
+                
+            }else{
+                $('input[name=chk]:checkbox').prop('checked',false)
+            }
         }
 
     </script>
