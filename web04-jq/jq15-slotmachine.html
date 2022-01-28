@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='./rescources/js/jquery-3.6.0.min.js'></script>
+    <style>
+        img{
+            width: 150px;
+            height: 150px;
+            float: left;
+        }
+        #menu{position: relative;}
+        #menu{overflow: auto;}
+        .sel{
+            width: 148px;
+            height: 140px;
+            border: 5px solid red;
+            position: absolute;
+            left: 300px;
+            z-index: 10;
+            
+        }
+        button{
+            width: 150px;
+            height: 50px;
+            margin-left: 300px;
+        }
+    </style>
+    <script>
+        $(function(){
+            // b.appendTo('a') a의 끝에 b를 넣어달라 -> 삽입(insert)이니까 이동?--> 복사가 아니라 이동임
+            setInterval(function(){
+                var div = $('#menu')
+                $('.active').first().appendTo(div)
+            },100)
+
+            $('button').click(function(){
+                $('img').toggleClass('active')
+                if($('button').text() == 'start'){
+                    $('button').text('stop')
+                }else{
+                    $('button').text('start')
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    
+    <h1>SlotMachine</h1>
+
+    <div  id ='menubox'>
+        <div class='sel'></div>
+
+        <div id='menu'>
+            <img src="./rescources/img/img01.png" alt="img01">
+            <img src="./rescources/img/img02.png" alt="img02">
+            <img src="./rescources/img/img03.png" alt="img03">
+            <img src="./rescources/img/img04.png" alt="img04">
+            <img src="./rescources/img/img05.png" alt="img05">
+            <img src="./rescources/img/img06.png" alt="img06">
+        </div>
+
+        <button>start</button>
+    </div>
+
+
+</body>
+</html>

@@ -43,7 +43,7 @@
                 // $(선택자).is(":checked");
                 // 클릭될때마다 검사 if에서 통과 하면 체크되있는한 항상 true
                 var a = $('input[name=chk]')
-                if(a.eq(0).is(':checked')&& a.eq(1).is(':checked') &&a.eq(2).is(':checked')  ){
+                if(a.eq(0).is(':checked')&& a.eq(1).is(':checked') &&a.eq(2).is(':checked')  ){    // if($('input[name=chk]').length == $('input[name=chk]:checked').length)
                     // alert('aef')
                     $('input[name=all]:checkbox').prop('checked',true)
                 }else{
@@ -67,6 +67,11 @@
             }else{
                 $('input[name=chk]:checkbox').prop('checked',false)
             }
+
+            // $('input[name=chk]').each(function(){   // each() 하나하나 각각의 function을 적용시켜줌 == map()
+            //     $(this).prop('checked',bool)
+            // })
+
         }
 
     </script>
