@@ -24,7 +24,7 @@
                 
                 $.ajax({
                     url:"emplist.xml",
-                    dataType:"xml",
+                    dataType:"xml",                 // 문자열로 넘어오는걸 xml로 바꿈 
                     success:function(data){
                         var empRowList=$(data).find("ROW");
                         $("body").append(makeTable(empRowList));

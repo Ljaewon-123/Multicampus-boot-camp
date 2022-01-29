@@ -50,3 +50,12 @@ div{
     justify-content: space-around;
 }
 
+.line_L{
+    /* 딱 50퍼면 분리가 잘안됨  */
+    width: 46%;   
+    float: left;
+}
+.line_R{
+    width: 46%;
+    float: right;
+}
