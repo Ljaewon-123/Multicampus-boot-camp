@@ -10,12 +10,15 @@ div{
 }
 
 #main_line {
-    height: 1000px;
+    height: 2000px;
     /* height: 100%; */
+    /* width: 100vw;
+    height: 100vh; */
 }
 
 #main_line > div{
-    line-height: 950%;
+    /* line-height: 950%; */
+    line-height: 2200%;
     
 }
 
