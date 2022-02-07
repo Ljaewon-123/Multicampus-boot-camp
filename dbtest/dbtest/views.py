@@ -32,11 +32,13 @@ def update_res(request):
     mycontent = request.POST['mycontent']
 
     # get() 과 filter()의 차이
+    # get() 은 0번째 객체 하나 이고 filter()은 조건에 맞는 객체 여러개이다
     myboard = MyBoard.objects.filter(id=id)
 
     result_title = myboard.update(mytitle=mytitle)
     result_content = myboard.update(mycontent=mycontent)
-
+    print(result_title)
+    print(result_content)
     if result_title + result_content == 2:
         return  redirect('/detail/'+id)
     else:
