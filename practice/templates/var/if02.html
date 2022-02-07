@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if role == 'admin' %}
+    <h1>Admin Page</h1>
+    <a href="#">user list</a>
+    <a href="#">user delete</a>
+    {% elif role.manage %}
+  <!--  }%{% elif role == 'manage'  -->
+  <!--  그게 아니라 role 이 manage 라면-->
+    <h1>Manage Page</h1>
+    <a href="#">user list</a>
+    {% else %}
+  <!--  모두 아니라면-->
+    <h1>user page</h1>
+    <a href="#">my</a>
+    {% endif %}
+</body>
+</html>
