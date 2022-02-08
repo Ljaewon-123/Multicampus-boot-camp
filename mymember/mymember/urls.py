@@ -1,4 +1,4 @@
-"""myboard URL Configuration
+"""mymember URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -16,18 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='index'),
-    path('insertform/',views.insert_form,name = 'insert'),
-    path('insertres/',views.insert_res),
-    path('detail/<int:id>',views.detail),
-    path('updateform/<int:id>',views.update_form,name = 'update'),
-    path('updateres/',views.update_res),
-    path('delete/<int:id>',views.delete),
-    path('register/',views.regitster),
-    path('login/',views.login),
-    path('logout/',views.logout),
-
+    path('',views.index,name = 'index'),
+    path('register/',views.register,name = 'register'),
+    path('login/',auth_views.LoginView.as_view(template_name='login.html'),name = 'login'),
+    path('logout/',auth_views.LogoutView.as_view(),name = 'logout'),
+    path('result/',views.result,name = 'result'),
 ]

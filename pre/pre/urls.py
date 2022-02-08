@@ -1,4 +1,4 @@
-"""myboard URL Configuration
+"""pre URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -29,5 +29,6 @@ urlpatterns = [
     path('register/',views.regitster),
     path('login/',views.login),
     path('logout/',views.logout),
-
+    path('upload/',views.upload_process),
+    path('download/<str:filename>',views.download_process),
 ]

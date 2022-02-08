@@ -1,4 +1,4 @@
-"""myboard URL Configuration
+"""updown URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -19,15 +19,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index,name='index'),
-    path('insertform/',views.insert_form,name = 'insert'),
-    path('insertres/',views.insert_res),
-    path('detail/<int:id>',views.detail),
-    path('updateform/<int:id>',views.update_form,name = 'update'),
-    path('updateres/',views.update_res),
-    path('delete/<int:id>',views.delete),
-    path('register/',views.regitster),
-    path('login/',views.login),
-    path('logout/',views.logout),
-
+    path('',views.index,name = 'index'),
+    path('upload/',views.upload_process),
+    path('download/<str:filename>',views.download_process),
 ]

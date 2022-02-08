@@ -3,7 +3,10 @@ from . models import MyBoard , MyMember
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.contrib.auth.hashers import make_password , check_password
-
+from django.http import HttpResponse
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+import mimetypes
 
 def index(request):  # .order_by('-id')  원래 기본키로 오름차순을 하는데 '-'해서 내림차순으로
     myboard = MyBoard.objects.all().order_by('-id')
@@ -108,3 +111,22 @@ def login(request):
 def logout(request):
     del request.session['myname']  # 요청받으면 db에 있는 알맞는값 가져와서 세션에 저장 del하면 세션내용만 삭제
     return redirect('/')
+
+def upload_process(request):
+    upload_file = request.FILES['uploadfile']
+    # print(upload_file)
+    # print(type(upload_file))
+
+    # setting에 있는 media 루트를 찾는다
+    uploaded = default_storage.save(upload_file.name,ContentFile(upload_file.read()))
+    # print(uploaded)
+    # print(type(uploaded))
+
+    return render(request,'download.html',{'filename':uploaded})
+
+def download_process(request,filename):
+    mime_type = mimetypes.guess_type(filename)
+    response = HttpResponse(default_storage.open(filename).read(),content_type=mime_type)
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+
+    return response

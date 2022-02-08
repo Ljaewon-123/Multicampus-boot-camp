@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Detail</h1>
+<!-- id값 찾아바 -->
+    <table border="1">
+<!--        <input type="hidden" name = 'id' value="{{dto.id}}">-->
+          <tr>
+              <th>작성자</th>
+              <td><input type="text" name = 'myname' value="{{dto.myname}}" readonly></td>
+          </tr>
+          <tr>
+              <th>제목</th>
+              <td><input type="text" name = 'mytitle' value="{{dto.mytitle}}" readonly></td>
+          </tr>
+          <tr>
+              <th>내용</th>
+              <td><textarea name="mycontent"  cols="60" rows="10"  readonly>{{dto.mycontent}}</textarea></td>
+          </tr>
+          <tr >
+              <td colspan="4" align="right">
+                  <input type="button" value='목록' onclick="location.href='/'">
+                  <input type="button" value="수정" onclick="location.href='/updateform/{{dto.id}}'">
+                  <input type="button" value="삭제" onclick="location.href='/delete/{{dto.id}}'">
+                  <input type="file" name = 'uploadfile' value="">
+
+              </td>
+          </tr>
+      </table>
+</body>
+</html>
