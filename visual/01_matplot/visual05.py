@@ -1,0 +1,16 @@
+import matplotlib.pyplot as plt
+from random import randint
+
+fig,ax = plt.subplots()
+
+x = list(randint(0,10) for i in range(100))
+
+ax.hist(x,bins=10)  # bin은 데이터가 가지는 x축의 영역(간격??)
+
+plt.xticks(list(range(0,11)))
+plt.yticks(list(range(0,101,5)))
+
+plt.xlim(0,10)
+plt.ylim(0,100)
+
+plt.show()

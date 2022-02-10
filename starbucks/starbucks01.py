@@ -24,22 +24,64 @@ def getSiDo():
 
 def getGuGun(sido_code):
     # __ajaxCall("/store/getGugunList.do", {"sido_cd":sido}, true, "json", "post",
-    sido_url = 'https://www.starbucks.co.kr/store/getGugunList.do'
-    resp_gugun = requests.post(sido_url)
-    # print(resp_gugun)
-    resp_gu = resp_gugun.json()
-    resp_gu['list'] = getSiDo()
-    # print(resp_gu['list'])
-    resp_last = resp_gu['list']
-    # print(resp_last['01'])
-    print(type(resp_last.keys()))
-    if resp_last.keys() == sido_code:
-        print(resp_last[sido_code])
+    url = 'https://www.starbucks.co.kr/store/getGugunList.do'
+    resp = requests.post(url,data = {'sido_cd':sido_code})
+    gugun_list = resp.json()['list']
+    # print(gugun_list)
+
+    # print(list(map(lambda x:x['gugun_cd'],gugun_list)))
+    # print(list(map(lambda x:x['gugun_nm'],gugun_list)))
+
+    gugun_dict = dict(zip(list(map(lambda x:x['gugun_cd'],gugun_list)),
+                          list(map(lambda x:x['gugun_nm'],gugun_list))))
+    # print(gugun_dict)
+
+    return gugun_dict
+
+def getStore(sido_code = '',gugun_code = ''):
+    # __ajaxCall( storeInterfaceUrl ,$search, true, "json", "post",
+    url = 'https://www.starbucks.co.kr/store/getStore.do'
+    resp = requests.post(url,data={'ins_lat': '37.56682',
+                                    'ins_lng': '126.97865',
+                                    'p_sido_cd': sido_code,
+                                    'p_gugun_cd': gugun_code,
+                                    'in_biz_cd': '',
+                                    'set_date': '',
+                                    })
+    # print(resp.json())
+    store_list = resp.json()['list']
+    # s_name, tel , doro_address,lat, lot
+    result_list = list()
+    for store in store_list:
+        store_dict = dict()
+        store_dict['s_name'] = store['s_name']
+        store_dict['tel'] = store['tel']
+        store_dict['doro_address'] = store['doro_address']
+        store_dict['lat'] = store['lat']
+        store_dict['lot'] = store['lot']
+        result_list.append(store_dict)
+
+    # print(result_list)
+    # {'store_list' : [{},{},{}]}
+    result_dict = dict()
+    result_dict['store_list'] = result_list
+    # print(result_dict)
+    # json 저장
+    result_json = json.dumps(result_dict,ensure_ascii=False)
+    with open('../visual/03_folium/starbucks01.py.json', 'w', encoding='utf-8') as f:
+        f.write(result_json)
+
+    return result_json
+
+# 제대로된 요청에 응답이 안오면 네트워크 확인할것
+# ? 이후는 새로운 데이터라고 생각해서 다시 읽음
 
 if __name__=='__main__':
     print(getSiDo())
     sido = input('도시 코드를 입력해 주세요 : ')
     if sido == '17':
-        pass
+        print(getStore(sido_code='17',gugun_code=''))
     else:
-        getGuGun(sido)
+        print(getGuGun(sido))
+        gugun = input('구군 코드를 입력해 주세요 : ')
+        print(getStore(sido_code='',gugun_code=gugun))

@@ -52,7 +52,7 @@ for img in range(len(imgs)):
 #
 #
 # # headers={"User-Agent": 'Mozilla/5.0'}
-# with open(path+'pp.jpg','wb') as f:
+# with open(path+'/pp.jpg','wb') as f:
 #     download_file = requests.get(div.select('img[src]')[0]['src'],)
 #     f.write(download_file.content)
 
