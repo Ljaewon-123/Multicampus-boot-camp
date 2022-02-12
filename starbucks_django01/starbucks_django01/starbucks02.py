@@ -11,16 +11,13 @@ def getSiDo():
     # print(resp)
     # print(resp.json())    #  json 객체로 만들어서 줌 requets 모듈기능
     sido_list = resp.json()['list']   # 괜히 한단계 더가지 말고 중간 확인할것
-    # print(sido_list)
-    # print(sido_list[3])
 
 
     sido_code = list(map(lambda x: x['sido_cd'],sido_list))
     sido_nm = list(map(lambda  x:x['sido_nm'],sido_list))
-    # print(sido_code)
-    # print(sido_nm)
+
     sido_dict = dict(zip(sido_code,sido_nm))
-    # print(sido_dict)
+
 
     return sido_dict
 
@@ -29,10 +26,7 @@ def getGuGun(sido_code):
     url = 'https://www.starbucks.co.kr/store/getGugunList.do'
     resp = requests.post(url,data = {'sido_cd':sido_code})
     gugun_list = resp.json()['list']
-    # print(gugun_list)
 
-    # print(list(map(lambda x:x['gugun_cd'],gugun_list)))
-    # print(list(map(lambda x:x['gugun_nm'],gugun_list)))
 
     gugun_dict = dict(zip(list(map(lambda x:x['gugun_cd'],gugun_list)),
                           list(map(lambda x:x['gugun_nm'],gugun_list))))
@@ -63,27 +57,36 @@ def getStore(sido_code = '',gugun_code = ''):
         store_dict['lot'] = store['lot']
         result_list.append(store_dict)
 
-    # print(result_list)
-    # {'store_list' : [{},{},{}]}
-    result_dict = dict()
-    result_dict['store_list'] = result_list
-    # print(result_dict)
-    # json 저장
-    result_json = json.dumps(result_dict,ensure_ascii=False)
-    with open('../visual/03_folium/starbucks01.py.json', 'w', encoding='utf-8') as f:
-        f.write(result_json)
 
-    return result_json
+    return result_list
 
 # 제대로된 요청에 응답이 안오면 네트워크 확인할것
 # ? 이후는 새로운 데이터라고 생각해서 다시 읽음
 
 if __name__=='__main__':
-    print(getSiDo())
-    sido = input('도시 코드를 입력해 주세요 : ')
-    if sido == '17':
-        print(getStore(sido_code='17',gugun_code=''))
-    else:
-        print(getGuGun(sido))
-        gugun = input('구군 코드를 입력해 주세요 : ')
-        print(getStore(sido_code='',gugun_code=gugun))
+    # 전국의 모든 스타벅스 매장을 저장하기
+    # {'list':[{s_name:...},{'',....}]
+    # starbucks_all.json
+    list_all = list()
+
+    sido_all = getSiDo()  # 그냥 돌면 키만??
+    for sido in sido_all:
+        if sido == '17':
+            result = getStore(sido_code=sido)
+            print(result)
+            list_all.extend(result)
+        else:
+            gugun_all = getGuGun(sido)
+            for gugun in gugun_all:
+                result = getStore(gugun_code=gugun)
+                print(result)
+                list_all.extend(result)
+    # print(list_all)
+    # print(len(list_all))
+
+    result_dict = dict()
+    result_dict['list'] = list_all
+
+    result = json.dumps(result_dict,ensure_ascii=False)
+    with open('starbucks_all.json','w',encoding='utf-8') as f:
+        f.write(result)

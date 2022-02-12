@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
+from bs4 import BeautifulSoup
 
 input_id = input('id 입력 : ')
 input_pw = input('pw 입력 : ')
@@ -31,3 +32,6 @@ later.click()
 
 # 크롤링이 잘안되면 샐레니움 써보자
 # 가장 좋은것은 공식적인 요청을 받기 이런게 안되는 경우는 셀레니움 보기
+
+## ------------------------------------------
+

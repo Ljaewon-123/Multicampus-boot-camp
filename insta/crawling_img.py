@@ -27,20 +27,17 @@ scroll()
 soup = BeautifulSoup(driver.page_source,'html.parser')
 
 div = soup.find('div',class_='container--HcTw2')
-# atag = div.select('a[class=link--h3bPw]')
-# print(atag)
-# print(div)
-# img = div.select('img[src]')[0]['src']
-# img = div.find('img')['src']
-# print(img)
+
 imgs = div.select('img[src]')
 
-
+path = '../crawling_down_img'
 
 for img in range(len(imgs)):
     # print(img)
     src_img = div.select('img[src]')[img]['src']
-
+    with open(path + f'\pp{img}.jpg', 'wb') as f:
+        download_file = requests.get(src_img, )
+        f.write(download_file.content)
     print(src_img)
 
 
@@ -48,11 +45,12 @@ for img in range(len(imgs)):
 
 ### 이미지 다운도 한번 해보자
 
+# Success!!!
+
 # path = '../crawling_down_img'
-#
-#
-# # headers={"User-Agent": 'Mozilla/5.0'}
-# with open(path+'/pp.jpg','wb') as f:
+
+
+# with open(path+'\pp.jpg','wb') as f:
 #     download_file = requests.get(div.select('img[src]')[0]['src'],)
 #     f.write(download_file.content)
 
