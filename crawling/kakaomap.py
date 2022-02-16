@@ -77,6 +77,7 @@ if hidden:
             # # print(div1)
             # print(f'last {span}')
 
+
 else:
     # more = driver.find_element(By.XPATH,'/html/body/div[5]/div[2]/div[1]/div[7]/div[5]/a')
     # more.click()
@@ -121,13 +122,22 @@ else:
                         # print(f'last {span}')
         except :
             break
-        # next_page = driver.find_element(By.CLASS_NAME,'next')   # 이건 왜안됨??
-        next_page = driver.find_element(By.XPATH,'/html/body/div[5]/div[2]/div[1]/div[7]/div[6]/div/button[2]')
-        if next_page:
-            next_page.click()
-        else:
-            break
 
+        button = soup.find('button',class_='next disabled')
+        if button:
+            break
+        else:
+            next_page = driver.find_element(By.XPATH, '/html/body/div[5]/div[2]/div[1]/div[7]/div[6]/div/button[2]')
+            next_page.click()
+        # next_page = driver.find_element(By.CLASS_NAME,'next')   # 이건 왜안됨??
+        # next_page = driver.find_element(By.XPATH,'/html/body/div[5]/div[2]/div[1]/div[7]/div[6]/div/button[2]')
+        # if next_page:
+        #     next_page.click()
+        #     print(i)  # 어느구간 무한루프인지 확인 이부분 까지는 옴
+        # else:
+        #     break
+# /html/body/div[5]/div[2]/div[1]/div[7]/div[6]/div/button[2]  # 활성화
+# /html/body/div[5]/div[2]/div[1]/div[6]/div[6]/div/button[2]  # 비활성화
 sleep(5)
 res = {}
 res[input_data] = lst
