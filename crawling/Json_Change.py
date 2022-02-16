@@ -3,7 +3,7 @@
 import json
 # gu_set 은 구이름 ex) 마포구
 # gu_list 는 전체 구이름
-def change_gu_json(gu_set,gu_list,bowwow_dict):
+def make_gu_json(gu_set,gu_list,bowwow_dict):
     name_json = {}
     list_json = []
     for num in range(len(gu_list)):
@@ -60,8 +60,8 @@ print(gu_set_naver)
 # gu_name = '구로구'
 
 
-kakao_gu = change_gu_json(gu_name,gu_list_kakao,bowwow_dict_kakao)
-naver_gu = change_gu_json(gu_name,gu_list_naver,bowwow_dict_naver)
+kakao_gu = make_gu_json(gu_name,gu_list_kakao,bowwow_dict_kakao)
+naver_gu = make_gu_json(gu_name,gu_list_naver,bowwow_dict_naver)
 # print(kakao_gu)
 list_kakao_name = list(map(lambda x: x['s_name'],kakao_gu[gu_name]))  # 결론엔 필요없음 제목 같은거 잡을려고 쓰는거
 list_naver_name = list(map(lambda x: x['s_name'],naver_gu[gu_name]))
