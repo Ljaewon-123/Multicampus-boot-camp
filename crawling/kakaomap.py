@@ -4,7 +4,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
-import requests
+import json
 from time import sleep
 
 
@@ -18,7 +18,6 @@ driver.get(url)
 
 sleep(5)
 input_data = input('검색값 입력: ')
-
 # print(soup)
 
 driver.find_element(By.CSS_SELECTOR,'.layer_body').click()
@@ -33,29 +32,6 @@ later = driver.find_element(By.ID,'search.keyword.submit')
 later.click()
 
 sleep(2)
-
-# soup = BeautifulSoup(driver.page_source,'html.parser')
-# ul = soup.find_all('ul',class_= 'placelist')[0]
-#
-# sleep(1)
-#
-# li = ul.select('li')
-#
-# for lis in li:
-#     if lis.find('a',class_='link_ad'):
-#         pass
-#     else:
-#         found = lis.find('a',class_='link_name')['title']
-#         found2 = lis.find('em',).text
-#         div = lis.select('div p')[0]['title']
-#         div1 = lis.select('div p')[1]['title']
-#         # span = lis.find('span',class_='subcategory.clickable').text
-#         span = lis.select('span')[3].text
-#         print(found)
-#         print(found2)
-#         print(div)
-#         print(div1)
-#         print(f'last {span}')
 
 
 # 더보기 버튼 클릭
@@ -110,28 +86,9 @@ while True:
 sleep(5)
 res = {}
 res['kakao_map'] = lst
+
+res_json = json.dumps(res,ensure_ascii=False)
 print(res)
-# sleep(3)
-#
-# soup = BeautifulSoup(driver.page_source,'html.parser')
-# ul = soup.find_all('ul',class_= 'placelist')[0]
-#
-# sleep(1)
-#
-# li = ul.select('li')
-#
-# for lis in li:
-#     if lis.find('a',class_='link_ad'):
-#         pass
-#     else:
-#         found = lis.find('a',class_='link_name')['title']
-#         found2 = lis.find('em',).text
-#         div = lis.select('div p')[0]['title']
-#         div1 = lis.select('div p')[1]['title']
-#         # span = lis.find('span',class_='subcategory.clickable').text
-#         span = lis.select('span')[3].text
-#         print(found)
-#         print(found2)
-#         print(div)
-#         print(div1)
-#         print(f'last {span}')
+
+with open('kakao_map.json','w',encoding='utf-8') as f:
+    f.write(res_json)
