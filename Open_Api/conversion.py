@@ -1,6 +1,6 @@
 import requests
 import json
-
+# rest api
 api_key = 'b8b58dd6490543a58e8ab1ea5352a75f'
 # 주소로 좌표변환
 def addr_to_lat_lon(addr):
@@ -12,7 +12,7 @@ def addr_to_lat_lon(addr):
     return float(found['y']), float(found['x'])
 
 
-print(addr_to_lat_lon('서울 구로구 경인로 472'))
+# print(addr_to_lat_lon('서울 구로구 경인로 472'))
 # (37.4979313896033, 126.871013564548)
 # (37.4985987300398, 126.871229657654)
 # 좌표로 주소 변환
@@ -23,4 +23,4 @@ def lat_lon_to_addr(lon,lat):
     found = result['documents'][0]['address_name']
     return str(found)
 
-print(lat_lon_to_addr('126.974907969051', '37.5696996246023'))
+# print(lat_lon_to_addr('126.974907969051', '37.5696996246023'))
