@@ -12,7 +12,7 @@ def addr_to_lat_lon(addr):
     return float(found['y']), float(found['x'])
 
 
-# print(addr_to_lat_lon('서울 구로구 경인로 472'))
+# print(addr_to_lat_lon('서울특별시 강남구 도곡로 174, 1,2층 (도곡동)'))
 # (37.4979313896033, 126.871013564548)
 # (37.4985987300398, 126.871229657654)
 # 좌표로 주소 변환

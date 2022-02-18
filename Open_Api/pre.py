@@ -10,38 +10,17 @@ from conversion import addr_to_lat_lon
 warnings.filterwarnings('ignore')
 
 
-input_gu = '강남구'
-path = './csv/'
-hospital_data = pd.read_csv(f'{path}hospital.csv', encoding='euc-kr')
-# print(hospital_data)
-hospital_data
-hospital_data = hospital_data[['상세영업상태명', '소재지전화', '소재지전체주소', '도로명전체주소', '사업장명', '좌표정보(x)', '좌표정보(y)']]
-hospital_data = hospital_data.loc[hospital_data['상세영업상태명'] == '정상']
 
-hospital_data = hospital_data.fillna(0)
-hospital_data = hospital_data[hospital_data['소재지전체주소'].str.contains(f'서울특별시 {input_gu}', na=False)]
+    # my_loc.save('pratice.html')
 
-# print(hospital_data)
-hospital_b = hospital_data.loc[:, '사업장명']
-hospital_local = hospital_data.loc[:, '도로명전체주소']
+# folium.Marker(
+#     location=[37.5752205086784, 127.010502773568],
+#     popup="Timberline Lodge",
+#     icon=folium.Icon(color="green"),
+# ).add_to(my_loc)
 
-# print(hospital_b)
-# print(hospital_local)
-center = addr_to_lat_lon(input_gu)
-center_loc = folium.Map(location=[center[0], center[1]], zoom_start=12)
 
-for i in hospital_local:
-    # print(i)
-    # print(hospital_data[hospital_data.도로명전체주소 == i])
-    a = hospital_data[hospital_data.도로명전체주소 == i]
-    # print(a['사업장명'].values)
-    b = a['사업장명'].values
-    print(b[0])
-    # try:
-    #     local = addr_to_lat_lon(i)
-    # except IndexError as e:
-    #     pass
-
-    # folium.Marker([local[0], local[1]], popup=folium.Popup('bowwobwobwobwobowb', max_width=100)).add_to(center_loc)
-
-# center_loc.save('pratice.html')
+# ajax로 folium 보내보기
+# 다음에 해야할게 마커랑 장고찍기
+# Marker : 병원(십자이미지) , 약국(알약이미지) , 공원(암거나 찾아바), 교육센터, 펫카페, 펫 유치원, 펫 호텔, ,펫 놀이터, 펫 미용실,
+#         펫 용품점, 동반카페, 동반식당
