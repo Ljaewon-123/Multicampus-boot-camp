@@ -62,7 +62,8 @@ def Location_Medical_CSV(path,input_gu,num):
         hosp_name = doro_add['사업장명'].values
         folium.Marker([local[0], local[1]], popup=folium.Popup(hosp_name[0], max_width=100),icon=folium.Icon(color="green",icon='cloud'),).add_to(center_loc)
 
-    return center_loc.save('pratice.html')
+    # center_loc.save('pratice.html')
+    return center_loc
 
 def Location_Park(path,input_gu):
     city_park = pd.read_csv(f'{path}city_park.csv', encoding='cp949')
@@ -93,8 +94,9 @@ def Location_Park(path,input_gu):
         park_width = park_etc.공원면적.values
         # print(park_width)
         folium.Marker([park_x, park_y], popup=folium.Popup(i+f' 공원면적:{park_width}', max_width=200)).add_to(center_loc)
+    # center_loc.save('pratice.html')
 
-    return center_loc.save('pratice.html')
+    return center_loc
 
 # input_csv = input('csv 파일명 입력 : ')
 # input_file = input('파일이름 입력 : ')

@@ -6,8 +6,16 @@ import numpy as np
 import warnings
 import json
 import folium
+from folium.features import CustomIcon
 from conversion import addr_to_lat_lon
 warnings.filterwarnings('ignore')
+
+# 외부 이미지는 아예안됨 for문 돌때마다 다르게 찍어줘야함 중첩이 안됨
+# icon_image1 = './동물병원후보1.jpeg'
+# icon1 = CustomIcon(
+#     icon_image1,
+#     icon_size=(75, 95)
+# )
 
 path_json = '../Open_Api/json_total/'
 def Location_Map_Json(path,input_file,input_gu):
@@ -25,9 +33,9 @@ def Location_Map_Json(path,input_file,input_gu):
         gu_address = gu["address"]
         print(gu_address)
         local = addr_to_lat_lon(gu_address)
-        folium.Marker([local[0], local[1]], popup=folium.Popup(gu['s_name'], max_width=100)).add_to(center_loc)
+        folium.Marker([local[0], local[1]] ,popup=folium.Popup(gu['s_name'], max_width=100)).add_to(center_loc)
 
-    center_loc.save('pratice.ajax')
+    center_loc.save('pratice.html')
 
 
 # 약국 medical 은  똑같은데 encoding를  cp949 로 해줘야함
@@ -103,11 +111,9 @@ input_file = 'together_diner'
 # input_gu = input('구 입력: ')
 input_gu = '강남구'
 
-# Location_Map_Json(path_json,input_file,input_gu)
-Location_Medical_CSV(path_csv,input_gu,2)
+Location_Map_Json(path_json,input_file,input_gu)
+# Location_Medical_CSV(path_csv,input_gu,2)
 # Location_Park(path_csv,input_gu)
-
-
 
 
 
