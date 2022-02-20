@@ -26,6 +26,7 @@ urlpatterns = [
     path('index2/', views.index2),
     path('get_map/', views.Map),
     path('Geo/',views.Geo),
+    path("Geo/get_myloc/",views.my_loc),
     # path('draw_map/',views.drawMap),
     # path('get_map/', views.),
 ]

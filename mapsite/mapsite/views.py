@@ -15,6 +15,16 @@ warnings.filterwarnings('ignore')
 def Geo(request):
     return render(request,'geo.html')
 
+def my_loc(request):
+    pprint.pprint('!!!!!!!!!!!!!!!')
+    lat = request.GET['lat']
+    lon = request.GET['lon']
+    print(lat)
+    print(lon)
+    # lat_lon_to_addr()
+    my_loc = lat_lon_to_addr(lon,lat)
+    gu_name = my_loc.split()[1]
+    return HttpResponse(gu_name)
 
 def Location_Map_Json(input_file,input_gu):
     # with open(f'{path}{input_file}.json', 'r', encoding='utf-8') as f:
@@ -244,3 +254,10 @@ def addr_to_lat_lon(addr):
     found = result['documents'][0]['address']
     # return float(found['x']), float(found['y'])
     return float(found['y']), float(found['x'])
+
+def lat_lon_to_addr(lon,lat):
+    url = 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x={longitude}&y={latitude}'.format(longitude=lon,latitude=lat)
+    api = {"Authorization": "KakaoAK " + api_key}
+    result = json.loads(str(requests.get(url, headers=api).text))
+    found = result['documents'][0]['address_name']
+    return str(found)
