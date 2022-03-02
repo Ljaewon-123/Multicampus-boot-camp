@@ -42,6 +42,10 @@ logist = LogisticRegression()
 logist.fit(train_x,train_y)
 # 5. 예측
 pred = logist.predict(test_x)
+# print(pred[0])
+# print(iris.target_names)
+# print(iris.target_names[pred[i]])
+# print(iris.target_names[test_y[i]])
 for i in range(len(test_x)):
     print(f'{test_x[i]} 예측 : {iris.target_names[pred[i]]}/ 실제: {iris.target_names[test_y[i]]}')
 

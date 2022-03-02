@@ -6,6 +6,8 @@ from sklearn.linear_model import LinearRegression
 def celsius_to_fahrenheit(x):
     return (x*1.8)+32
 
+# 혼자할때 1번 준비만 보고 만들수있느냐ㅏ 이거롤 남은 번호에서 연습하면됨? 근데? 이미 좀 늦은거같기두..
+
 # 1. 데이터 준비
 data_C = np.array(range(0,100))
 data_F = celsius_to_fahrenheit(data_C)

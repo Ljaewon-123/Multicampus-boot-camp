@@ -24,16 +24,16 @@ df['weight'] = list(map(lambda x:str(x).split(' ')[0] ,df['weight']))
 df['weight'] = list(map(lambda x:float(x) if x else None,df['weight']))
 df.dropna(inplace=True)
 # print(df)
-x = df['weight']
+x = df['weight'] # 나의 입력값
 y = df['height']
 # 2. 데이터 분할 왜? 학습용과 검증용으로
 # train_x ,test_x
 train_x ,test_x,train_y,test_y = train_test_split(x,y,test_size=0.3,random_state=1)
-# print(train_x)
+print(train_x)
 # print(train_y)
 train_x = train_x.values.reshape(-1,1)  # 학습변수
 test_x = test_x.values.reshape(-1,1)    # 실제적으로 쓰는값
-
+print(train_x)
 # 3. 준비
 linear = LinearRegression()
 

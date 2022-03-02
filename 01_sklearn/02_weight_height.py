@@ -24,7 +24,7 @@ df.dropna(inplace=True)
 df['grade'] = list(map(lambda x:0 if x[-4:]  == '초등학교' else 6 if x[-3:] == '중학교' else 9 ,df['학교명'])) + df['학년']
 # lambda 쓴다고 반드시 모든 과정을 람다안에서 해결 안해도됨
 # print(df)
-# print(df[6000:7000])
+# print(df[6000:7000]) 중간값 확인
 df.drop(['학교명','학년'],axis = 'columns',inplace=True)
 df.columns = ['gender','height','weight','grade']
 # df['gender'] = list(map(lambda x:0 if x == '남' else 1,df['gender']))
