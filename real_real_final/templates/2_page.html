@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1조는 1인분 하조</title>
+    {% load static %}
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=edd9d5b2b096d9719de5b3ad246eea5b"></script>
+    <script>
+        $(function(){
+            if (navigator.geolocation) {
+                // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude, // 위도
+                        lon = position.coords.longitude; // 경도
+                    get_myloc(lat,lon);
+                });
+
+            } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+                var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+                    message = 'geolocation을 사용할수 없어요..'
+            }
+
+
+        // 클릭 이벤트들
+
+            $('.click_bs').on('click',function(){
+                //alert($(this).text())
+                //alert($('h1').text())
+                $('.click_bs').css('background-color','')
+                bs = $(this).text()
+                my_gu = $('h1').text()
+                click_bs(my_gu,bs)
+                $(this).css('background-color','#C0D8C0')
+                $(this).css('font-weight','500')
+            })
+            $('#score_sum').on('click',function(){
+                $('#talk').text('우리구 점수는 교육센터는 유/무에 따라 100/0점, 애완용품점은 0개(25점), 1개\
+                (50점), 2개(75점), 3개(100점), 놀이터는 0개(0점) 1(25점), 2(50점), 3(75점),\
+                4(100점), 동반가능 식당은 0~9개미만(20점), 10~19개미만(40점), 20~29개미만\
+                (60점), 30~39개미만(80점), 40~49개미만(100점)을 줌.')
+                $('#talk').append('<br><br>그 외에는 시설 평균 개수 대비 0~0.5배미만(25점), 0.5배~1배미만(50점), 1배~1.5 배미만(75점), 1.5배~2배(100점)을 기준으로 주었음. \
+                오픈서베이에서 현재 반려견/반려묘를 키우는 사람 500명을 대상으로 실시한 (복수응답가능) 설문조사를 근거로 가중치를 주었으며,')
+                $('#talk').append('<br><br>동반 카페, 펫 카페 , 동물교육센터 , 동물병원, 동물동반가능호텔, 동물미용업, 애완용품샵, 동물 유치원, 동물놀이터, 공원, 약국, 동반 가능 식당순으로0.0188, 0.0188, 0.0719, 0.0659, 0.1421, 0.3219, 0.0257, 0.0685, 0.1626, 0.0188, 0.0659, 0.0188의 가중치를 주었음')
+
+            })
+
+        })
+        function click_bs(my_gu,bs){
+            if(bs == '반려동물교육센터'){
+                $.ajax({
+                    url:'/click_bs/',
+                    data: {'my_gu':my_gu,'bs':bs},
+                    dataType: 'html',
+                    success: function(msg){
+                        $('#container').text(msg)
+                    }
+                })
+            }
+            else{
+                $.ajax({
+                    url:'/click_bs/',
+                    data: {'my_gu':my_gu,'bs':bs},
+                    dataType: 'json',
+                    success: function(msg){
+                        var msg1 = msg['my_bs']
+                        var msg2 = msg['bs_cnt']
+                        var msg3 = msg['bs_times']
+                        var msg4 = msg['bs_km']
+                        var msg5 = msg['bs_gagu']
+                        var msg6 = msg['area_win']
+                        var msg7 = msg['popu_win']
+                        console.log(msg2)
+                        if (msg2 == 0){
+                            $('#container').html('우리 구에는 없어요!')
+                        } else {
+                            $('#container').html("우리 동네 <span class='msg1'></span>의 수는 <span id='msg2'></span>개이며 서울시 평균 <span class='msg1'></span> 수의<span id='msg3'></span>배입니다.")
+                            $('#container').append("<br>10km<sup>2</sup>당 <span class='msg1'></span>의 수는 <span id='msg4'></span>개이고, 만 가구당 우리 동네의 <span class='msg1'></span> 수는 <span id='msg5'></span>개 입니다.")
+                            $('#container').append("<br>서울 평균과 우리 동네를 <span class='standard'>동일한 면적</span>으로 놓고 비교하면, 우리 동네는 서울보다 <span id='msg6'></span>에서 뛰어납니다.")
+                            $('#container').append("<br>서울 평균과 우리 동네를 <span class='standard'>같은 가구 수</span>로 놓고 비교하면, 우리 동네는 서울보다 <span id='msg7'></span>에서 뛰어납니다.")
+                            $('.msg1').text(msg1)
+                            $('#msg2').text(msg2)
+                            $('#msg3').text(msg3)
+                            $('#msg4').text(msg4)
+                            $('#msg5').text(msg5)
+                            $('#msg6').text(msg6)
+                            $('#msg7').text(msg7)
+                            }
+
+                    }
+                })
+            }
+        }
+        function get_myloc(lat, lon){
+            $.ajax({
+                url:'get_myloc',
+                data: {'lat':lat,'lon':lon},
+                dataType: 'html',
+                success: function(msg){
+                    $('h1').append(msg)
+                    get_score(msg)
+                    get_rank(msg)
+                }
+            })
+        }
+        function get_score(my_gu){
+            $.ajax({
+                url:'/get_score/',
+                data: {'my_gu':my_gu},
+                dataType: 'html',
+                success: function(msg){
+                    $('#load_score').append($('<span>').html(msg).css('color','black').css('font-size', '80px').css({'font-weight':'1000','color':'#495371'}))
+                    $('#load_score').append('/100점').css({'color':'black','z-index':2})
+                }
+            })
+        }
+        function get_rank(my_gu){
+            $.ajax({
+                url:'/get_rank/',
+                data: {'my_gu':my_gu},
+                dataType: 'html',
+                success: function(msg){
+                    var div = ('#load_rank')
+                    $('#load_rank').append($('<span>').html(msg).css('color','black').css('font-size', '80px').css({'font-weight':'1000','color':'#495371'}))
+                    $('#load_rank').append('/25등').css('color','black')
+                    if (msg <= 5){ $('#load_rank').append($('<span>').html('     <br>천상계 등급! 이곳은 바로 반려인들의 <b> DREAM WORLD~</b>').append('<span style="position : relative;"><img src="../static/img/stamp_1.png" alt="" style="z-index: 1; position: absolute; top: -180px; left: 20px; transform : rotate(20deg)"></span>'))}
+                    else if (5 < msg && msg <= 10 ){$('#aka').append($('<span>').html('     <br>우리 구가 어때서~ 반려동물 키우기 딱 좋은 곳인데~').append('<span style="position : relative;"><img src="../static/img/stamp_2.png" alt="" style="z-index: 1; position: absolute; left: 20px; top: -180px; transform : rotate(20deg)"></span>'))}
+                    else if (10 < msg && msg<= 15 ){$('#load_rank').append($('<span>').html('     <br>평균 그 이상 그 이하도 아닌 .... OTL').append('<span style="position : relative;"><img src="../static/img/stamp_3.png" alt="" style=" z-index: 1; position: absolute; left: -20px; top: -180px; transform : rotate(20deg)"></span>'))}
+                    else if (15 < msg && msg <= 20 ){$('#load_rank').append($('<span>').html('     <br>우리 동네 반성해..').append('<span style="position : relative;"><img src="../static/img/stamp_4.png" alt="" style=" z-index: 1; position: absolute; left: 150px; top: -180px; transform : rotate(20deg)"></span>'))}
+                    else if(20< msg && msg <= 25){$('#load_rank').append($('<span>').html('     <br>여기서 반려인을 위한 사업 시작해도 되겠는 데요?').append('<span style="position : relative;"><img src="../static/img/stamp_5.png" alt="" style=" z-index: 1; position: absolute; left: -20px; top: -180px; transform : rotate(20deg)"></span>'))}
+                }
+            })
+        }
+    </script>
+    <style>
+
+        @font-face {
+
+        src : url("../static/SDMiSaeng.ttf");
+        font-family: "mi" 
+        }
+
+        *{
+        font-family: "mi";
+        font-size: 25px;
+        }
+        body{
+            margin: 0px;
+        }
+        .containers{
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            scroll-snap-type: y mandatory;
+        }
+        header {
+          background: #495371;/*#f6f5ef*/
+          height: 120px;
+          width: 100%;
+          /* position: absolute; */
+
+          z-index:6;
+        }
+
+        header > div{
+            position: relative;
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        header > div nav { float: right; width: 1000px;position: relative; height: 110px; }
+        header > div nav > ul{ float: right; }
+        header > div nav > ul > li {float: left; position: relative; line-height: 0.8rem; top: 15px; left: 40px; letter-spacing: 0.5px; padding-right: 10px;}
+
+        header > div:after {content: "";display: block;clear: both;}
+
+        /* 로고 이미지 위아래 여백 padding*/
+        header > div> h1 {float : left; padding: 0.34rem 0 1.6rem;
+            position:absolute;left:16px;
+        }
+        header > div> h1>img {position:relative;top: -100px;}
+
+        /*네이게이션 메뉴 위치 내리는 여백 padding  padding: 1.2em 0 0 0;*/
+
+
+        header > div nav > ul > li > a {
+            display: block;   /*위아래 padding때문에 좌우여백이 안들어가지므로 */
+            padding : 0.7rem 0.7rem 0;  /*메뉴마다 좌우 여백 */
+            height : 2.6rem;    /*메뉴 아래 영역까지 포함시키도록 */
+            font-size: 15px;
+            color: #f6f5ef;
+            line-height: 100%;
+        }
+        #horse{
+            display: inline-block;
+            height: 100px;
+            width: 100px;
+        }
+        #horse{
+           margin-top: 10px;
+           padding-right: 10px;
+        }
+        #horse a{
+            display: inline-block;
+            height: 100px;
+            z-index: 2;
+        }
+        #horse img{
+            z-index: 1;
+        }
+        #user_loc{
+
+            padding-left: 120px;
+            font-size: 50px;
+            top: -2px;
+            color:white;
+        }
+
+        div>span{
+            margin: 0.5%;
+        }
+        .click_bs{
+            display: inline-block;
+            min-width: 150px;
+            height: 38px;
+            line-height: 34px;
+            font-size: 25px;
+            color: #111;
+            border: 2px solid #111;
+            border-radius: 5px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        a{   /* 링크의 밑줄 없애기 */
+            text-decoration-line: none;
+        }
+
+
+        ul{ /* 점 없애기, 들여쓰기 없애기*/
+            list-style: none;
+        }
+        .msg1{
+            font-size: 32pt;
+            font-weight: 550;
+        }
+        #msg6, #msg7{
+            font-size: 32pt;
+            font-weight: 800;
+            color:#47597E;
+        }
+        #container > span:not(.msg1, #msg6, #msg7, .standard){
+            font-size: 40pt;
+            font-weight: 800;
+            color:#74959A;
+        }
+        .standard{
+            font-size: 32pt;
+            font-weight: 600;
+            color: darkgray;
+            margin-top: 20px;
+        }
+        hr{
+            border: 0;
+            height: 2px;
+            background: black;
+        }
+    </style>
+
+</head>
+<body style="background: #EEEEEE; ">
+    <div class="containers" >
+        <div class="section">
+            <div class="content">
+                <header>
+                    <!--헤더-->
+                    <div>
+                        <div id="horse">
+                            <a href="{% static '../' %}"><img src="/static/img/logoo.png" alt="logo" style="height:90px;"></a>
+                        </div>
+                        <h1 id="user_loc" style="color: white"></h1>
+                        <nav>
+                            <ul>
+                                <li><a href="/index"><b>내 주변 서비스 확인하기</b></a></li>
+                                <li><a href="/score"><b>우리 동네 분석</b></a></li>
+                                <li><a href="/menu"><b>우리 동네 최종 보고서</b></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </header>
+            </div>
+        </div>
+        <div style=" border: solid 2px black; margin-left: 20%; margin-right: 20%; margin-top: 100px; height: 1300px; background-color: white; z-index: -3;">
+            <div style="margin-top: 50px; padding-left: 20%; padding-right: 20%; font-size: 70px; padding-top: 20px; text-align: center; margin-bottom: 50px; font-weight: bold; "><우리 동네 최종 보고서></div>
+            <hr>
+            <div id ='load_score' style="margin-top: 30px; padding-left: 20%; padding-right: 20%; font-size: 40px; padding-top: 20px; text-align: center; z-index: 30;">우리 동네 점수 :   </div>
+            <div id = 'load_rank' style="padding-left: 20%; padding-right: 20%; font-size: 40px;text-align: center; height: 100px; position: relative;">우리 동네 등수 : </div>
+            <div id ='aka' style="padding-left: 20%; padding-right: 20%; font-size: 40px;text-align: center; height: 60px; "></div>
+            <hr>
+            <div style="text-align: center;">
+                <span class = 'click_bs'>애견카페</span>
+                <span class = 'click_bs'>애견유치원</span>
+                <span class = 'click_bs'>반려동물교육센터</span>
+                <span class ='click_bs'>반려견놀이터</span>
+                <br>
+                <span class ='click_bs'>애견동반카페</span>
+                <span class ='click_bs'>애견미용실</span>
+                <span class ='click_bs'>애견호텔</span>
+                <span class ='click_bs'>애완용품점</span>
+                <br>
+                <span class ='click_bs'>애견동반식당</span>
+                <span class ='click_bs'>동물병원</span>
+                <span class ='click_bs'>동물약국</span>
+                <span class ='click_bs'>산책가능공원</span>
+            </div>
+            <hr>
+            <br>
+            <br>
+            <div id = 'container' style="padding-left: 7%; padding-right: 7%; font-size: 40px;text-align: center; height: 300px;"></div>
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+            </div>
+            <div  style="position:absolute; width: 70%; left: 50%; transform: translateX(-50%); padding-top: 10px;">
+            <span id = 'score_sum'  style="padding-left: 20%; display: block; padding-right: 20%; margin-top: 100px; font-size: 30px;text-align: center; height: 70px;">점수 합산 기준 : </span>
+            <div id = 'talk' style="padding-left: 20%; padding-right: 20%;  padding-bottom: 20%;  height: 100px;"></div>
+        </div>
+    </div>
+</body>
+</html>

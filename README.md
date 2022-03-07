@@ -1,6 +1,6 @@
 # Project_mypart
 
-추후 최종본 업로드
+추후 최종본 업로드  == real_real_final
 
 공용부분 프로젝트에서 내가 맡은 부분들 
 
