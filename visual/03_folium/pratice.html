@@ -23,7 +23,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_0dd1c09286e0419f8f04c13a88436c00 {
+                #map_16c94e3e64184b51bea9be7be2ae8480 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -35,17 +35,17 @@
 </head>
 <body>    
     
-            <div class="folium-map" id="map_0dd1c09286e0419f8f04c13a88436c00" ></div>
+            <div class="folium-map" id="map_16c94e3e64184b51bea9be7be2ae8480" ></div>
         
 </body>
 <script>    
     
-            var map_0dd1c09286e0419f8f04c13a88436c00 = L.map(
-                "map_0dd1c09286e0419f8f04c13a88436c00",
+            var map_16c94e3e64184b51bea9be7be2ae8480 = L.map(
+                "map_16c94e3e64184b51bea9be7be2ae8480",
                 {
-                    center: [36.3659806300997, 127.436127730684],
+                    center: [37.5752205086784, 127.010502773568],
                     crs: L.CRS.EPSG3857,
-                    zoom: 6,
+                    zoom: 18,
                     zoomControl: true,
                     preferCanvas: false,
                 }
@@ -55,26 +55,32 @@
 
         
     
-            var tile_layer_30fb5a47e35d433198e23788f38f108e = L.tileLayer(
+            var tile_layer_87c6b55b10c44f7d851db1ba868bc6dc = L.tileLayer(
                 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-            ).addTo(map_0dd1c09286e0419f8f04c13a88436c00);
+            ).addTo(map_16c94e3e64184b51bea9be7be2ae8480);
         
     
-            var marker_0e6bfd73aa8a4578abbb15da6e1e0c4b = L.marker(
-                [36.3659806300997, 127.436127730684],
+            var marker_a3d3aacf4c974ad2987789a9f85a35ba = L.marker(
+                [37.5752205086784, 127.010402773568],
                 {}
-            ).addTo(map_0dd1c09286e0419f8f04c13a88436c00);
+            ).addTo(map_16c94e3e64184b51bea9be7be2ae8480);
         
     
-        var popup_db5a09395e0e4103a6459390dd4e406c = L.popup({"maxWidth": 100});
+            var icon_763b8c8766694d7f9ccd23e50d184afc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cloud", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_a3d3aacf4c974ad2987789a9f85a35ba.setIcon(icon_763b8c8766694d7f9ccd23e50d184afc);
+        
+    
+        var popup_48f33aeda9be4c578194941fb64d5d19 = L.popup({"maxWidth": 100});
 
         
-            var html_c3176150d139483f8eb17bef94f97d87 = $(`<div id="html_c3176150d139483f8eb17bef94f97d87" style="width: 100.0%; height: 100.0%;">송촌장로교회</div>`)[0];
-            popup_db5a09395e0e4103a6459390dd4e406c.setContent(html_c3176150d139483f8eb17bef94f97d87);
+            var html_c0565dc751264305b65ea3a5a4db4cc9 = $(`<div id="html_c0565dc751264305b65ea3a5a4db4cc9" style="width: 100.0%; height: 100.0%;">이쁜아이 공원면적:가능?</div>`)[0];
+            popup_48f33aeda9be4c578194941fb64d5d19.setContent(html_c0565dc751264305b65ea3a5a4db4cc9);
         
 
-        marker_0e6bfd73aa8a4578abbb15da6e1e0c4b.bindPopup(popup_db5a09395e0e4103a6459390dd4e406c)
+        marker_a3d3aacf4c974ad2987789a9f85a35ba.bindPopup(popup_48f33aeda9be4c578194941fb64d5d19)
         ;
 
         

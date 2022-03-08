@@ -9,6 +9,7 @@ print(url)
 
 resp = requests.get(url)
 tree = ElementTree.fromstring(resp.text)   # 이것도 parser tree 만드는거
+print(tree)
 
 for items in tree[1][0]:
     # print(items[3].text)

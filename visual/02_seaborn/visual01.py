@@ -7,7 +7,7 @@ pd.options.display.max_rows = None
 
 # print(sns.get_dataset_names())
 car_crashes = sns.load_dataset('car_crashes')
-# print(car_crashes)
+print(car_crashes)
 
 '''
 <데이터 정보>

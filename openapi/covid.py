@@ -11,7 +11,7 @@ print(url)
 resp = requests.get(url)
 # print(resp.text)
 tree = ElementTree.fromstring(resp.text)   # 이것도 parser tree 만드는거
-# print(tree)
+print(tree)
 # 트리의 자식 자식
 for items in tree[1][0]:
     # print(items[3].text)
