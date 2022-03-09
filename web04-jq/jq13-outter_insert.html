@@ -14,10 +14,10 @@
             // 기준차이?
             // 2개의 동작 자체는 같음
             $('button:eq(0)').click(function(){
-                $('#base').after('냐냔ㅇ뉴ㅐ<div>새로운 엘리먼트(after)</div>1가나다라마바사')
+                $('#base').after('<div>새로운 엘리먼트(after)</div>')
             })
             $('button:eq(1)').click(function(){
-                $('<div>새로운 엘리먼트(insertAfter)</div>11가나다라마바사').insertAfter('#base')
+                $('<div>새로운 엘리먼트(insertAfter)</div>').insertAfter('#base')
             })
             $('button:eq(2)').click(function(){
                 // target이 앞 해당함수에서 리턴하는 값도 가능 미리 target을 잡아논거니까
