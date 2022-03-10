@@ -9,3 +9,12 @@
 - 그외 seaborn과 matplot같은 시각화 패키지 사용
 - 기본 folium연습 (추후 프로젝트에서 더 많이 활용하게됨)
 - wordcloud연습
+
+
+
+## pymongo
+
+pymongo 중 일부를 크롤링으로 얻은 데이터 활용
+
+MongoDB정리 : [Ljaewon-123/MongoDB (github.com)](https://github.com/Ljaewon-123/MongoDB)
+
