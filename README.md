@@ -460,6 +460,14 @@ db.myRes.find()
 
 # pymongo 
 
+장고 데이터활용: [Ljaewon-123/crawling_pra (github.com)](https://github.com/Ljaewon-123/crawling_pra)
+
+python_mongodb : [python_mongodb](https://github.com/Ljaewon-123/crawling_pra/tree/master/python_mongodb)
+
+python_mongodb_geo : [python_mongodb_geo](https://github.com/Ljaewon-123/crawling_pra/tree/master/python_mongodb_geo)
+
+
+
 `2dsphere`  what is??
 
 [2dsphere](https://docs.mongodb.com/manual/core/2dsphere/) indexes support queries that calculate [geometries on an earth-like sphere](https://docs.mongodb.com/manual/geospatial-queries/#std-label-geospatial-geometry).
