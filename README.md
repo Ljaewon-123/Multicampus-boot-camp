@@ -1,10 +1,29 @@
+# 프로젝트 기능 간단설명
+
+pip
+
+- pip install requests
+- pip install beautifulsoup4
+- pip install selenium
+- pip install django
+- pip install matplotlib
+- pip install seaborn
+- pip install folium
+- pip install base64
+
+
+
+**서울시 반려동물 시설 안내_**    PDF 참고
+
+
+
 # Project_mypart
 
 추후 최종본 업로드  == real_real_final
 
 공용부분 프로젝트에서 내가 맡은 부분들 
 
-일지?
+일지
 
 같은 프로젝트 팀원 hongpower https://github.com/hongpower/project_visualization 
 
