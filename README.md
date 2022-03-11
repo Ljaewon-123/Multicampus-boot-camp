@@ -1,5 +1,7 @@
 # MongoDB
 
+pip install pymongo
+
 - NOSQL (Not Only Sql)
 
   >기존의 관계형 DBMS가 갖고있는 특성 뿐만 아니라 다른 특성들을 부가적으로 지원한다는 것
