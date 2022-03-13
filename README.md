@@ -9,7 +9,7 @@
 - 그외 seaborn과 matplot같은 시각화 패키지 사용
 - 기본 folium연습 (추후 프로젝트에서 더 많이 활용하게됨)
 - wordcloud연습
-
+- 크롤링을 이용해 Json파일 만들기
 
 
 ## pymongo
