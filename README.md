@@ -462,7 +462,7 @@ db.myRes.find()
 
 # pymongo 
 
-장고 데이터활용: [Ljaewon-123/crawling_pra (github.com)](https://github.com/Ljaewon-123/crawling_pra)
+ 데이터활용: [Ljaewon-123/crawling_pra (github.com)](https://github.com/Ljaewon-123/crawling_pra)
 
 python_mongodb : [python_mongodb](https://github.com/Ljaewon-123/crawling_pra/tree/master/python_mongodb)
 
