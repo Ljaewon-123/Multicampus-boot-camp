@@ -18,3 +18,6 @@ pymongo 중 일부를 크롤링으로 얻은 데이터 활용
 
 MongoDB정리 : [Ljaewon-123/MongoDB (github.com)](https://github.com/Ljaewon-123/MongoDB)
 
+starbucks03.py,starbucks04.py 는 starbucks_all 이라는 Json파일을 이용해서
+pymongo geo에 활용함
+
