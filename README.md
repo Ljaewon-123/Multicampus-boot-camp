@@ -140,8 +140,10 @@ db.multi.find({class:'de'})  // class 가 'de'인 얘들만
 
 쿼리 오퍼레이터
 
-$regex : "s" --> s가 포함되어있는것을 찾기 
+$regex : "s" --> s가 포함되어있는것을 찾기
+
 $regex : "s$" --> 끝자리가 s인것을 찾기
+
 $regex : "^s" --> 첫자리가 s인것을 찾기
 
 
