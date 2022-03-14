@@ -1,0 +1,167 @@
+linux
+색 다른것은 심볼링크 파일
+
+sudo adduser multi
+멀티라는 계정추가
+
+cd /home ls
+계정보기
+
+su multi
+multi 로 계정변경
+
+pwd
+현재 경로보기 
+
+cd ~    계정로 이동
+
+
+sudo usermod -aG sudo multi
+multi계정에 관리자 권한 주기
+
+man  sudo_root
+man  : 메뉴얼
+
+
+/home$ id
+# uid=1001(multi) gid=1001(multi) groups=1001(multi),27(sudo)
+
+mkdir test
+test라는 디렉토리 생성
+
+touch multi01
+multi01 이라는 파일생성
+
+리눅스는 확장자 그리 안중요함
+
+cp multi01 multi02
+복사  (각각 ./ 생략)
+
+cp multi01 /home/jaewon/multi02
+multi01을 지정된 경로에 multi02 이름으로복사
+
+mv multi02 ./test/multi03
+multi02 을 지정된 경로에 multi03라는 이름으로 이동
+
+mv multi01 multi04
+multi01 ->multi04 로 이름변경
+
+rm multi04
+multi04 삭제
+
+rm test
+rm: cannot remove 'test': Is a directory
+test는 디렉토리라 rm안됨
+
+rm -r test
+디렉토리 삭제 
+
+디렉토리 복사에도 -r 필요
+
+
+ls -l
+파일 권한보기
+ls -l test
+특정 파일(test)의 권한보기
+
+-rw-rw-r-- 1 jaewon jaewon 0 Mar 10 20:41 test
+소유자는 rw 그룹은 re other 은 r  1 소유자 소유그룹, 파일크기 ,만들어진 시간
+
+chmod 파일 권한부여
+chmod g+x test  
+test에 group 실행권한 부여
+녹색은 실행가능,실행파일??
+
+chmod u-w test
+소유자의 쓰기 권한 삭제
+
+chmod 숫자사용 7 이면 rwx 다주는거 이진수로따미
+chmod 777 test
+-rwxrwxrwx
+chmod 755 test
+-rwxr-xr-x
+
+
+
+sudo chown multi test  소유자바꿈
+-rwxr-xr-x 1 multi jaewon 0 Mar 10 20:41 test
+sudo chown :multi test  그룹바꿈
+-rwxr-xr-x 1 multi multi
+
+sudo chown jaewon:jaewon test   둘다 한번에
+jaewon jaewon 0 Mar 10
+
+------------------
+수업때는 안함
+rpm 수동설치
+yum 자동설치
+------------------
+
+sudo apt update
+업데이트 정기적으로 하면 좋음
+apt 사용 목록을 업데이트
+sudo apt upgrade -y
+버전업그레이드 할수있는놈은 업그레이드
+
+그냥저냥 재밌는 패키지
+sudo apt install hollywood
+hollywood
+
+
+crontab    ???
+"특정 시간에 특정 작업을 해야한다."
+라고 한다면 크론탭을 사용해 편하게 리눅스를 사용하기 가능
+
+카카오 서버
+vi /etc/apt/sources.list
+:%s/kr.archive.ubuntu.com/mirror.kakao.com/
+kr->us?
+
+
+sudo apt install vim
+빔 설치
+
+
+cat '파일명'
+파일안에있는 내용 볼거야
+
+mkdir mytest
+mv test ./mytest/test
+
+tar -cvzf mytest.tar.gz mytest
+mytest.tar.gz 라는 압축파일을 만듬
+-cvzf 부분 순서 달라도 상관없음
+
+rm - r mytest
+
+tar -xvzf mytest.tar.gz test   (x)
+
+tar -xvzf mytest.tar.gz 
+
+tar -xvzf mytest.tar.gz  mytest/test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
