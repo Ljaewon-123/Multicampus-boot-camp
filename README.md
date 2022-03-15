@@ -1545,9 +1545,13 @@ null_df.select(coalesce(col('address'),col('phone')).alias('coalesce')).show()
 
 '''
 ifnull  : 첫번째 값이 null이면 두번째 값 리턴
+
 nullif  : 두값이 같으면 null, 같지 않으면 첫번째값 
+
 nvl    :  첫번째 값이 null 이면 두번째 값 리턴
+
 nvl2   : 첫번째 값이 null 이면 두번째값 리턴 아니면 세번째 값 리턴
+
 '''
 
 ```python
