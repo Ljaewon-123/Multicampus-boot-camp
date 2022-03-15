@@ -14,7 +14,8 @@
 
 [Spark_문법](#Spark 문법)
 
-
+1. [Rdd](# Rdd)
+2. [DataFrame](# DataFrame )
 
 전체 역할에서
 하둡은 저장과 연결
@@ -429,7 +430,7 @@ pyspark      # 시작
 
 ![image-20220314233936808](README.assets/image-20220314233936808.png)
 
-각노드 작동 확인
+각 노드 작동 확인
 
 
 
@@ -445,6 +446,12 @@ lazy-evaluation (lazy-execution)
 게으른 진화 게으른 실행?
 
 작업들을 다읽은 후에 진행
+
+
+
+### Rdd
+
+
 
 RDD 가 SERIES 판다스의 시리즈 같은 것 으로  특정 상황에서 장애 복구하기에 편하다
 DataFrame 가 DataFrame 이다.
@@ -913,6 +920,1080 @@ stop-all.sh   `하둡종료`
 stop-all.sh
 
 ![image-20220315013104733](README.assets/image-20220315013104733.png)
+
+
+
+### DataFrame 
+
+이번엔 DataFrame 문법
+
+start-dfs.sh
+start-yarn.sh
+/# start-all.sh
+
+localhost:9870
+localhost:8088
+
+데이터 프레임
+
+```python
+myRange = spark.range(1000).toDF('number')
+toDF 라는 데이터 프레임 number 라는 이름으로
+myRange.head(10)
+myRange.tail(10)
+```
+
+```python
+divisBy2 = myRange.where('number % 2 = 0')  # 짝
+number 컬럼에서 2로나눈 나머지가 0인놈
+divisBy2.head(5)
+divisBy2.tail(5)
+divisBy2.count()
+```
+
+localhost:9870
+`Utilties -> browse the file system` 에서 파란색 링크 눌러서 디렉토리 확인가능
+
+
+
+csv 데이터 스파크에서 읽기 
+
+printSchema()   # row데이터 보기
+
+```python
+fligths2010 = spark.read.csv('/home/jaewon/data/flights/csv/2010-summary.csv')
+fligths2010.printSchema()   # row데이터 보기
+root
+ |-- _c0: string (nullable = true)
+ |-- _c1: string (nullable = true)
+ |-- _c2: string (nullable = true)
+```
+
+다시 설정
+
+```python
+헤더를 다시 잡아줌  'header','true' --> 맨첫줄이 컬럼값!
+flights2010 = spark.read.option('header','true').csv('/home/jaewon/data/flights/csv/2010-summary.csv')
+flights2010.take(5)
+
+카운트 어케 할건지 좀 보자 실행계획? 실행전 미리 확인 가능 
+flights2010.sort('count').explain()
+```
+
+데이터 프레임 함수 , 스파크
+https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql.html#dataframe-apis
+
+
+
+csv 가 아니라 json도 가능
+
+```python
+json 파일 은 show()가능   -> csv도 가능 하다.
+f2015 = spark.read.format('json').load('/home/jaewon/data/flights/json/2015-summary.json')
+f2015.show()
+f2015.show(5)  위에서 내가 n값만큼
+전부보기
+f2015.show(f2015.count()) # f2015.count() count()이용해서 전체 보여줌
+show()가 전부 보여주는건 아님
+```
+
+
+
+안시 표준쿼리 위해 테이블 하나 만들기
+
+f2015 를이용해 flights2015 라는 이름의 테이블 만들어짐
+
+`f2015.createOrReplaceTempView('flights2015')`
+
+```python
+f2015.createOrReplaceTempView('flights2015')
+파이썬 문법으로 sql 하기 
+안시 표준 쿼리로 하기
+sqls = spark.sql('''
+SELECT DEST_COUNTRY_NAME,COUNT(*)
+FROM flights2015
+GROUP BY DEST_COUNTRY_NAME
+''')
+
+# 똑같지만 스파크 sql 매소드로 만들기
+dfs = f2015.groupBy('DEST_COUNTRY_NAME').count()
+dfs.show()
+```
+
+테이블 만들어서 spark.sql이라고 쿼리문을 넣어주면 해당 테이블의 쿼리 형태로 내가 원하는 데이터 뽑기가능
+혹은 스파크 모듈안에 매소드들 groupBy,count() 등등, 쿼리에 대응되는 매소드들 사용가능 
+
+ansi로쓰고싶으면 spark.sql쓰고
+밑에거는 그애 대응되는
+메소드
+
+`.explain()` 은 해당 데이터가 어찌 실행되는지를 기록하는 함후인데
+
+```
+sqls.explain()
+dfs.explain()
+```
+
+다른 방식으로 만들었지만 결과는 같은 위 sqls,dfs를 보면 explain()으로 처리되는 과정이 같다는걸 볼수있다. 
+
+
+
+안시 쿼리문은 **pyspark.sql.functions** 경로에 저장
+
+하여 
+
+`from pyspark.sql.functions import max` 식으로 사용가능
+
+```python
+from pyspark.sql.functions import max
+f2015.select(max('count')).take(1)
+
+f2015.select('DEST_COUNTRY_NAME').show(5)
+
+spark.sql('SELECT DEST_COUNTRY_NAME FROM flights2015 LIMIT 5').show()
+
+
+spark.sql('SELECT DEST_COUNTRY_NAME,ORIGIN_COUNTRY_NAME FROM flights2015 LIMIT 5').show()
+
+f2015.select('DEST_COUNTRY_NAME','ORIGIN_COUNTRY_NAME').show(5)
+
+```
+
+스파크 sql이랑 안시쿼리로 똑같은거 만들어보는중
+
+
+
+**expr, col**
+
+```python
+# expr은 함수내부에서 형식까지 지정가능하고 ,col은 그냥 컬럼하나 지정 
+from pyspark.sql.functions import expr, col 
+f2015.select(expr('DEST_COUNTRY_NAME'),col('DEST_COUNTRY_NAME')).show(5)
+```
+
+expr 같은 경우 selectExpr()로도 그역할을 할수있다.
+
+```python
+# 같은 결과 다른 과정
+f2015.select(expr('DEST_COUNTRY_NAME as destination')).show(5)
+f2015.select(col('DEST_COUNTRY_NAME').alias('destination')).show(5)
+# 안시 쿼리
+spark.sql('SELECT DEST_COUNTRY_NAME AS destination from flights2015 limit(5)').show()
+
+# select(expr == 합쳐짐
+f2015.selectExpr('DEST_COUNTRY_NAME AS destination').show(5)
+
+# 컬럼 2개 비교 
+f2015.selectExpr('*','(DEST_COUNTRY_NAME = ORIGIN_COUNTRY_NAME) AS domestic_flights').show()
+
+
+spark.sql('SELECT AVG(COUNT),COUNT(DISTINCT(DEST_COUNTRY_NAME)) FROM   flights2015').show()
+f2015.selectExpr('AVG(COUNT)','COUNT(DISTINCT(DEST_COUNTRY_NAME))').show()
+# 함수 따로 쓰는거보다 selectExpr 합쳐진게 많이 편할수있다.
++-----------+---------------------------------+                                 
+| avg(count)|count(DISTINCT DEST_COUNTRY_NAME)|
++-----------+---------------------------------+
+|1770.765625|                              132|
++-----------+---------------------------------+
+```
+
+
+
+**리터럴 값 자체 출력** # literal = 값 자체
+
+```python
+from pyspark.sql.functions import lit
+f2015.select(expr('*'),lit(1).alias('one')).show()
+spark.sql('SELECT *,1 AS ONE FROM flights2015 limit5').show(5)
+-----------------+-------------------+-----+---+
+|DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|count|one|
++-----------------+-------------------+-----+---+
+|    United States|            Romania|   15|  1|
+|    United States|            Croatia|    1|  1|
+|    United States|            Ireland|  344|  1|
+|            Egypt|      United States|   15|  1|
+|    United States|              India|   62|  1|
++-----------------+-------------------+-----+---+
+
+```
+
+스파크 sql이 함수쓴다고 겁먹지 말고 안시 쿼리는 그냥 아는거 그대로 쓰면 그게 답임
+
+
+
+결과가 들어간게 더 좋나??
+
+
+
+pyspark
+
+api가서 한번씩 보기 [pyspark.sql.functions.lit — PySpark 3.2.1 documentation (apache.org)](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.sql.functions.lit.html)
+
+withColumn
+
+```python
+# withColumn ,  콘마끼리 묶어서 나온것처럼 이어줌 
+컬럼이름으로 오른쪽 조건에 맞게 컬럼을 만들어주고 원래 테이블에서 추가됨 근데 아직은 보여지기만 한거임
+새로운걸로 대입해야 추가되는거  a = b
+f2015.withColumn('DOMESTIC_FLIGHT',expr('DEST_COUNTRY_NAME = ORIGIN_COUNTRY_NAME')).show()
+
+spark.sql("select *,(DEST_COUNTRY_NAME = ORIGIN_COUNTRY_NAME) as domestic from flights2015").show(5)
+
+f2015.withColumnRenamed('DEST_COUNTRY_NAME','DESTINATION').show()
+기존 컬럼명 바뀜
+안시 쿼리에서는 ALTER RENAME 이게 있음?? 
+```
+
+삭제
+
+```scala
+f2015.drop('count').show()
+f2015.drop('count').columns  # 목록보기 가능
+['DEST_COUNTRY_NAME', 'ORIGIN_COUNTRY_NAME']
+```
+
+summary 
+
+cast 캐스트가 타입 바꿔주는거
+
+count라는 컬럼을 가지고 오면서 string로 바꿔줌
+
+```python
+f2015.withColumn('count2',col('count').cast('string')).summary # astype()
+f2015.withColumn('count2',col('count').cast('string')).show()
+# 보여지는건 어차피 똑같다
+# 하지만 타입을 count에서 string로 바꿔줌
+
+# 똑같지만 안시 쿼리 이용
+spark.sql('select *,cast(count as string) as count2 from flights2015').show()
+```
+
+
+
+filter , where
+
+```python
+# 3개다 결과는 같다 
+f2015.filter(col('count')<2).show(5) # col 이라는 컬럼 지정 함수 필요
+f2015.where('count < 2').show(5)    
+spark.sql('select * from flights2015 where count < 2 limit 5').show() # 표준쿼리
++-----------------+-------------------+-----+
+|DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|count|
++-----------------+-------------------+-----+
+|    United States|            Croatia|    1|
+|    United States|          Singapore|    1|
+|          Moldova|      United States|    1|
+|            Malta|      United States|    1|
+|    United States|          Gibraltar|    1|
++-----------------+-------------------+-----+
+```
+
+조건 여러개 가능
+
+```python
+#  where 가 동시에 실행됨 그래서 가끔식 조건 여러개가 안될때 있음 
+f2015.where(col('count') < 2).where(col('ORIGIN_COUNTRY_NAME') != 'Croatia').show(5)
+
+spark.sql("select * from flights2015 where count < 2 and ORIGIN_COUNTRY_NAME != 'Croatia' limit 5").show()
+
+spark.sql("select * from flights2015 where count < 2 and ORIGIN_COUNTRY_NAME NOT IN ('Croatia')").show(5)
+```
+
+
+
+중복 빼고 count ,distinct
+
+```python
+f2015.select('DEST_COUNTRY_NAME').distinct().count()
+132        
+park.sql('select count(distinct DEST_COUNTry_NAME) AS count from flights2015').show()
++-----+                                                                         
+|count|
++-----+
+|  132|
++-----+
+
+```
+
+
+
+Pyspark Row 사용해서 f2015랑 똑같은 스키마 적용
+
+```python
+>>> from pyspark.sql import Row
+>>> new_rows = []
+>>> new_rows = [
+...     Row('Korea','Korea',5),
+...     Row('Korea','Wakanda',1)
+... ]
+>>> rdd_rows = sc.parallelize(new_rows)
+>>> schema = f2015.schema
+>>> df_rows = spark.createDataFrame(rdd_rows,schema)
+>>> df_rows.show()
++-----------------+-------------------+-----+
+|DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|count|
++-----------------+-------------------+-----+
+|            Korea|              Korea|    5|
+|            Korea|            Wakanda|    1|
++-----------------+-------------------+-----+
+
+```
+
+```python
+# f2015 와 df_rows를  union 하고, count = 1 이고 origin~ us 가 아닌 데이터
+f2015.union(df_rows).where('count = 1').where(col('ORIGIN_COUNTRY_NAME') != 'United States').show()
+ORIGIN_COUNTRY_NAME 얘가 아닌거임 DEST_COUNTRY_NAME 가 아니라 
+```
+
+
+
+정렬
+
+```python
+f2015.sort('count').show(f2015.count())  # accending = false???
+f2015.orderBy(col('count').asc()).show(f2015.count())
+f2015.orderBy(col('count').desc()).show(f2015.count())
+
+spark.sql('select * from flights2015 order by count desc').show(f2015.count())
+
+
+#  DEST ~ 내림차순, COUNT 오름차순 정렬후 5개만 출력
+f2015.orderBy(col('DEST_COUNTRY_NAME').desc(),col('count').asc()).show(5)
+spark.sql('select * from flights2015 order by DEST_COUNTRY_NAME desc, count asc limit(5)').show()
+
+f2015.limit(5).show()
+```
+
+
+
+`inferSchema` 해당 스키마 예측을 정확하게 대신 좀 느려짐
+
+```python
+데이터 로드 
+retails = spark.read.format('csv').option('header', 'true').option('inferSchema', 'true').load('/home/jaewon/data/retails/2010-12-01.csv')
+
+retails.printSchema()
+# 컬럼 속성
+root
+ |-- InvoiceNo: string (nullable = true)
+ |-- StockCode: string (nullable = true)
+ |-- Description: string (nullable = true)
+ |-- Quantity: integer (nullable = true)
+ |-- InvoiceDate: string (nullable = true)
+ |-- UnitPrice: double (nullable = true)
+ |-- CustomerID: double (nullable = true)
+ |-- Country: string (nullable = true)
+
+# retails 로 retails테이블 만들기
+retails.createOrReplaceTempView('retails')
+retails.show()로 확인
+spark.sql('select * from retails').show()  # 위와 같음
+
+    
+```
+
+```python
+retails.where(col('invoiceNo') != 536365).select('invoiceNo','Description').show(5,False)
+
+retails.where('invoiceNo <> 536365').show(5,False)
++---------+-----------------------------+
+|invoiceNo|Description                  |
++---------+-----------------------------+
+|536366   |HAND WARMER UNION JACK       |
+|536366   |HAND WARMER RED POLKA DOT    |
+|536367   |ASSORTED COLOUR BIRD ORNAMENT|
+|536367   |POPPY'S PLAYHOUSE BEDROOM    |
+|536367   |POPPY'S PLAYHOUSE KITCHEN    |
++---------+-----------------------------+
+```
+
+
+
+**INSTR**
+
+```
+주어진 문자열에서 substr 열이 처음 나타나는 위치를 찾습니다. 인수 중 하나가 null이면 null을 반환합니다.
+```
+
+```PYTHON
+# 조건을 변수로 담아서 사용 
+from pyspark.sql.functions import instr 
+priceFilter = col('UnitPrice') > 600
+descripFilter = instr(retails.Description, 'POSTAGE') >= 1
+retails.where(retails.StockCode.isin('DOT')).where(priceFilter | descripFilter).show()
+# 'POSTAGE' 1개이상
+
+Description 이 'POSTAGE 라는 걸 가지고 있는지 1개이상
+
+spark.sql('''
+select  * from retails 
+where StockCode in ('DOT')
+AND (UnitPrice > 600 OR INSTR(Description,'POSTAGE') >= 1)
+''').show()
+```
+
+
+
+```PYTHON
+dotCodeFilter = col('StockCode') == 'DOT'
+priceFilter = col('UnitPrice') > 600
+descriptFilter = instr(col('Description'),'POSTAGE') >= 1
+instr Description 컬럼에 postage 가 있으면 인덱스 표시
+
+retails.withColumn('isExpensive',dotCodeFilter & (priceFilter | descriptFilter)).where('isExpensive').select('UnitPrice','isExpensive').show(5)
+
+
+spark.sql("select UnitPrice , ((StockCode = 'DOT') and (UnitPrice > 600 or instr(Description,'POSTAGE') >= 1))  AS isExpensive from retails where ((StockCode = 'DOT') and (UnitPrice > 600 or instr(Description,'POSTAGE') >= 1)) ").show() 
+```
+
+집계
+
+```python
+# (현재 갯수 * 가격)^2 + 5
+from pyspark.sql.functions import pow
+quantity = pow(col('Quantity') * col('UnitPrice'),2) + 5
+retails.select(col('CustomerId'),quantity.alias('myQuantity')).show(5)
+
+spark.sql('''
+select CustomerId,(POWER((Quantity * UnitPrice),2) + 5) as myQuantity
+FROM retails
+''').show()
+
+from pyspark.sql.functions import round,bround
+retails.select(round(lit('2.5')),bround(lit('2.5')),lit('2.5')).show(5)
+
+spark.sql('select round(2.5),bround(2.5) from retails').show(5)
+
+bround 내림 
+```
+
+종합
+
+`retails.describe().show()`
+
+추가 집계
+
+```python
+etails.describe().show()
+
+# count,mean,stddev,min,max
+from pyspark.sql.functions import count,mean, stddev_pop , min,max
+retails.select(count('UnitPrice'),mean('UnitPrice'),stddev_pop('UnitPrice'),min('UnitPrice'),max('UnitPrice')).show()
+
+avg??
+spark.sql('select count(UnitPrice),mean(UnitPrice) from retails').show()
+
+
+from pyspark.sql.functions import monotonically_increasing_id
+retails.select('*',monotonically_increasing_id()).show(5)
+/# monotonically_increasing_id  자동으로 숫자 하나씩 올라가는 ,인덱스??
+
+
+from pyspark.sql.functions import initcap
+retails.select(initcap(col('Description'))).show(5,False)
+
+
+from pyspark.sql.functions import lower,upper
+retails.select(col('Description'),lower(col('Description')),upper(col('Description'))).show(5)
+```
+
+왜 스파크 사용??
+크롤링 Json 하둡에 올려서 스파크가 가공,처리해줌, -> csv,json을 우리가 sql문으로 처리를 해줄뿐
+스파크로 좀더 적당한 형태로 db저장 db-> 장고로 시각화 가능 
+
+ ltrim,rtrim,trim,lpad,rpad 
+
+```python
+from pyspark.sql.functions import ltrim,rtrim,trim,lpad,rpad 
+retails.select(ltrim(lit('     hello     ')).alias('ltrim'),rtrim(lit('     hello     ')).alias('rtrim'),trim(lit('     hello    ')).alias('trim'),lpad(lit('hello'),10,'*').alias('lpad'),rpad(lit('hello'),10,'*')).show()
+# lit 리터럴값 으로 바로 컬럼
+
+spark.sql('''
+select ltrim('     hello     ') as ltrim , rtrim('     hello     ') as rtrim ,trim('     hello     ') as trim,
+lpad('hello',10,'*') as lpad,rpad('hello',10,'*') as rpad
+from retails
+''').show()
+```
+
+regexp_replace 
+
+```python
+from pyspark.sql.functions import regexp_replace 
+regex_str = 'BLACK|WHITE|RED|GREEN|BLUE'
+retails.select(regexp_replace(col('Description'),regex_str,'COLOR').alias('color'),col('Description')).show(5,False)
+/# regexp_replace (a,b,c) a의 b를 c로 바꿔달라
+
+spark.sql('''
+select regexp_replace(Description,'BLACK|WHITE|RED|GREEN|BLUE','color') as color, Description
+from retails
+''').show(5,False)
+```
+
+translate
+
+```python
+from pyspark.sql.functions import translate
+retails.select(translate(col('Description'),'ABCD','1234'),col('Description')).show(5,False)
+translate(1,2,3) 1컬럼의 2를,3 으로 문자열에 있어도 다 바뀜
+```
+
+regexp_extract  정규식 반환
+
+```python
+from pyspark.sql.functions import regexp_extract
+extract_str = '(BLACK|WHITE|GREEN|BLUE)'
+retails.select(regexp_extract(col('Description'),extract_str,1).alias('extract'),col('Description')).show(5,False)
+regexp_extract(a,b,c) a의 b를 c개 ??
+regexp_extract 패턴에 맞는놈 하나 가져옴
+
+
+
+spark.sql("select Description,(instr(Description,'BLACK') >= 1 or instr(Description,'WHITE') >= 1) as has from retails where (instr(Description,'BLACK') >= 1 or instr(Description,'WHITE') >= 1)").show(retails.count(),False)
+
+```
+
+dataframe api 것들임 
+
+시간함수 date
+
+```python
+from pyspark.sql.functions import current_date,current_timestamp
+date_df = spark.range(10).withColumn('today_date',current_date()).withColumn('now_timestamp',current_timestamp())
+date_df.show(5,False)
+
+date_df.createOrReplaceTempView('dateTable')
+spark.sql('select * from dateTable').show()  # 제대로 만들어졌나 확인
+
+우분투 날짜가 하루 느림
+from pyspark.sql.functions import date_add,date_sub
+date_df.select(date_sub(col('today_date'),5),date_add(col('today_date'),5)).show(1)
+
+
+spark.sql('SELECT DATE_SUB(today_date,5) as sub, DATE_ADD(today_date,5) as add FROM dateTable').show(1)
+
+
+from pyspark.sql.functions import datediff,months_between,to_date
+date_df.withColumn('week_ago',date_sub(col('today_date'),7)).select(datediff(col('week_ago'),col('today_date'))).show(1)
+/# datediff 작은날짜 에서 큰날짜 빼줌  
+
+
+date_df.select(to_date(lit('2022-03-15')).alias('now'),to_date(lit('2022-05-13')).alias('end')).select(months_between(col('now'),col('end'))).show(1)
+
+# /months_between  개월차이
+
+
+date_df.select(to_date(lit('2022-12-32'))).show(1)  # null
+
+# simpleDateFormat (java)
+dateFormat = 'yyyy-MM-dd'
+clean_date = spark.range(1).select(to_date(lit('2022-12-31'),dateFormat).alias('date'))
+clean_date.show()
+
+dateFormat = 'yyyy-dd-MM'   # 일수먼저 쓰도록 지정가능 근데 출력은 실제 날짜로 나옴
+clean_date = spark.range(1).select(to_date(lit('2022-11-12'),dateFormat).alias('date'))
+clean_date.show()
+
+spark.range(1).select(to_date(lit('2020-02-29'))).show()
+```
+
+ 결측치
+
+데이터 프레임 만들기
+
+```python
+null_df = sc.parallelize(
+[
+	Row(name = 'Kang',phone='010-0000-0000',address = 'Seoul'),
+	Row(name = 'Shin',phone = '010-1111-1111',address = None),
+	Row(name = 'You', phone = None, address = None)
+]
+).toDF()
+
+// rdd 넣어서 toDF() 로 데이터 프레임으로 바꿈
+
+null_df.show()
+
+
+null_df.createOrReplaceTempView('nullTable')
+spark.sql('select * from nullTable').show()
+null_df.show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|   null|
+| You|         null|   null|
++----+-------------+-------+
+
+```
+
+`null_df.createOrReplaceTempView('nullTable')`
+
+coalesce : null이 아닌 첫번째 컬럼 값 출력
+
+```python
+from pyspark.sql.functions import coalesce
+null_df.select(coalesce(col('address'),col('phone')).alias('coalesce')).show()
++-------------+
+|     coalesce|
++-------------+
+|        Seoul|
+|010-1111-1111|
+|         null|
++-------------+
+```
+
+'''
+ifnull  : 첫번째 값이 null이면 두번째 값 리턴
+nullif  : 두값이 같으면 null, 같지 않으면 첫번째값 
+nvl    :  첫번째 값이 null 이면 두번째 값 리턴
+nvl2   : 첫번째 값이 null 이면 두번째값 리턴 아니면 세번째 값 리턴
+'''
+
+```python
+spark.sql('''
+select ifnull(null,'VALUE') ,NULLIF('SAME','SAME') ,NULLIF('SAME','NOTSAME') ,NVL(NULL,'VALUE'),NVL2(NULL,'VALUE','VALUE2') ,NVL2('NOTNULL','VALUE','VALUE2')
+FROM nullTable
+''').show(1)
+```
+
+ DataFrameNaFunction   na
+
+/# DataFrameNaFunction : drop,fill,replace
+
+```python
+null_df.count()
+null_df.na.drop().count()  # null있는 row날리기 dropna()같음
+null_df.na.drop('any').count()  # any 하나라도 있으면 drop
+null_df.na.drop('all').count()   # all 전부다 null이면 날림
+
+
+
+>>> null_df.na.drop('all').show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|   null|
+| You|         null|   null|
++----+-------------+-------+
+
+>>> null_df.na.drop('all',subset=['phone']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|   null|
++----+-------------+-------+
+
+>>> null_df.na.drop('all',subset=['address']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
++----+-------------+-------+
+
+>>> null_df.na.drop('any',subset=['address']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
++----+-------------+-------+
+
+>>> null_df.na.drop('all',subset=['phone','address']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|   null|
++----+-------------+-------+
+
+>>> null_df.na.drop('any',subset=['phone','address']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
++----+-------------+-------+
+
+```
+
+subset 으로 필요한 컬럼을 적용시켜줄수있다.
+
+일단 fillna는 null값을  교체하는거
+
+```python
+>>> null_df.na.fill('n/a').show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|    n/a|
+| You|          n/a|    n/a|
++----+-------------+-------+
+
+>>> null_df.na.fill('n/a',subset = ['name','address']).show()
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111|    n/a|
+| You|         null|    n/a|
++----+-------------+-------+
+
+# 키값으로 컬럼찾고 null을 벨류로 바꿔준다
+>>> fill_cols_val = {'phone':'070-000-0000','address':'street'}
+>>> null_df.na.fill(fill_cols_val).show()  
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|  Seoul|
+|Shin|010-1111-1111| street|
+| You| 070-000-0000| street|
++----+-------------+-------+
+
+>>> null_df.na.replace('Seoul','서울','address').show()
+null_df.na.replace(['Seoul'],['서울'],'address').show() 
+# 그냥 replace랑 무슨차이 ? na?? null값을 바꿔줌 
++----+-------------+-------+
+|name|        phone|address|
++----+-------------+-------+
+|Kang|010-0000-0000|   서울|
+|Shin|010-1111-1111|   null|
+| You|         null|   null|
++----+-------------+-------+
+
+```
+
+구조체
+
+구조체 : dataframe 안에 dataframe 
+
+// 여러 컬럼을 묶어서 하나의 컬럼으로 만들어줌
+
+```python
+retails.selectExpr('(Description,invoiceNo) as complex','*').show(5,False)
+```
+
+```python
+from pyspark.sql.functions import struct
+complex_df = retails.select(struct('Description','invoiceNo').alias('complex'))
+complex_df.createOrReplaceTempView('complexdf')
+# 확인
+complex_df.show()
+spark.sql('select * from complexdf').show()
+
+>>> from pyspark.sql.functions import struct
+>>> complex_df = retails.select(struct('Description','invoiceNo').alias('complex'))
+>>> complex_df.createOrReplaceTempView('complexdf')
+>>> complex_df.select('complex').show(5,False) 
+ # ,으로  두개의 컬럼 묶여 있는거임
++---------------------------------------------+
+|complex                                      |
++---------------------------------------------+
+|{WHITE HANGING HEART T-LIGHT HOLDER, 536365} |
+|{WHITE METAL LANTERN, 536365}                |
+|{CREAM CUPID HEARTS COAT HANGER, 536365}     |
+|{KNITTED UNION FLAG HOT WATER BOTTLE, 536365}|
+|{RED WOOLLY HOTTIE WHITE HEART., 536365}     |
++---------------------------------------------+
+only showing top 5 rows
+
+>>> complex_df.select('complex.Description').show(5,False)
+# 컴플렉스의 디스크립션 몽고db마냥 어디의 뭐 이런식
++-----------------------------------+
+|Description                        |
++-----------------------------------+
+|WHITE HANGING HEART T-LIGHT HOLDER |
+|WHITE METAL LANTERN                |
+|CREAM CUPID HEARTS COAT HANGER     |
+|KNITTED UNION FLAG HOT WATER BOTTLE|
+|RED WOOLLY HOTTIE WHITE HEART.     |
++-----------------------------------+
+only showing top 5 rows
+
+>>> complex_df.select(col('complex').getField('invoiceNo')).show(5,False)
+# 컴플렉스 필드에서 인보이스
++-----------------+
+|complex.invoiceNo|
++-----------------+
+|536365           |
+|536365           |
+|536365           |
+|536365           |
+|536365           |
++-----------------+
+only showing top 5 rows
+
+```
+
+파이썬 기반의 pyspark 니까 split같은 메소드도 있다
+
+```python
+>>> from pyspark.sql.functions import split
+>>> retails.select(split(col('Description'),' ')).show(5,False)
++------------------------------------------+
+|split(Description,  , -1)                 |
++------------------------------------------+
+|[WHITE, HANGING, HEART, T-LIGHT, HOLDER]  |
+|[WHITE, METAL, LANTERN]                   |
+|[CREAM, CUPID, HEARTS, COAT, HANGER]      |
+|[KNITTED, UNION, FLAG, HOT, WATER, BOTTLE]|
+|[RED, WOOLLY, HOTTIE, WHITE, HEART.]      |
++------------------------------------------+
+only showing top 5 rows
+
+>>> retails.select(split(col('Description'),' ').alias('arrays')).selectExpr('arrays[0]').show(5)
++---------+
+|arrays[0]|
++---------+
+|    WHITE|
+|    WHITE|
+|    CREAM|
+|  KNITTED|
+|      RED|
++---------+
+only showing top 5 rows
+
+```
+
+size , array_contains
+
+```python
+# size 배열의 개수를 리턴해주는 함수
+// 배열은 스파크 꺼라서 이렇게 밖에 못함
+from pyspark.sql.functions import size
+retails.select(size(split(col('Description'),' ')).alias('array_size')).show(5)
++----------+
+|array_size|
++----------+
+|         5|
+|         3|
+|         5|
+|         6|
+|         5|
++----------+
+
+# 해당 글자 포함된거 t,f
+from pyspark.sql.functions import array_contains
+retails.select(array_contains(split(col('Description'),' '),'WHITE')).show(5)
++------------------------------------------------+
+|array_contains(split(Description,  , -1), WHITE)|
++------------------------------------------------+
+|                                            true|
+|                                            true|
+|                                           false|
+|                                           false|
+|                                            true|
++------------------------------------------------+
+
+```
+
+create_map
+
+ 컴플렉스랑 비슷한데 화살표-> 로 되어있고 왼쪽이 키 오른쪽이 벨류 map이라고 부름
+
+```python
+>>> from pyspark.sql.functions import create_map
+>>> retails.select(create_map(col('StockCode'),col('Description')).alias('complex_map')).show(5,False)
++-----------------------------------------------+
+|complex_map                                    |
++-----------------------------------------------+
+|{85123A -> WHITE HANGING HEART T-LIGHT HOLDER} |
+|{71053 -> WHITE METAL LANTERN}                 |
+|{84406B -> CREAM CUPID HEARTS COAT HANGER}     |
+|{84029G -> KNITTED UNION FLAG HOT WATER BOTTLE}|
+|{84029E -> RED WOOLLY HOTTIE WHITE HEART.}     |
++-----------------------------------------------+
+
+# 컴플렉스 에서 특정 키 가져옴
+retails.select(create_map(col('StockCode'),col('Description')).alias('complex_map')).selectExpr("complex_map['84406B']").show()
+--------------------+
+| complex_map[84406B]|
++--------------------+
+|                null|
+|                null|
+|CREAM CUPID HEART...|
+|                null|
+# select 에서 고른거랑 출력이랑 살짝 다름
+
+```
+
+사용자 정의 함수
+
+```python
+// 스파크 사용자 정의 함수
+def power3(value):
+...     return value**3
+
+power3(3)
+// udf user define functions  # 스파크 함수로 사용하고 싶어서
+from pyspark.sql.functions import udf 
+pow3 = udf(power3)
+
+// 스파크에 함수저장안됨
+user_def_df = spark.range(5,).toDF('num')
+user_def_df.select(pow3(col('num')),col('num')).show()
+```
+
+조금더 큰 데이터로 집계함수 적용시켜봄
+
+```python
+/# 해당 retails 의 csv파일 다 읽음
+retails_all = spark.read.format('csv').option('header','true').option('inferSchema','true').load('/home/jaewon/data/retails/*.csv')
+
+retails_all.count()
+retails_all.printSchema()
+
+retails_all.createOrReplaceTempView('retailsAll')
+retails_all.  + tap + tap  retails_all. 데이터 프레임이 사용할수 있는 모든게 뜸 
+retails_all.a +taptap 가능
+
+from pyspark.sql.functions import count
+retails_all.select(count('StockCode')).show()
+spark.sql("select count(StockCode) from retailsAll ").show()
+spark.sql("select count(*) from retailsAll ").show()  # 카운트 null있는거 아니면 * 이거나 값이나 똑같음 
+
+
+from pyspark.sql.functions import countDistinct
+retails_all.select(countDistinct('*').alias('countDistinct')).show()
+spark.sql("select count(distinct(*)) as countdistinct from retailsAll").show()
+
+
+from pyspark.sql.functions import first,last
+retails_all.select(first('StockCode'),last('StockCode')).show()
+
+from pyspark.sql.functions import min, max
+retails_all.select(min('Quantity'),max('Quantity')).show()
+
+
+from pyspark.sql.functions import sumDistinct  # 중복제거하고 더하기
+retails_all.select(sumDistinct('Quantity')).show()
+spark.sql('select sum(distinct(Quantity)) from retailsAll').show()
+
+
+from pyspark.sql.functions import count,sum,avg,expr
+
+
+from pyspark.sql.functions import avg
+retails_all.select(count('Quantity').alias('countQuantity'),sum('Quantity').alias('sumQuantity'),
+avg('Quantity').alias('avgQuantity'),expr('mean(Quantity)').alias('meanQuantity')).show()
+
+
+'''
+분산,표준편차
+var_pop : 모집단 분산(모분산)
+steddev_pop : 모집단 표준편차 (모표준편차)
+var_samp : 표본 분산
+stddev_samp : 표본 표준편차
+'''
+
+from pyspark.sql.functions import var_pop,stddev_pop, var_samp,stddev_samp
+retails_all.select(var_pop('Quantity').alias('varpop'),stddev_pop('Quantity').alias('stddevpop'),
+var_samp('Quantity').alias('varsamp'),stddev_samp('Quantity').alias('stddevsamp')).show()
+
+'''
+공분산,상관관계
+corr : 피어슨 상관관계(DataFrame.corr과 같음)
+covar_pop : 모집단 공분산
+covar_samp : 표본집단 공분산
+'''
+
+from pyspark.sql.functions import corr,covar_pop,covar_samp
+retails_all.select(corr('invoiceNo','Quantity').alias('corr'),covar_pop('invoiceNo','Quantity').alias('pop'),covar_samp('invoiceNo','Quantity').alias('samp')).show()
+
+
+# agg : aggregate
+# collect_set   # 중복 x
+# collect_list   # 중복 가능
+
+from pyspark.sql.functions import collect_set,collect_list
+retails_all.agg(collect_set('Country'),collect_list('Country')).show()
+
+retails_all.groupBy('invoiceNo','CustomerId').count().show()
+spark.sql('select invoiceNo,CustomerId,count(*) from retailsAll group by invoiceNo,CustomerId').show()
+
+
+retails_all.groupBy('invoiceNo').agg(count('Quantity').alias('quan'),expr('count(Quantity) as qquan2')).show()
+
+
+
+date_df = retails_all.withColumn('date',to_date(col('InvoiceDate'),'yyyy-MM-dd HH:mm:ss'))
+date_df.show()
+
+
+date_df.createOrReplaceTempView('date_df')
+```
+
+파이썬 해석
+
+```python
+------------------------------------------------------------------
+
+# 가지고오기
+wordcount = sc.textFile("/data/shakespeare.txt")
+wordcount.take(10)
+
+# 공백 데이터 제거
+wordcount = wordcount.filter(lambda x: len(x) > 0)
+wordcount.take(10)
+
+# 문자가 아닌것으로 자르기 (전체 적용)
+wordcount = wordcount.flatMap(lambda x: re.split("\W+", x))
+wordcount.take(10)
+wordcount.count()
+
+# 공백 데이터 제거
+wordcount = wordcount.filter(lambda x: len(x) > 0)
+wordcount.count()
+
+# (단어, 1) 형태로 변경
+wordcount = wordcount.map(lambda x: (x.lower(), 1))
+wordcount.take(10)
+
+# 같은 키 값 기준으로 뒤의 숫자 더하기
+wordcount = wordcount.reduceByKey(lambda x, y: x + y)
+wordcount.take(10)
+
+# (단어, 숫자) => (숫자, 단어) 형태로 변환
+wordcount = wordcount.map(lambda x:(x[1], x[0]))
+wordcount.take(10)
+
+# 내림차순 정렬
+wordcount = wordcount.sortByKey(ascending=False)
+
+# persist() : 메모리에 올려놓고 작업하겠다.
+
+
+----------------------------------------------------------------
+```
+
+윈도우 함수
+
+```python
+/# 윈도우 함수
+from pyspark.sql.window import Window
+from pyspark.sql.functions import desc
+
+window_function = Window.partitionBy('CustomerId','date').orderBy(desc('Quantity')).rowsBetween(Window.unboundedPreceding,Window.currentRow)
+
+max_quantity = max(col('Quantity')).over(window_function)
+
+from pyspark.sql.functions import dense_rank,rank
+
+win_dense_rank = dense_rank().over(window_function)
+win_rank = rank().over(window_function)
+
+date_df.where('CustomerId IS NOT NULL').orderBy('CustomerId').select(col('CustomerId'),col('date'),col('Quantity'),win_rank.alias('quantityRank'),win_dense_rank.alias('quantityDense'),max_quantity.alias('quantityMax')).show()
+
+```
+
+
+
+
+
+
+
+
 
 # zeppelin 
 
