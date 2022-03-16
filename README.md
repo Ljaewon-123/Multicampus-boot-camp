@@ -1,5 +1,7 @@
 # 프로젝트 기능 간단설명
 
+서울시의 반려동물시설현황 ,시각화및 분석
+
 pip
 
 - pip install requests
@@ -11,28 +13,24 @@ pip
 - pip install folium
 - pip install base64
 
-사용 데이터 
-- kakaomap ,naver지도 크롤링
-- 공공데이터셋 사용
-- 카카오톡API사용
 
-자세한 내용은
 
 #### 나의 역할? 내가만든 기능?
 
 1. 크롤링 
 2. json 전처리 , 크롤링 데이터들을 원하는 형태로 재가공
+2. Django
 3. 카카오 API 활용 주소,좌표 변환기 
 4. Geo_coding 
 5. input값에 맞는 좌표를 folium 화면에 보여주고 마커를 한화면에 전부 찍어줌 
-6. 우리동네 보고서 페이지(2_page.html)에 있는 ajax, 해당 페이지에 활용된 views.py 부분 만듬 
-7. 그외 만들거나 수정,추가된 많은 함수들이 views.py에 올라갔고 그것들을 ajax활용해서 django 서버에 올림
+6. 우리동네 보고서 페이지(2_page.html)에 있는 Ajax, 해당 페이지에 활용된 views.py 부분 만듬 
+7. 그외 만들거나 수정,추가된 많은 함수들이 views.py에 올라갔고 그것들을 Ajax활용해서 django 서버에 올림
 
 
 
 
 
-
+사용 데이터 및 전체적은 코드 설명은 
 
 **서울시 반려동물 시설 안내_**    PDF 참고
 
