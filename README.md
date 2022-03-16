@@ -63,6 +63,8 @@ namenode와 datanode는 서로를 다른컴퓨터로 인식
 
 `ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa`
 
+rsa, dsa, ecdsa 등등의 공개키 알고리즘이 있는데, 보통 rsa 많이 사용 
+
 열쇠만듬
 
 ssh-keygen 시큐어셀 접속 
@@ -205,6 +207,10 @@ export HADOOP_PID_DIR=$HADOOP_HOME/pids
 
 `vim core-site.xml`
 
+**네임노드** = 데이터 노드 관리,클라이언트한테 요청을 받고 data node에 일을 시킴
+데이터 노드에서 끌어와서 응답을 주기도함 
+core-site 에  value로 준 **9000번 포트가 네임 노드임**
+
 ```html
 <configuration>
         <property>
@@ -220,7 +226,7 @@ export HADOOP_PID_DIR=$HADOOP_HOME/pids
 <configuration>
         <property>
                 <name>dfs.replication</name>
-                <value>1</value>
+                <value>1</value>  # 싱글모드 데이터 노드가 하나, 저장이 1개에 노드에됨
         </property>
         <property>
                 <name>dfs.namenode.name.dir</name>
@@ -420,6 +426,24 @@ spark.master                            yarn
 클라이언트 요청시 드라이버가 받아서 클러스터매니저에게 주면 슬레이브에 던져서 실행시킴
 
 스파크는 기본적으로 scala(jvm 기반)
+
+네임노드 클라이언트  마스터
+
+세컨더리 네임노드 대체 네임노드
+
+데이터 노드 데이터 저장 슬레이브
+
+spark sql : df,쿼리문형태
+
+spark  stream : 실시간처리
+
+mllib : ml사용가능
+
+spark core : rdd
+
+yarn을 사용해서 하둡에 저장 --> 불러오는 주체가 하둡이라는 소리
+
+standalone 이면 리눅스에 바로 저장  --> 같다
 
 ```
 cd ~
@@ -709,6 +733,8 @@ germany
 
 
 
+##### 외부 data 하둡에 넣기
+
 `hdfs dfs -mkdir -p /home/jaewon`
 -p로 한번에 만들수있음
 
@@ -722,6 +748,9 @@ mkdir data
 하둡 디스트리뷰트 파일 시스템 
 
 `hdfs dfs -put /home/jaewon/data /home/jaewon/data` # 데이터
+
+-put 보낼(로컬) 받을(하둡)
+
 잘 들어갔나 확인
 
 `hdfs dfs -ls /home/jaewon/data`
@@ -910,6 +939,8 @@ hdfs dfs -cat ~/result/part-00000   # 어떤 단어 몇개? 출력
 
 
 ```
+
+### submit 파이썬 실행
 
 stop-all.sh   `하둡종료`
 
@@ -1993,7 +2024,295 @@ date_df.where('CustomerId IS NOT NULL').orderBy('CustomerId').select(col('Custom
 
 
 
+리눅스는 파일의 확장자가 그리 중요하지는 않다
 
+#### 파일 load와 save
+
+```python
+# csv 
+csv_file01 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/flights/csv/2010-summary.csv')
+or
+csv_file02 = spark.read.option('header','true').csv('/home/jaewon/data/flights/csv/2010-summary.csv')
+
+이거 파일로 저장
+csv_file02.write.format('csv').mode('overwrite').save('/tmp/csv')
+hdfs dfs -ls /tmp/csv  # 우분투에서 하는거
+Found 2 items
+-rw-r--r--   1 jaewon supergroup          0 2022-03-15 17:15 /tmp/csv/_SUCCESS
+-rw-r--r--   1 jaewon supergroup       7077 2022-03-15 17:15 /tmp/csv/part-00000-69ec6f75-badf-480b-8573-6f0fb8b117ec-c000.csv
+
+// 뭔진 모르겠는데 해당 경로의 파일내용좀 보여줘 
+hdfs dfs -cat /tmp/csv/*.csv
+ 
+# dataframewrite.mode : append,overwrite, error/errorifexists,ignore
+
+json_file01 = spark.read.format('json').load('/home/jaewon/data/flights/json/2010-summary.json')
+# json_file02
+
+// 하둡 저장 왜??  클러스터 매니저 yarn 
+스파크 클러스터 설정해주고있는 넘이 yarn임 
+json_file01.write.format('json').mode('append').save('/tmp/json')
+
+~$ : hdfs dfs -ls /tmp/json
+Found 2 items
+-rw-r--r--   1 jaewon supergroup          0 2022-03-15 17:24 /tmp/json/_SUCCESS
+-rw-r--r--   1 jaewon supergroup      21353 2022-03-15 17:24 /tmp/json/part-00000-f44ac2de-eb6f-4ffd-b734-d3d97f252575-c000.json
+```
+
+// 뭔진 모르겠는데 해당 경로의 파일내용좀 보여줘 
+`hdfs dfs -cat /tmp/csv/*.csv`  형태 알고있어야함 
+
+'''
+그외!
+parquet : spark 컬럼 기반 데이터 저장 방식
+orc : 하둡 컬럼 기반 데이터 저장 방식
+text 파일로도 저장 가능
+db 연동해서 저장 할수도있음
+
+'''
+
+네임노드 = 데이터 노드 관리,클라이언트한테 요청을 받고 data node에 일을 시킴
+데이터 노드에서 끌어와서 응답을 주기도함 
+core-site 에  value로 준 9000번 포트가 네임 노드임 
+
+네임노드 클라이언트  마스터
+세컨더리 네임노드  대체 네임노드
+데이터 노드 데이터 저장 슬레이브
+
+
+
+// 기존 csv파일 리드 해서 컬럼 변경 하고 저장한 이후에 다시 불러와서 사용해보기 연습 
+
+```python
+>>> csv_file02 = spark.read.option('header','true').csv('/home/jaewon/data/flights/csv/2010-summary.csv')
+>>> csv_file02.show(5)
++-----------------+-------------------+-----+
+|DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|count|
++-----------------+-------------------+-----+
+|    United States|            Romania|    1|
+|    United States|            Ireland|  264|
+|    United States|              India|   69|
+|            Egypt|      United States|   24|
+|Equatorial Guinea|      United States|    1|
++-----------------+-------------------+-----+
+only showing top 5 rows
+
+>>> csv_file02.select('DEST_COUNTRY_NAME','ORIGIN_COUNTRY_NAME')
+DataFrame[DEST_COUNTRY_NAME: string, ORIGIN_COUNTRY_NAME: string]
+>>> csv_fix = csv_file02.select('DEST_COUNTRY_NAME','ORIGIN_COUNTRY_NAME')
+>>> csv_fix.show(5)
++-----------------+-------------------+
+|DEST_COUNTRY_NAME|ORIGIN_COUNTRY_NAME|
++-----------------+-------------------+
+|    United States|            Romania|
+|    United States|            Ireland|
+|    United States|              India|
+|            Egypt|      United States|
+|Equatorial Guinea|      United States|
++-----------------+-------------------+
+only showing top 5 rows
+
+>>> csv_fix.write.format('csv').mode('overwrite').save('/tmp/csv')
+>>> csv_file = spark.read.option('header','true').csv('/tmp/csv/*.csv')
+>>> csv_file.show(5)
++-----------------+-------------+
+|    United States|      Romania|
++-----------------+-------------+
+|    United States|      Ireland|
+|    United States|        India|
+|            Egypt|United States|
+|Equatorial Guinea|United States|
+|    United States|    Singapore|
++-----------------+-------------+
+only showing top 5 rows
+
+```
+
+// json 파일도 해보자
+
+```python
+json_file01 = spark.read.format('json').load('/home/jaewon/data/flights/json/2010-summary.json')
+# 저장
+json_file01.write.format('json').mode('append').save('/tmp/json')
+
+json_file02 = spark.read.option('header','true').json('/home/jaewon/data/flights/json/2010-summary.json')
+
+file02 = json_file02.select('DEST_COUNTRY_NAME','ORIGIN_COUNTRY_NAME')
+# 내용 바꿔서 저장
+file02.write.format('json').mode('append').save('/tmp/json/')
+```
+
+결과는 위csv랑 똑같은데 이번에는 mode의 차이를 보여주고자 한다
+
+### save/load mode 
+
+dataframewrite.mode : append,overwrite, error/errorifexists,ignore
+
+![image-20220316202202471](README.assets/image-20220316202202471.png)
+
+csv 파일 같은 경우는 **overwrite** 모드를 사용해서 파일이 한개 밖에 없지만 
+
+![image-20220316202234658](README.assets/image-20220316202234658.png)
+
+json 파일 같은 경우는 **append**를 사용해서 파일이 추가가된 모습
+
+![image-20220316202223867](README.assets/image-20220316202223867.png)
+
+
+
+![image-20220316100338530](README.assets/image-20220316100338530.png)
+
+파란색 이 디렉토리이고 파란색 눌러서 경로를 찾을수 있다.
+
+'''
+
+그외!
+
+parquet : spark 컬럼 기반 데이터 저장 방식
+
+orc : 하둡 컬럼 기반 데이터 저장 방식
+
+text 파일로도 저장 가능
+
+db 연동해서 저장 할수도있음
+
+'''
+
+
+
+retails 로 다시연습
+
+이번엔 rollup , cube 
+
+```python
+retails = spark.read.format('csv').option('header','true').option('inferSchema','true').load('/home/jaewon/data/retails/2010-12-01.csv')
+
+from pyspark.sql.functions import to_date,col 
+date_df = retails.withColumn('date',to_date(col('invoiceDate'),'yyyy-MM-dd HH:mm:ss'))  # withColumn 컬럼추가
+
+
+notnull_df = date_df.drop()
+notnull_df.createOrReplaceTempView('notnullDf')
+
+
+spark.sql('''
+select CustomerID,StockCode,sum(Quantity)
+from notnullDf
+group by CustomerID, StockCode
+order by CustomerID desc, StockCode desc
+''').show()
+
+from pyspark.sql.functions import sum
+rollup_df = notnull_df.rollup('Date','country').agg(sum('Quantity')).selectExpr('Date','Country',"`sum(Quantity)` as total_quantity").orderBy('Date')
+
+
+rollup_df.where('Country IS NULL').show()
+a집계
+전체 집계 
+
+
+cube
+notnull_df.cube('Date','Country').agg(sum(col('Quantity'))).select('Date','Country','sum(Quantity)').show()
+```
+
+### join
+
+새테이블 생성
+
+```python
+person = spark.createDataFrame(
+[
+	(1,'shin dongyep',2,[1]),
+	(2,'seo janghun',3,[2]),
+	(3,'you jaeseok',1,[1,2]),
+	(4,'kang hodong',0,[0])
+]
+).toDF('id','name','program','job')
+
+
+program = spark.createDataFrame(
+[
+	(1,'MBC','놀면 뭐하니'),
+	(2,'KBS','불후의 명곡'),
+	(3,'SBS','미운 우리 새끼'),
+	(4,'JTBC','뭉쳐야 찬다')
+]
+).toDF('id','broadcaster','program')
+
+job = spark.createDataFrame([(1,'main mc'),(2,'member')]).toDF('id','job')
+
+
+person.createOrReplaceTempView('person')
+program.createOrReplaceTempView('program')
+job.createOrReplaceTempView('job')
+```
+
+// 같은 조건으로 조인
+
+````python
+person.join(program,person['program'] == program['id']).show()
+spark.sql('select * from person join program on(person.program = program.id) ').show()
+
+conditions = person.program == program.id 
+person.join(program,conditions).show() 
+
+person.join(program,conditions,'inner').show()
+
+person.join(program,conditions,'outer').show()
+spark.sql('select * from person full outer join program on(person.program = program.id)').show()
+
+person.join(program,conditions,'left_outer').show()
+person.join(program,conditions,'right_outer').show()
+````
+
+// 세미조인
+
+```python
+person.join(program,conditions,'left_semi').show()  # inner join 테이블에서 왼쪽만 남김 
+
+person.join(program,conditions,'left_anti').show()  # inner join 에서 포함 안된 row
+
+person.join(program,conditions,'cross').show()  # 카티시안 곱  , 아래랑 살짝 다름 왜? conditions 조건 잡아서 
+
+person.join(program, how = "cross").show()
+// how 이거 자체는 파이썬 
+
+select *
+from person,program 
+where persos.program = program.id 
+
+
+person.crossJoin(program).show()
+```
+
+
+
+// 서브 쿼리
+
+```python
+// person job 연결
+person.join(job,person.id == job.id).show()
+spark.sql('select * from person join job using(id)').show()
+
+// array_contains  : array_contains(arr, tgt): arr 배열에 tgt이 존재하는지 확인
+from pyspark.sql.functions import expr
+person.join(job,expr('array_contains(job,id)')).show()  # job이 여러개라서 안되니까 이름 바꿔서
+person.withColumnRenamed('id','num').withColumnRenamed('job','role').join(job,expr('array_contains(role,id)')).show()
+
+
+### subquery를 사용하여 sbs 에서 프로그램을 하고있는 사람을 출력하자 
+spark.sql('select name from person where (select broadcaster from program where broadcaster in (SBS))').show() 
+
+spark.sql('''
+select *
+from person
+where program = 
+	(select id 
+	from program
+	where broadcaster in ('SBS'))   
+''').show()
+# where broadcaster = 'SBS'
+```
 
 
 
