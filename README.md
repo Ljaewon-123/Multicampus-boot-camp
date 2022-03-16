@@ -11,7 +11,12 @@ pip
 - pip install folium
 - pip install base64
 
+사용 데이터 
+- kakaomap ,naver지도 크롤링
+- 공공데이터셋 사용
+- 카카오톡API사용
 
+자세한 내용은
 
 #### 나의 역할? 내가만든 기능?
 
