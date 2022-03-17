@@ -17,6 +17,16 @@
 1. [Rdd](# Rdd)
 2. [DataFrame](# DataFrame )
 
+[Spark streaming](# Spark streaming 스파크 스트리밍)
+
+[파이썬,쉘스크립트](# 파이썬 파일로 실행하기)
+
+[zeppelin]( #zeppelin)
+
+[Mysql](#mysql)
+
+[MongoDB](# MongoDB)
+
 전체 역할에서
 하둡은 저장과 연결
 스파크는 DB에 넣어주기전 처리
@@ -746,6 +756,8 @@ mkdir data
 
 
 하둡 디스트리뷰트 파일 시스템 
+
+하둡에 데이터 올리기 -put
 
 `hdfs dfs -put /home/jaewon/data /home/jaewon/data` # 데이터
 
@@ -2316,6 +2328,161 @@ where program =
 
 
 
+## Spark streaming 스파크 스트리밍
+
+vim streaming_test.py 여기에 작성
+
+```python
+from pyspark import SparkContext
+from pyspark.streaming import StreamingContext
+
+# Create a local StreamingContext with two working thread and batch interval of 1 second
+sc = SparkContext("local[2]", "NetworkWordCount")
+ssc = StreamingContext(sc, 1)
+
+# Create a DStream that will connect to hostname:port, like localhost:9999
+lines = ssc.socketTextStream("localhost", 9999)
+
+가져온거 쪼개기
+# Split each line into words
+words = lines.flatMap(lambda line: line.split(" "))
+
+가져온거 실행
+# Count each word in each batch
+pairs = words.map(lambda word: (word, 1))
+wordCounts = pairs.reduceByKey(lambda x, y: x + y)
+
+# Print the first ten elements of each RDD generated in this DStream to the console
+wordCounts.pprint()
+
+ssc.start()             # Start the computation  실행
+ssc.awaitTermination()  # Wait for the computation to terminate 기다림
+```
+
+그뒤 터미널에서
+
+9999포트로 스트리밍 서버 열음
+ nc -lk 9999
+
+new_window
+
+submit으로 파이썬 파일 실행
+spark-submit streaming_test.py localhost 9999
+
+그후 다른 창에서 내가 넣어주는 값들 출력됨
+
+// 스트리밍은 계속 동작하고 있으면서 입력을 받아준다.
+
+스파크 sql 다시 연습
+
+pyspark
+
+```terminal
+cat all.csv
+
+hdfs dfs  -put ./all.csv /home/jaewon/all.csv    # 하둡에 파일올리기
+
+hdfs dfs -ls /home/jaewon  # 잘 올라갔나 확인
+
+
+pyspark
+
+저장한 파일 가져옴 
+multi = spark.read.format('csv').option('header','true').load('/home/jaewon/all.csv')
+
+multi.count()
+multi.createOrReplaceTempView('multi')
+
+//  채팅을 많이 보낸 사람 순서대로 정렬  chat_from 
+***** group by 로 카운트 하면 됨..
+from pyspark.sql.functions import col
+multi.groupBy('chat_from').count().orderBy(col('count').desc()).show()
+
+// ??? 강사 에게 dm을 가장 많이 보낸사람
+multi.where(col('chat_to') ==  "???강사").groupBy('chat_from','chat_to').count().orderBy(col('count').desc()).show()
+
+
+// 시간별 채팅 횟수
+from pyspark.sql.functions import substring
+multi.groupBy(substring('chat_time',1,2)).count().orderBy(substring('chat_time',1,2)).show()
+spark.sql('select substr(chat_time,1,2),count(*) from multi group by substr(chat_time,1,2) order by substr(chat_time,1,2) asc').show()
+
+// 날짜별 채팅 횟수
+
+multi.groupBy(col('chat_date')).count().orderBy(col('chat_date')).show()
+spark.sql('select chat_date , count(*) from multi group by chat_date order by chat_date').show()
+
+
+// 날짜와 시간별 채팅 횟수
+rollup?
+multi.groupBy('chat_date',substring('chat_time',1,2)).count().orderBy('chat_date',substring('chat_time',1,2)).show()
+
+// 시간별 채팅한 사람
+hour_chat = multi.groupBy(substring('chat_time',1,2).alias('hour'),'chat_from').count().orderBy(substring('chat_time',1,2),col('count').desc())
+hour_chat.show()
+
+hour_chat.write.format('csv').mode('overwrite').save('hour_chat')
+hour_chat 저장
+rdd 파티션 엄청  나눠짐
+
+# coalesce(1) 하나로 합쳐라
+hour_chat.coalesce(1).write.format('csv').mode('overwrite').save('/home/jaewon/hour_chat')
+```
+
+# 파이썬 파일로 실행하기
+
+vim hour_chat.py
+
+```terminal
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col,substring
+# 이파일 스파크로 동작 
+# 스파크 세션 만드는데 클러스터 매니저는 yarn이고 이름지정해줌 
+spark = SparkSession.builder.master("yarn").appName("hour_chat").getOrCreate() 
+multi = spark.read.format('csv').option('header','true').load('/home/jaewon/all.csv')
+hour_chat = multi.groupBy(substring('chat_time',1,2).alias('hour'),'chat_from').count().orderBy(substring('chat_time',1,2),col('count').desc())
+
+hour_chat.coalesce(1).write.format('csv').mode('overwrite').save('/hour_chat')
+
+:wq!
+```
+
+터미널 동작
+
+```terminal
+#pip install pyspark   python 명령어도 pyspark로 동작하게하고 싶어서
+python hour_chat.py 
+spark-submit hour_chat.py  # 위와 동일하게 동작 
+
+hdfs dfs -cat /hour_chat/*.csv
+```
+
+# 쉘 스크립트
+
+```terminal
+.sh == 쉘스크립트 
+vim multi.sh 
+
+start-all.sh
+
+sleep 20   
+
+pyspark
+
+:wq!
+
+sudo chmod 755 multi.sh
+
+ls -l | grep multi.sh   # multi.sh 파일의 상세정보만
+
+./multi.sh
+이 쉘스크립트 명령어는 하둡과 pyspark 를 자동으로 실행
+```
+
+
+
+
+
 
 
 # zeppelin 
@@ -2331,5 +2498,244 @@ wget https://dlcdn.apache.org/zeppelin/zeppelin-0.10.1/zeppelin-0.10.1-bin-netin
 ```scala
 tar -xvzf zeppelin-0.10.1-bin-netinst.tgz 
 ln -s zeppelin-0.10.1-bin-netinst zeppelin
+```
+
+```terminal
+
+source ~/.bashrc
+
+
+cd $ZEPPELIN_HOME/conf
+
+
+cp zeppelin-env.sh.template zeppelin-env.sh
+
+
+vim zeppelin-env.sh
+
+19 
+export JAVA_HOME=/home/jaewon/java
+
+79
+export SPARK_HOME=/home/jaewon/spark
+
+89
+export HADOOP_CONF_DIR=/home/jaewon/hadoop/etc/hadoop
+:wq!
+```
+
+
+
+`cp zeppelin-site.xml.template zeppelin-site.xml`
+
+vim zeppelin-site.xml
+
+```html
+<property>
+  <name>zeppelin.server.addr</name>
+  <value>127.0.0.1</value>  # 127.0.0.1 내부에서만 접속 // 0.0.0.0 어디서든 접속 가능
+  <description>Server binding address</description>
+</property>
+
+<name>zeppelin.server.port</name>
+  <value>8082</value>  # 포트 다른애들이 많이 쓰는 포트라서 8080->8082 로 바꿈
+<description>Server port.</description>
+:wq!
+```
+
+~
+
+재플린 실행
+
+```terminal
+start-all.sh
+zeppelin-daemon.sh start  # 재플린 구동
+
+localhost:8082 # 설정한 포트에서 확인 가능 
+계정에 인터프린터
+spark 검색
+spark %spark , %sql , %pyspark , %ipyspark , %r , %ir , %shiny , %kotlin    // 동작 명령어 
+
+#  anonymous -> interpreter -> spark 검색 -> edit
+spark.master  		yarn
+spark.submit.deployMode   client
+# save
+
+
+새로운 노트북 파일 만들어줌
+주피터 노트북에서 스파크 쓰는 느낌
+
+%pyspark
+
+test = [1,2,3,4,5]
+test_rdd = sc.parallelize(test)
+
+test_rdd.collect()
+[1, 2, 3, 4, 5]
+
+
+zeppelin-daemon.sh stop  # 중지
+stop-all.sh
+```
+
+
+
+# mysql
+
+--- mysql 설치
+
+```terminal
+sudo apt install mysql-server -y
+
+
+sudo service mysql start
+
+
+sudo mysql_secure_installation 
+n
+1234
+1234
+y
+n
+y
+y
+
+
+cd /etc/mysql/mysql.conf.d
+
+sudo vim mysqld.cnf
+bind-address            = 217.0.0.1     -> 0.0.0.0
+mysqlx-bind-address     = 127.0.0.1  -> 0.0.0.0   외부에서 접속 가능하게 잡아줌 
+
+원래대로 라면 내가 사용할 ip만 접속하게 해줘야함 
+
+~
+sudo mysql -u root -p
+
+show databases;
+use mysql;
+
+alter user 'root'@'localhost' identified with mysql_native_password by '1234';
+CREATE USER 'root'@'%' IDENTIFIED BY '1234';
+sudo 없이 사용하도록
+'root'@'%' root 의 어떤 ip든 사용가능
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;  # 모든 권한 root@localhost 에줌
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+flush privileges; 저장
+
+CREATE TABLE test(id int, name VARCHAR(30));
+
+INSERT INTO test VALUES(1, "hadoop");
+INSERT INTO test VALUES(2, "spark");
+
+select * from test;  # 만들어진거 확인
+
+# mysql spark 연결 할려면 자바 가상머신 연결해주는 드라이버가 필요함 
+
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java_8.0.28-1ubuntu20.04_all.deb
+
+
+sudo dpkg -i mysql-connector-java_8.0.28-1ubuntu20.04_all.deb
+
+
+cd /usr/share/java/
+# /usr/share/java/mysql-connector-java-8.0.28.jar  // 드라이버 경로 스파크랑 sql 연결하는 드라이버
+
+스파크 설정 경로
+cd $SPARK_HOME/conf
+
+vim spark-defaults.conf
+맨 밑
+spark.jars                              /usr/share/java/mysql-connector-java-8.0.28.jar
+
+지금 재플린 노트북으로도 가능하긴함 
+
+myspark 에서 
+mysql 비번 root에 요청
+
+user='root'
+password='1234'    
+url="jdbc:mysql://localhost:3306/mysql"
+driver = 'com.mysql.cj.jdbc.Driver'
+dbtable='test'
+
+test_df = spark.read.format('jdbc').option('user',user).option('password',password).option('url',url).option('driver',driver).option('dbtable',dbtable).load()
+test_df.show()
+
+test_insert = [(3,'mysql'),(4,'zeppelin')]
+insert_df = sc.parallelize(test_insert).toDF(['id','name'])
+
+insert_df.write.jdbc(url,dbtable,'append',properties={'driver':driver,'user':user,'password':password})
+
+
+```
+
+
+
+# MongoDB
+
+하둡 안켜도 접속 가능
+
+몽고디비 다운  https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+
+```terminal
+// 1
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+// 2
+20.04
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+// 3
+sudo apt-get update
+sudo apt-get upgrade -y
+// 4
+다운
+sudo apt-get install -y mongodb-org
+//5 실행
+sudo systemctl start mongod
+// sudo service mongod start   # 이것도 가능
+sudo service mongod status  # 현재 몽고서버 확인 가능 
+
+mongo # 실행키
+
+
+# 중지
+sudo systemctl stop mongod
+sudo service mongod stop
+
+# 재실행
+sudo service mongod restart
+
+db.test.insertOne({'id':'10','name':'mongodb'})
+db.test.find()
+
+exit
+```
+
+mongodb test 데이터베이스 사용
+만일 데이터베이스를 계속 바꿔야 하는 상황이라면
+해당 설정 안하고
+코드에서 옵션으로 바꿔야함 
+
+```terminal
+spark.mongodb.input.uri		mongodb://localhost/test
+spark.mongodb.output.uri		mongodb://localhost/test
+# spark.jar.packages			org.mongodb.spark:mongo-spark-connector_2.12:3.0.1    안먹힘
+
+// 대신 해당 디펜더스 설치후 실행  jars들 가져와서 한번에 실행
+pyspark --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1  
+
+몽고디비 내용 가져오기
+test = spark.read.format('mongo').option('database','test').option('collection','test').load()
+mongo 형태를 test db에 test coll 가져옴  
+
+insert_df = spark.createDataFrame([('11','mongo-spark')],['id','name'])
+
+insert_df.write.format('mongo').option('database','test').option('collection','test').mode('append').save()
+기존 몽고 디비 데이터에 추가됨
+
+
+
 ```
 
