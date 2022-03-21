@@ -4,7 +4,9 @@ import json
 
 service_key='SaSnehC34rO3z%2Ff%2Fjavc%2FfzjQCJwxfuTfLP5JNBfIOGmvKQtXfuAX8tm2GGi1%2FY2lX3Gbx07wScwmZsCdeLpyQ%3D%3D'
 # #
-url = f'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={service_key}&searchYearCd=2019&siDo=11&guGun=620&type=json&numOfRows=9999&pageNo=1'
+# url = f'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={service_key}&searchYearCd=2019&siDo=11&guGun=620&type=json&numOfRows=9999&pageNo=1'
+# 음주  전부 한번에
+url = f'https://api.odcloud.kr/api/15094170/v1/uddi:9011cf90-a379-4eca-bb29-8dcf99c11f1d?page=1&perPage=9999&serviceKey={service_key}'
 print(url)
 #
 
@@ -13,7 +15,7 @@ resp = requests.get(url)
 json_res = resp.json()
 print(json_res)
 
-print(json_res['resultMsg'])  # NODATA_ERROR
+# print(json_res['resultMsg'])  # NODATA_ERROR
 
 
 x = {'123':'asdf','5687':'zxcv'}
