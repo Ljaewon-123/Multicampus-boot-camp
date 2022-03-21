@@ -153,12 +153,13 @@ class Traffic():
                     # print(lst)
                     gu = {gugun: lst}
                     # print(gu)
-
+                    # sido_dict = {sido: gu}
+                    # print(sido_dict)
                     lst_gu.append(gu)
                     # print(lst_gu)
                 # print(lst_gu)
 
-                sido_dict = {sido: lst_gu}
+                sido_dict = {sido: lst_gu}   # 구까지는 쉽게 찾을수 있게 해야함, 원본 == lst_gu
                 lst_sido.append(sido_dict)
             # print(lst_sido)
 
@@ -169,7 +170,7 @@ class Traffic():
             #     year_dict[year] = lst_sido
             year_dict[year] = lst_sido
 
-            year_lst.append(year_dict)
+            # year_lst.append(year_dict)
 
         # print(year_lst)
         print(year_dict)
@@ -180,7 +181,27 @@ class Traffic():
         with open(f'{self.file_name}.json', 'w', encoding='utf-8') as f:
             f.write(res_json)
 
+    def find_index(self,want_sido, want_gugun):
+        # print(SiDo.keys())
+        cnt = -1
+        for s in Traffic.SiDo.keys():
+            cnt += 1
+            if s == want_sido:
+                # print(cnt)
+                cnt_s = cnt
+        cnt = -1
+        # print(SiDo[want_sido][1].keys())
+        gugun_key = Traffic.SiDo[want_sido][1].keys()
+        for g in gugun_key:
+            cnt += 1
+            if g == want_gugun:
+                # print(cnt)
+                cnt_g = cnt
+        return cnt_s, cnt_g
 
+# 아래가 자치구 위에가 노인무단?
 url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+# url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 t = Traffic(url,'namename')
 t.Make_Json()
+# print(t.find_index('충청남도','서천군'))

@@ -54,152 +54,38 @@ SiDo = {'서울특별시': ['11',
                   '사천시': '240', '산청군': '860', '양산시': '330', '의령군': '720', '진주시': '170', '진해시': '190', '창녕군': '740',
                   '창원시': '120', '통영시': '220', '하동군': '850', '함안군': '730', '함양군': '870', '합천군': '890'}],
         '제주특별자치도': ['50', {'서귀포시': '130', '제주시': '110'}]}
-
-# print(SiDo['서울특별시'])
-# print(SiDo['서울특별시'][0])
-# print(SiDo['서울특별시'][1]['강남구'])
-# print(SiDo['서울특별시'][1].keys())
-
-# print(SiDo.keys())
-
 Year = ['2017', '2018', '2019', '2020']
-# sido_list = ['서울특별시']
 
-# print(SiDo[sido_list[0]][1].values())
-
-service_key = 'SaSnehC34rO3z%2Ff%2Fjavc%2FfzjQCJwxfuTfLP5JNBfIOGmvKQtXfuAX8tm2GGi1%2FY2lX3Gbx07wScwmZsCdeLpyQ%3D%3D'
-
-year_lst = []
-year_dict = {}
-for year in Year:
-    print(year)
-    lst_sido = []
-    for sido in SiDo.keys():
-        print(sido)
-        lst_gu = []
-        for gugun in SiDo[sido][1].keys():
-            # print(gugun)
-            url = f'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={service_key}&searchYearCd={year}&siDo={SiDo[sido][0]}&guGun={SiDo[sido][1][gugun]}&type=json&numOfRows=9999&pageNo=1'
-            # url = f'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={service_key}&searchYearCd={year}&siDo={SiDo[sido][0]}&guGun={SiDo[sido][1][gugun]}&type=json&numOfRows=9999&pageNo=1'
-            # print(url)
-
-            # format123 = 'asdf{0},{1},{2}'
-            # ff123 = format123.format(123,421,56)
-            # print(ff123)
-
-            resp = requests.get(url)
-            # json
-            json_data = resp.json()
-            # print(json_data)
-            # xml
-            # tree = ElementTree.fromstring(resp.text)
-            # print(tree)
-            '''
-            5 : 지점명  spot_nm
-            6 : 발생건수  occrrnc_cnt
-            7 : 사상자수  caslt_cnt
-            8 : 사망자수  dth_dnv_cnt
-            9 : 중상자수  se_dnv_cnt
-            10 : 경상자수  sl_dnv_cnt
-            12 : 폴리곤  geom_json
-            13 : 경도   lo_crd
-            14 : 위도   la_crd
-
-            '''
-            # print(json['items']['item'])
-            data = json_data['items']['item']
-            # print(data)
-            lst = []
-            total_occrrnc_cnt, total_caslt_cnt, total_dth_dnv_cnt, total_se_dnv_cnt, total_sl_dnv_cnt = 0, 0, 0, 0, 0
-
-            for item in data:
-                # print(item)
-                tmp = {}
-                for key in item.keys():
-                    if key == 'spot_nm':
-                        tmp['상세주소'] = item[key]
-                    # elif key == 'occrrnc_cnt':
-                    #         tmp['발생건수'] = item[key]
-                    #         total_occrrnc_cnt += item[key]
-                    # elif key == 'caslt_cnt':
-                    #         tmp['사상자수'] = item[key]
-                    #         total_caslt_cnt += item[key]
-                    # elif key == 'dth_dnv_cnt':
-                    #         tmp['사망자수'] = item[key]
-                    #         total_dth_dnv_cnt += item[key]
-                    # elif key == 'se_dnv_cnt':
-                    #         tmp['중상자수'] = item[key]
-                    #         total_se_dnv_cnt = +item[key]
-                    # elif key == 'sl_dnv_cnt':
-                    #         tmp['경상자수'] = item[key]
-                    #         total_sl_dnv_cnt = +item[key]
-                    # # elif key == 'geom_json':
-                    # #         tmp['폴리곤'] = item[key]
-                    # elif key == 'lo_crd':
-                    #         tmp['경도'] = item[key]
-                    # elif key == 'la_crd':
-                    #         tmp['위도'] = item[key]
-                lst.append(tmp)
-
-            # 데이터 없으면 에러 발생
-            # try:
-            #     tmp['총합발생건수'] = total_occrrnc_cnt
-            #     tmp['총합사상자수'] = total_caslt_cnt
-            #     tmp['총합사망자수'] = total_dth_dnv_cnt
-            #     tmp['총합중상자수'] = total_se_dnv_cnt
-            #     tmp['총합경상자수'] = total_sl_dnv_cnt
-            #     lst.append(tmp)
-            # except NameError as e:
-            #     print('데이터가 없음')
-
-            # print(lst)
-            gu = {gugun: lst}
-            # print(gu)
-
-            lst_gu.append(gu)
-            # print(lst_gu)
-        # print(lst_gu)
-
-        sido_dict = {sido: lst_gu}
-        lst_sido.append(sido_dict)
-    # print(lst_sido)
-
-    # year_dict = {year:lst_sido}
-    # if year != '2017':
-    #     year_dict[year] += lst_sido
-    # else:
-    #     year_dict[year] = lst_sido
-    year_dict[year] = lst_sido
-
-    year_lst.append(year_dict)
-
-# print(year_lst)
-print(year_dict)
-# fin = {}
-# fin['final'] = year_lst
-# print(fin)
-res_json = json.dumps(year_dict,ensure_ascii=False)
-with open('fffffff.json','w',encoding='utf-8') as f:
-    f.write(res_json)
+def find_index(want_sido,want_gugun):
+    # print(SiDo.keys())
+    cnt = -1
+    for s in SiDo.keys():
+        cnt += 1
+        if s == want_sido:
+            # print(cnt)
+            cnt_s = cnt
+    cnt = -1
+    # print(SiDo[want_sido][1].keys())
+    gugun_key = SiDo[want_sido][1].keys()
+    for g in gugun_key:
+        cnt += 1
+        if g == want_gugun:
+            # print(cnt)
+            cnt_g = cnt
+    return cnt_s,cnt_g
 
 
-# a = {'s':['11',{'asdf':'123',"zxcv":'568'}]}
-# print(a['s'][1].values())
 
-# 유형== 파일이름?? 밑에 시도 밑에 년도 밑에 구별 데이터
-# 파일 명을 유형별로?? 할꺼면 파일명을 리스트에 안넣어도됨
-# class 에서 url 를 매개변수로 받는 형식 문제 : 파일 저장 으캄
-# 매개변수로 url과 파일 명을 같이 받음
+find_index('충청남도','서천군')
+
+print(find_index('충청남도','서천군'))
+a,b = find_index('충청남도','서천군')
+# print(a)
+# print(b)
 
 
-# xml
-# print(tree[1][0].text)
-# for item in tree[1][0]:  # response 는 안잡힘
-#     print(f"지점명(상세주소): {item[5].text}\n발생건수: {item[6].text} 사상자수: {item[7].text} 사망자수: {item[8].text}"
-#           f" 중상자수: {item[9].text} 경상자수: {item[10].text}\n폴리곤: {item[12].text} 경도: {item[13].text} 위도: {item[14].text}")
-# a = item.find('spot_nm').text
-# b = item.get('spot_nm')
-# print(a,b)
-# get 은 뭐야??
 
-# 어떤 형식으로 저장??? 일단 json 이라고 하고 모든 사고다발지역의 url 과 시도 , 구 자동으로 전부~!! 해야함
+
+# print(SiDo['충청남도'][1])
+
+
