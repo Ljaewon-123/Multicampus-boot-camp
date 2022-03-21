@@ -33,7 +33,7 @@ SiDo = {'서울특별시':['11',{'강남구':'680','강동구':'740','강북구'
 
 # print(SiDo.keys())
 
-Year = ['2017','2018','2019','2020']
+Year = ['2016','2017','2018','2019','2020']  # '2016', 추가시 데이터 없다고 뜸
 sido_list = ['서울특별시']
 
 # print(SiDo[sido_list[0]][1].values())
@@ -60,7 +60,7 @@ for year in Year:
                         resp = requests.get(url)
                         # json
                         json_data = resp.json()
-                        print(json_data)
+                        # print(json_data)
                         # xml
                         # tree = ElementTree.fromstring(resp.text)
                         # print(tree)
@@ -112,15 +112,15 @@ for year in Year:
                                 lst.append(tmp)
 
                         # 데이터 없으면 에러 발생
-                        try:
-                                tmp['총합발생건수'] = total_occrrnc_cnt
-                                tmp['총합사상자수'] = total_caslt_cnt
-                                tmp['총합사망자수'] = total_dth_dnv_cnt
-                                tmp['총합중상자수'] = total_se_dnv_cnt
-                                tmp['총합경상자수'] = total_sl_dnv_cnt
-                                lst.append(tmp)
-                        except NameError as e:
-                                print('데이터가 없음')
+                        # try:
+                        #         tmp['총합발생건수'] = total_occrrnc_cnt
+                        #         tmp['총합사상자수'] = total_caslt_cnt
+                        #         tmp['총합사망자수'] = total_dth_dnv_cnt
+                        #         tmp['총합중상자수'] = total_se_dnv_cnt
+                        #         tmp['총합경상자수'] = total_sl_dnv_cnt
+                        #         lst.append(tmp)
+                        # except NameError as e:
+                        #         print('데이터가 없음')
 
                         # print(lst)
                         gu = {gugun:lst}
