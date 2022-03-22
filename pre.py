@@ -29,20 +29,23 @@ json_DD = {}
 for YY in total_json.keys():
     for SS in total_json[YY][0].keys():
         # print(SS)
-        # new_json[YY] = SS
         for GG in total_json[YY][0][SS][0].keys():
-            # print(GG)
-            # new_json[YY] = {SS:GG}
-            # new_json[SS] = GG
-            for DD in total_json[YY][0][SS][0][GG]:
-                # print(DD)
-                # print(DD.keys())
-                json_DD[GG] = DD
-                print(json_DD)
-                new_json[YY] = {SS:json_DD}
-                # print(new_json)
+            cnt = 0
 
-# print(new_json)
+            for DD in total_json[YY][0][SS][0][GG]:
+                print(DD)
+                json_DD[cnt] = DD
+                cnt += 1
+                # print(json_DD)
+                new_json[YY] = {SS:{GG:json_DD}}
+                # print(new_json)
+            cnt = 0
+print(new_json)
+
+res_json = json.dumps(new_json, ensure_ascii=False)
+with open(f'T_T.json', 'w', encoding='utf-8') as f:
+        f.write(res_json)
+
 
 # 값 하나당 row 하나
 

@@ -208,8 +208,8 @@ class Traffic():
                             elif key == 'sl_dnv_cnt':
                                 tmp['경상자수'] = item[key]
                                 total_sl_dnv_cnt = +item[key]
-                            # # elif key == 'geom_json':
-                            # #         tmp['폴리곤'] = item[key]
+                            elif key == 'geom_json':
+                                    tmp['폴리곤'] = item[key]
                             elif key == 'lo_crd':
                                 tmp['경도'] = item[key]
                             elif key == 'la_crd':
@@ -298,7 +298,7 @@ url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0
 # t = Traffic(url,'namename')
 # t.Make_Json()
 
-t1 = Traffic(url,'namename2')
+t1 = Traffic(url,'namename3')
 t1.Make_Json()
 
 # print(t.find_index('충청남도','서천군'))
