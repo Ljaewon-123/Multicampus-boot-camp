@@ -26,25 +26,31 @@ print(total_json['2020'][0]['서울특별시'][0].keys())
 
 new_json = {}
 json_DD = {}
-for YY in total_json.keys():
-    for SS in total_json[YY][0].keys():
-        # print(SS)
-        for GG in total_json[YY][0][SS][0].keys():
-            cnt = 0
 
-            for DD in total_json[YY][0][SS][0][GG]:
-                print(DD)
-                json_DD[cnt] = DD
-                cnt += 1
-                # print(json_DD)
-                new_json[YY] = {SS:{GG:json_DD}}
-                # print(new_json)
-            cnt = 0
+while True:
+    cnt = 0
+    for YY in total_json.keys():
+        new_json[cnt] = YY
+        cnt += 1
+        for SS in total_json[YY][0].keys():
+            # print(SS)
+            new_json[YY] = SS
+            for GG in total_json[YY][0][SS][0].keys():
+                new_json[SS] = GG
+                for DD in total_json[YY][0][SS][0][GG]:
+                    # print(DD)
+                    new_json[GG] = DD
+
+        if YY == '2020':
+            break
+
+
+
 print(new_json)
 
-res_json = json.dumps(new_json, ensure_ascii=False)
-with open(f'T_T.json', 'w', encoding='utf-8') as f:
-        f.write(res_json)
+# res_json = json.dumps(new_json, ensure_ascii=False)
+# with open(f'T_T.json', 'w', encoding='utf-8') as f:
+#         f.write(res_json)
 
 
 # 값 하나당 row 하나
