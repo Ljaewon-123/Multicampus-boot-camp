@@ -88,7 +88,7 @@ with open(f'../Data_Processing/namename.json', 'r', encoding='utf-8') as f:
 
 # print(total_json)
 
-# res = namename3.insert_one(total_json)
+res = namename3.insert_one(total_json)
 
 for i in SiDo['서울특별시'][1].keys():
 

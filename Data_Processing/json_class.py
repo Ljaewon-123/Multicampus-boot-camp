@@ -215,6 +215,8 @@ class Traffic():
             if g == want_gugun:
                 # print(cnt)
                 cnt_g = cnt
+        if want_gugun == 'default':
+            cnt_g = -1
         return cnt_s, cnt_g
 
     # 팀원 동준 https://github.com/GoodJeon
