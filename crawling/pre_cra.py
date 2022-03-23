@@ -1,4 +1,9 @@
 import json
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+from time import sleep
+
 contents = '''우리의 모든 순간이 애틋해 눈물 날 때면
 언제나 네게 닿을 수 있게 가까이서 머물게
 유난히 더 힘든 날엔 더 이상 외롭지 않게 안아줄게
@@ -106,21 +111,27 @@ def find_index(want_sido, want_gugun):
         cnt_g = -1
     return cnt_s, cnt_g
 
+service = webdriver.edge.service.Service('../drivers/msedgedriver.exe')
+driver = webdriver.Edge(service=service)
+lst = ['카페', '술집', '어린이']
+
 with open(f'../Data_Processing/namename3.json', 'r', encoding='utf-8') as f:
     total_json = json.load(f)
 
-print(total_json['2020'][1])  # 이러면 부산 나옴 {부산:[]}
-
-print(total_json['2017'][0]['서울특별시'])
-
-a = find_index('서울특별시','성동구')
-print(a[0])
+# print(total_json['2020'][1])  # 이러면 부산 나옴 {부산:[]}
+#
+# print(total_json['2017'][0]['서울특별시'])
+#
+# a = find_index('서울특별시','성동구')
+# print(a[0])
 
 # count = -1
 # for gu_list in total_json['2017'][0]['서울특별시']:
 #     for gu in gu_list:
 #         count += 1
 #         print(gu,count)
+
+
 
 
 for YY in year:
@@ -134,6 +145,41 @@ for YY in year:
                 print(GG, count)
                 a , b = find_index(SS,'default')
                 print(a,b)
-                for i in total_json[YY][a][SS][count][GG]:  # 여기와 키워드 사이에 연도 ,sido,gugun 구분지어서 돌리는거,만들어진 파일,시도코드?
-                    lat_lon = [i['위도'], i['경도']]
-                    print(lat_lon)
+                for cafe in lst:
+                    for i in total_json[YY][a][SS][count][GG]:  # 여기와 키워드 사이에 연도 ,sido,gugun 구분지어서 돌리는거,만들어진 파일,시도코드?
+                        lat_lon = [i['위도'], i['경도']]
+                        print(lat_lon)
+                        url = f'https://www.google.co.kr/maps/search/{cafe}/@{lat_lon[0]},{lat_lon[1]},13.25z/'
+
+                        driver.implicitly_wait(3)  # 3초 기다렸다가 url 가져오겠다
+                        driver.get(url)
+
+                        sleep(1)
+
+                        exists_ele = driver.find_elements(By.CLASS_NAME,
+                                                 'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
+                        num_ele = len(exists_ele)
+                        if num_ele >= 13:
+                            # 스크롤 특정 엘리먼트로 이동  # 41
+                            for x in range(3, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
+                                # if EE.is_displayed():
+                                element = driver.find_element(By.XPATH,
+                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+
+                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                        else:
+                            for x in range(3, num_ele, 2):
+                                element = driver.find_element(By.XPATH,
+                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
+
+                        sleep(5)
+
+# '/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[5]/div/div[2]'
+# '/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[1]/div/div[2]'
+                        find_name = driver.find_elements(By.CLASS_NAME,
+                                                         'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
+                        # print(find_name.text.strip())
+
+                        for i in find_name:
+                            print(i.text.split('\n')[0])
