@@ -159,16 +159,16 @@ for YY in year:
                         exists_ele = driver.find_elements(By.CLASS_NAME,
                                                  'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
                         num_ele = len(exists_ele)
-                        if num_ele >= 13:
+                        if num_ele >= 5:
                             # 스크롤 특정 엘리먼트로 이동  # 41
-                            for x in range(3, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
+                            for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
                                 # if EE.is_displayed():
                                 element = driver.find_element(By.XPATH,
                                                               f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
 
                                 driver.execute_script('arguments[0].scrollIntoView(true);', element)
                         else:
-                            for x in range(3, num_ele, 2):
+                            for x in range(5, num_ele, 2):
                                 element = driver.find_element(By.XPATH,
                                                               f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
                                 driver.execute_script('arguments[0].scrollIntoView(true);', element)
