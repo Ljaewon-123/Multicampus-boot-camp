@@ -83,8 +83,8 @@ class Traffic():
                       '창원시진해구': '129',
                       '통영시': '220', '하동군': '850', '함안군': '730', '함양군': '870', '합천군': '890'}],
             '제주특별자치도': ['50', {'서귀포시': '130', '제주시': '110'}]}
-    # Year = ['2017', '2018', '2019', '2020',]
-    Year = ['2020' ]
+    Year = ['2017', '2018', '2019', '2020',]
+    # Year = ['2020' ]
     def __init__(self,url,file_name):
         self.url = url
         self.file_name = file_name
@@ -253,7 +253,8 @@ class Traffic():
     def add_crawling(self):
         service = webdriver.edge.service.Service('../drivers/msedgedriver.exe')
         driver = webdriver.Edge(service=service)
-        lst = ['어린이']
+        lst = ['어린이', '초등학교', '놀이터', '키즈카페', '소아과', '학원', '요양원', '경로당', '공원', 'IC', '요금소', '버스터미널',
+               '관광지', '숙박업소', '시장', '주차장', '술집']
 
         with open(f'{self.file_name}.json', 'r', encoding='utf-8') as f:
             total_json = json.load(f)
