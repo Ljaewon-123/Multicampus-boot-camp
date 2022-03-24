@@ -283,6 +283,7 @@ class Traffic():
                         a, b = self.find_index(SS, 'default')
                         print(a, b)
                         for keyword in lst:
+                            print(keyword)
                             for i in total_json[YY][a][SS][count][GG]:  # 여기와 키워드 사이에 연도 ,sido,gugun 구분지어서 돌리는거,만들어진 파일,시도코드?
                                 lat_lon = [i['위도'], i['경도']]
                                 print(lat_lon)
@@ -295,19 +296,28 @@ class Traffic():
 
                                 exists_ele = driver.find_elements(By.CLASS_NAME,
                                                                   'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
+
                                 num_ele = len(exists_ele)
-                                if num_ele >= 5:
+                                if num_ele <= 5:
                                     # 스크롤 특정 엘리먼트로 이동  # 41
+                                    #     print('여기?3')
+                                    for x in range(5, num_ele, 2):
+                                        element = driver.find_element(By.XPATH,
+                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
+
+                                elif num_ele >= 6 or num_ele <= 13:
+                                    # print('여기?2')
+                                    for x in range(5, num_ele, 2):
+                                        element = driver.find_element(By.XPATH,
+                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                else:
                                     for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
                                         # if EE.is_displayed():
                                         element = driver.find_element(By.XPATH,
                                                                       f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
 
-                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
-                                else:
-                                    for x in range(5, num_ele, 2):
-                                        element = driver.find_element(By.XPATH,
-                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
                                         driver.execute_script('arguments[0].scrollIntoView(true);', element)
 
                                 sleep(5)
@@ -321,11 +331,11 @@ class Traffic():
                                 for dt in find_name:
                                     print(dt.text.split('\n')[0])
                                     if len(dt.text.split('\n')) > 2:
-                                        print(dt.text.split('\n')[2].split('·')[0].strip())
+                                        # print(dt.text.split('\n')[2].split('·')[0].strip())
                                         category = (dt.text.split('\n')[2].split('·')[0].strip())
 
                                         if '·' in dt.text.split('\n')[2]:
-                                            print(dt.text.split('\n')[2].split('·')[1].strip())
+                                            # print(dt.text.split('\n')[2].split('·')[1].strip())
                                             saddress = (dt.text.split('\n')[2].split('·')[1].strip())
                                         else:
                                             saddress = ''
@@ -345,7 +355,7 @@ class Traffic():
                                     key_lst.append(keyword)
                                     center_lst.append(lat_lon)
 
-                                    print(name_lst, cate_lst, addr_lst)
+                                    # print(name_lst, cate_lst, addr_lst)
         # 각 리스트를 한 열에 취급
         # colname_lst = ['year', 'sido', 'gugun', 'keyword', 'cateogory', 'name', 'address', 'center']
         df = pd.DataFrame(zip(year_lst, sido_lst, gugun_lst, key_lst, cate_lst, name_lst, addr_lst, center_lst),
@@ -362,8 +372,12 @@ url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0
 # t = Traffic(url,'namename')
 # t.Make_Json()
 
-t1 = Traffic(url,'namename3')
-# t1.Make_Json()
-# t1.json_to_csv()
+
+t1 = Traffic(url,'jaywalking')
+try:
+    t1.Make_Json()
+except TimeoutError as e:
+    t1.Make_Json()
+t1.json_to_csv()
 t1.add_crawling()
 # print(t.find_index('충청남도','서천군'))
