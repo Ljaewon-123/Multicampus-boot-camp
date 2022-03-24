@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
-
+import pandas as pd
 contents = '''우리의 모든 순간이 애틋해 눈물 날 때면
 언제나 네게 닿을 수 있게 가까이서 머물게
 유난히 더 힘든 날엔 더 이상 외롭지 않게 안아줄게
@@ -131,7 +131,15 @@ with open(f'../Data_Processing/namename3.json', 'r', encoding='utf-8') as f:
 #         count += 1
 #         print(gu,count)
 
-
+colname_lst = ['year', 'sido', 'gugun', 'keyword', 'category', 'name', 'address', 'center']
+year_lst = []
+sido_lst = []
+gugun_lst = []
+key_lst = []
+name_lst = []
+cate_lst = []
+addr_lst = []
+center_lst = []
 
 
 for YY in year:
@@ -145,11 +153,11 @@ for YY in year:
                 print(GG, count)
                 a , b = find_index(SS,'default')
                 print(a,b)
-                for cafe in lst:
+                for keyword in lst:
                     for i in total_json[YY][a][SS][count][GG]:  # 여기와 키워드 사이에 연도 ,sido,gugun 구분지어서 돌리는거,만들어진 파일,시도코드?
                         lat_lon = [i['위도'], i['경도']]
                         print(lat_lon)
-                        url = f'https://www.google.co.kr/maps/search/{cafe}/@{lat_lon[0]},{lat_lon[1]},13.25z/'
+                        url = f'https://www.google.co.kr/maps/search/{keyword}/@{lat_lon[0]},{lat_lon[1]},13.25z/'
 
                         driver.implicitly_wait(3)  # 3초 기다렸다가 url 가져오겠다
                         driver.get(url)
@@ -181,5 +189,35 @@ for YY in year:
                                                          'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
                         # print(find_name.text.strip())
 
-                        for i in find_name:
-                            print(i.text.split('\n')[0])
+                        for dt in find_name:
+                            print(dt .text.split('\n')[0])
+                            if len(dt.text.split('\n')) > 2:
+                                print(dt.text.split('\n')[2].split('·')[0].strip())
+                                category = (dt.text.split('\n')[2].split('·')[0].strip())
+
+                                if '·' in dt.text.split('\n')[2]:
+                                    print(dt.text.split('\n')[2].split('·')[1].strip())
+                                    saddress = (dt.text.split('\n')[2].split('·')[1].strip())
+                                else:
+                                    saddress = ''
+                            else:
+                                print('No Info')
+                                category = ''
+                                saddress = ''
+
+                            sname = (dt.text.split('\n')[0])
+
+                            name_lst.append(sname)
+                            cate_lst.append(category)
+                            addr_lst.append(saddress)
+                            year_lst.append(YY)
+                            sido_lst.append(SS)
+                            gugun_lst.append(GG)
+                            key_lst.append(keyword)
+                            center_lst.append(lat_lon)
+
+                            print(name_lst, cate_lst, addr_lst)
+# 각 리스트를 한 열에 취급
+# colname_lst = ['year', 'sido', 'gugun', 'keyword', 'cateogory', 'name', 'address', 'center']
+df = pd.DataFrame(zip(year_lst,sido_lst,gugun_lst,key_lst,cate_lst,name_lst,addr_lst,center_lst), columns=colname_lst)
+df.to_csv('holiday_keywordSearch.csv')
