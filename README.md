@@ -763,6 +763,12 @@ mkdir data
 
 -put 보낼(로컬) 받을(하둡)
 
+### 로컬 -> 하둡에 덮어쓰기 
+
+`hdfs dfs -put -f [로컬경로] [하둡경로]` 파일 덮어쓰기
+
+
+
 잘 들어갔나 확인
 
 `hdfs dfs -ls /home/jaewon/data`
@@ -2479,7 +2485,7 @@ ls -l | grep multi.sh   # multi.sh 파일의 상세정보만
 이 쉘스크립트 명령어는 하둡과 pyspark 를 자동으로 실행
 ```
 
-
+`hdfs dfs -rmr 경로` 는 하둡에서폴더삭제
 
 
 
@@ -2610,6 +2616,7 @@ mysqlx-bind-address     = 127.0.0.1  -> 0.0.0.0   외부에서 접속 가능하�
 원래대로 라면 내가 사용할 ip만 접속하게 해줘야함 
 
 ~
+# 실행 
 sudo mysql -u root -p
 
 show databases;
@@ -2652,8 +2659,11 @@ spark.jars                              /usr/share/java/mysql-connector-java-8.0
 
 지금 재플린 노트북으로도 가능하긴함 
 
-myspark 에서 
+pyspark 에서 
 mysql 비번 root에 요청
+
+
+spark 에서
 
 user='root'
 password='1234'    
@@ -2718,10 +2728,14 @@ mongodb test 데이터베이스 사용
 해당 설정 안하고
 코드에서 옵션으로 바꿔야함 
 
+`vim spark-defaults.conf`
+
 ```terminal
 spark.mongodb.input.uri		mongodb://localhost/test
 spark.mongodb.output.uri		mongodb://localhost/test
 # spark.jar.packages			org.mongodb.spark:mongo-spark-connector_2.12:3.0.1    안먹힘
+# jars ??? 로 하면 먹힘 
+# spark.jars.packages			org.mongodb.spark:mongo-spark-connector_2.12:3.0.1
 
 // 대신 해당 디펜더스 설치후 실행  jars들 가져와서 한번에 실행
 pyspark --packages org.mongodb.spark:mongo-spark-connector_2.12:3.0.1  
