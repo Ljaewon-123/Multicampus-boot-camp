@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script>
+        $(function(){
+            $('#accd').change(function(){
+                // alert('뜨냐?')
+                infra = $("#accd option:selected").val()
+               // alert(infra)
+                $.ajax({
+                    url:'infra_data/',
+                    data: {'infra':infra,},
+                    dataType: 'json',
+                    success: function(msg){
+                        //$('#container').text(msg['17'])
+                        $('#container').html("<canvas id='myChart' width='400' height='400'></canvas>")
+                        // 차트를 그럴 영역을 dom요소로 가져온다.
+                        var chartArea = document.getElementById('myChart').getContext('2d');
+                        // 차트를 생성한다.
+                        var myChart = new Chart(chartArea, {
+                            // ①차트의 종류(String)
+                            type: 'bar',
+                            // ②차트의 데이터(Object)
+                            data: {
+                                // ③x축에 들어갈 이름들(Array)
+                                labels: ['2017', '2018', '2019', '2020', ],
+                                // ④실제 차트에 표시할 데이터들(Array), dataset객체들을 담고 있다.
+                                datasets: [{
+                                    // ⑤dataset의 이름(String)
+                                    label: '# of Votes',
+                                    // ⑥dataset값(Array)
+                                    data: [msg['17'], msg['18'], msg['19'], msg['20'],],
+                                    // ⑦dataset의 배경색(rgba값을 String으로 표현)
+                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    // ⑧dataset의 선 색(rgba값을 String으로 표현)
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    // ⑨dataset의 선 두께(Number)
+                                    borderWidth: 1
+                                }]
+                            },
+                            // ⑩차트의 설정(Object)
+                            options: {
+                                // ⑪축에 관한 설정(Object)
+                                scales: {
+                                    // ⑫y축에 대한 설정(Object)
+                                    y: {
+                                        // ⑬시작을 0부터 하게끔 설정(최소값이 0보다 크더라도)(boolean)
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+            })
+        })
+
+    </script>
+</head>
+<body>
+
+    <h1>1 페이지 헿</h1>
+
+    <br>
+    <select name="type" id="accd">
+        <option value="none">== 선택 == </option>
+        <option value="InfSmartCross">스마트 횡단보드</option>
+        <option value="InfSmartLamp">스마트 가로등</option>
+        <option value="InfSpeedBump">과속 방지턱</option>
+        <option value="InfYellowcarpet">옐로 카펫</option>
+        <option value="InfUnCamera">무인 카메라</option>
+        <option value="InfChildZone">어린이 보호구역</option>
+    </select>
+    <br>
+    <br>
+    <div id="container"></div>
+    <br>
+
+
+</body>
+</html>
