@@ -242,7 +242,7 @@ class Traffic():
                                 columns = json_x[year_data][sido_add][sido_data][gugun_add][details_data].keys()
             year_df = pd.DataFrame(data, columns=columns)
             year_df['발생년도'] = year_add
-            df = pd.concat([df, year_df], ignore_index=True)
+            df = pd.concat([df, year_df], ignore_index=True)  # /ignore_index  바로 df에 적용
 
         # 입력받은 파라미터가 파일 이름에 쓰인다.
         # 예) json형태의 변수 child를 넣어주면 'child_accident.csv'로 저장된다.
@@ -298,27 +298,53 @@ class Traffic():
                                                                   'MVVflb-haAclf.V0h1Ob-haAclf-d6wfac.MVVflb-haAclf-uxVfW-hSRGPd')
 
                                 num_ele = len(exists_ele)
-                                if num_ele <= 5:
-                                    # 스크롤 특정 엘리먼트로 이동  # 41
-                                    #     print('여기?3')
-                                    for x in range(5, num_ele, 2):
-                                        element = driver.find_element(By.XPATH,
-                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
-                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                if keyword == '숙박업소':
+                                    if num_ele <= 5:
+                                        # 스크롤 특정 엘리먼트로 이동  # 41
+                                        #     print('여기?3')
+                                        for x in range(5, num_ele, 2):
+                                            element = driver.find_element(By.XPATH,
+                                                                          f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
+                                            driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                    else:  # 스크롤 생기면 무조건 끝까지 내리는데 마지막 20개가 아니라 중간에 멈출경우 이제까지 생성된 num_ele만큼 내리고 로드된 모든 element에서 값 가져옴
+                                        try:
+                                            for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
+                                                # if EE.is_displayed():
+                                                element = driver.find_element(By.XPATH,
+                                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
 
-                                elif num_ele >= 6 or num_ele <= 13:
-                                    # print('여기?2')
-                                    for x in range(5, num_ele, 2):
-                                        element = driver.find_element(By.XPATH,
-                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
-                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                        except Exception as e:
+                                            # print(e)
+                                            for x in range(5, num_ele, 2):
+                                                element = driver.find_element(By.XPATH,
+                                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
+                                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
                                 else:
-                                    for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
-                                        # if EE.is_displayed():
-                                        element = driver.find_element(By.XPATH,
-                                                                      f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                    print('where?')
+                                    if num_ele <= 5:
+                                        print('here?')
+                                        # 스크롤 특정 엘리먼트로 이동  # 41
+                                        #     print('여기?3')
+                                        for x in range(5, num_ele, 2):
+                                            element = driver.find_element(By.XPATH,
+                                                                          f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                            driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                    else:  # 스크롤 생기면 무조건 끝까지 내리는데 마지막 20개가 아니라 중간에 멈출경우 이제까지 생성된 num_ele만큼 내리고 로드된 모든 element에서 값 가져옴
+                                        try:
+                                            print('Here??????')
+                                            for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
+                                                # if EE.is_displayed():
+                                                element = driver.find_element(By.XPATH,
+                                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
 
-                                        driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                        except Exception as e:
+                                            # print(e)
+                                            for x in range(5, num_ele, 2):
+                                                element = driver.find_element(By.XPATH,
+                                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[2]/div[1]/div[{x}]/div/div[2]')
+                                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
 
                                 sleep(5)
 
@@ -374,10 +400,10 @@ url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0
 
 
 t1 = Traffic(url,'jaywalking')
-try:
-    t1.Make_Json()
-except TimeoutError as e:
-    t1.Make_Json()
-t1.json_to_csv()
+# try:
+#     t1.Make_Json()
+# except TimeoutError as e:
+#     t1.Make_Json()
+# t1.json_to_csv()
 t1.add_crawling()
 # print(t.find_index('충청남도','서천군'))
