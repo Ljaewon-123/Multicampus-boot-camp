@@ -52,8 +52,8 @@ def infra_data(request):
         print(lst_year)
         print(lst)
 
-        print(json_dict)
         json_dict = {'17': cnt_17, '18': cnt_18, '19': cnt_19, '20': cnt_20}
+        print(json_dict)
     return JsonResponse(json_dict)
 
 
