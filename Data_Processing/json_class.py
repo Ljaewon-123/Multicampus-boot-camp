@@ -246,7 +246,7 @@ class Traffic():
 
         # 입력받은 파라미터가 파일 이름에 쓰인다.
         # 예) json형태의 변수 child를 넣어주면 'child_accident.csv'로 저장된다.
-
+        df.drop(['폴리곤'],axis=1,inplace=True)
         df.to_csv(f'{self.file_name}_accident.csv')
         return df
 
@@ -404,6 +404,6 @@ t1 = Traffic(url,'jaywalking')
 #     t1.Make_Json()
 # except TimeoutError as e:
 #     t1.Make_Json()
-# t1.json_to_csv()
-t1.add_crawling()
+t1.json_to_csv()
+# t1.add_crawling()
 # print(t.find_index('충청남도','서천군'))
