@@ -200,7 +200,7 @@ class Traffic():
         print(year_dict)
 
         res_json = json.dumps(year_dict, ensure_ascii=False)
-        with open(f'{self.file_name}.json', 'w', encoding='utf-8') as f:
+        with open(f'./created_data/{self.file_name}.json', 'w', encoding='utf-8') as f:
             f.write(res_json)
 
     def find_index(self,want_sido, want_gugun):
@@ -223,11 +223,12 @@ class Traffic():
             cnt_g = -1
         return cnt_s, cnt_g
 
-    # 팀원 동준 https://github.com/GoodJeon
-    # 님의 json_to_csv 함수 가져와서 class 에 맞게 일부 수정
+    # 팀원 동준 https://github.com/GoodJeon 님이 만든
+    # json_to_csv 함수
+    # 가져와서 class 에 맞게 일부 수정
     # json형태(년도가 key)의 데이터를 넣어주면 csv파일로 바꿔준다.
     def json_to_csv(self):
-        with open(f'{self.file_name}.json', 'r', encoding='utf-8') as j:
+        with open(f'./created_data/{self.file_name}.json', 'r', encoding='utf-8') as j:
             x= json.loads(j.read())  #  UnboundLocalError: local variable 'json' referenced before assignment
         data = []
         df = pd.DataFrame()
@@ -247,7 +248,7 @@ class Traffic():
         # 입력받은 파라미터가 파일 이름에 쓰인다.
         # 예) json형태의 변수 child를 넣어주면 'child_accident.csv'로 저장된다.
         df.drop(['폴리곤'],axis=1,inplace=True)
-        df.to_csv(f'{self.file_name}_accident.csv')
+        df.to_csv(f'./created_data/{self.file_name}_accident.csv')
         return df
 
     def add_crawling(self):
@@ -256,7 +257,7 @@ class Traffic():
         lst = ['어린이', '초등학교', '놀이터', '키즈카페', '소아과', '학원', '요양원', '경로당', '공원', 'IC', '요금소', '버스터미널',
                '관광지', '숙박업소', '시장', '주차장', '술집']
 
-        with open(f'{self.file_name}.json', 'r', encoding='utf-8') as f:
+        with open(f'./created_data/{self.file_name}.json', 'r', encoding='utf-8') as f:
             total_json = json.load(f)
 
 
@@ -355,7 +356,7 @@ class Traffic():
                                 # print(find_name.text.strip())
 
                                 for dt in find_name:
-                                    print(dt.text.split('\n')[0])
+                                    # print(dt.text.split('\n')[0])
                                     if len(dt.text.split('\n')) > 2:
                                         # print(dt.text.split('\n')[2].split('·')[0].strip())
                                         category = (dt.text.split('\n')[2].split('·')[0].strip())
@@ -386,7 +387,7 @@ class Traffic():
         # colname_lst = ['year', 'sido', 'gugun', 'keyword', 'cateogory', 'name', 'address', 'center']
         df = pd.DataFrame(zip(year_lst, sido_lst, gugun_lst, key_lst, cate_lst, name_lst, addr_lst, center_lst),
                           columns=colname_lst)
-        df.to_csv(f'{self.file_name}_keywordSearch.csv')
+        df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv')
 
 
 # 아래가 자치구 위에가 연휴
@@ -404,6 +405,63 @@ t1 = Traffic(url,'jaywalking')
 #     t1.Make_Json()
 # except TimeoutError as e:
 #     t1.Make_Json()
-t1.json_to_csv()
+# t1.json_to_csv()
 # t1.add_crawling()
 # print(t.find_index('충청남도','서천군'))
+
+# 연휴
+url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
+t2 = Traffic(url,'frequentzoneTmzon')
+try:
+    t2.Make_Json()
+except TimeoutError as e:
+    t2.Make_Json()
+t2.json_to_csv()
+# t2.add_crawling()
+
+# 자치구
+url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
+t3 = Traffic(url,'frequentzoneLg')
+try:
+    t3.Make_Json()
+except TimeoutError as e:
+    t3.Make_Json()
+t3.json_to_csv()
+# t3.add_crawling()
+
+# 보행 노인
+url = 'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
+t4 = Traffic(url,'frequentzoneOldman')
+try:
+    t4.Make_Json()
+except TimeoutError as e:
+    t4.Make_Json()
+t4.json_to_csv()
+# t4.add_crawling()
+
+# 보행 어린이 사고
+url = 'http://apis.data.go.kr/B552061/frequentzoneChild/getRestFrequentzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
+t5 = Traffic(url,'frequentzoneChild')
+try:
+    t5.Make_Json()
+except TimeoutError as e:
+    t5.Make_Json()
+t5.json_to_csv()
+# t5.add_crawling()
+
+# 스쿨존 어린이 사고
+url = 'http://apis.data.go.kr/B552061/schoolzoneChild/getRestSchoolzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
+t6 = Traffic(url,'schoolzoneChild')
+try:
+    t6.Make_Json()
+except TimeoutError as e:
+    t6.Make_Json()
+t6.json_to_csv()
+# t6.add_crawling()
+
+
