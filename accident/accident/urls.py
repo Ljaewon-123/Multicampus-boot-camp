@@ -23,4 +23,6 @@ urlpatterns = [
     path('graph',views.graph_infra),
     path('infra_data/',views.infra_data),
     path('all_infra/', views.all_infra),
+    path('2_page/',views.two_page),
+    path('2_page/sido_pie/',views.sido_pie),
 ]

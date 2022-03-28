@@ -57,7 +57,6 @@
                     }
                 })
             })
-
         $.ajax({
             url:'all_infra/',
             // data: {'infra':infra,},
@@ -138,6 +137,16 @@
                         msg['infra_chzone'][3]+msg['infra_chzone'][2]+msg['infra_chzone'][1]+msg['infra_chzone'][0]]
                     }
                     ,
+                    {
+                        label: 'inf_ele_display',
+                        type : 'bar', // 'bar' type, 전체 타입과 같다면 생략가능
+                        backgroundColor: 'rgb(255, 255, 0)',
+                        borderColor: 'rgb(133, 214, 102)',
+                        data: [msg['inf_ele_display'][0],msg['inf_ele_display'][1]+msg['inf_ele_display'][0],
+                        msg['inf_ele_display'][2]+msg['inf_ele_display'][1]+msg['inf_ele_display'][0],
+                        msg['inf_ele_display'][3]+msg['inf_ele_display'][2]+msg['inf_ele_display'][1]+msg['inf_ele_display'][0]]
+                    }
+                    ,
                     ]
                 },
 
@@ -168,8 +177,8 @@
         }})
 
 
-        //end point
-        })
+        // end point
+        });
 
     </script>
 </head>
@@ -186,11 +195,13 @@
         <option value="InfYellowcarpet">옐로 카펫</option>
         <option value="InfUnCamera">무인 카메라</option>
         <option value="InfChildZone">어린이 보호구역</option>
+        <option value="InfEleDisplay">가변 전광판</option>
     </select>
     <br>
     <br>
     <div id="container"></div>
     <br>
+     <canvas id="jsChart"></canvas>
 
 
 </body>
