@@ -22,4 +22,5 @@ urlpatterns = [
     path('',views.index,name='index'),
     path('graph',views.graph_infra),
     path('infra_data/',views.infra_data),
+    path('all_infra/', views.all_infra),
 ]

@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
+import re
 
 class Traffic():
     SiDo = {'서울특별시': ['11',
@@ -83,8 +84,8 @@ class Traffic():
                       '창원시진해구': '129',
                       '통영시': '220', '하동군': '850', '함안군': '730', '함양군': '870', '합천군': '890'}],
             '제주특별자치도': ['50', {'서귀포시': '130', '제주시': '110'}]}
-    Year = ['2017', '2018', '2019', '2020',]
-    # Year = ['2020' ]
+    # Year = ['2017', '2018', '2019', '2020',]
+    Year = ['2020' ]
     def __init__(self,url,file_name):
         self.url = url
         self.file_name = file_name
@@ -242,13 +243,18 @@ class Traffic():
                                 data.append(list(json_x[year_data][sido_add][sido_data][gugun_add][details_data].values()))
                                 columns = json_x[year_data][sido_add][sido_data][gugun_add][details_data].keys()
             year_df = pd.DataFrame(data, columns=columns)
-            year_df['발생년도'] = year_add
+            year_df['year'] = year_add
             df = pd.concat([df, year_df], ignore_index=True)  # /ignore_index  바로 df에 적용
-
+        # ['id','address','occur','death_injury','death','s_injury','l_injury','lot','lat']
         # 입력받은 파라미터가 파일 이름에 쓰인다.
         # 예) json형태의 변수 child를 넣어주면 'child_accident.csv'로 저장된다.
         df.drop(['폴리곤'],axis=1,inplace=True)
-        df.to_csv(f'./created_data/{self.file_name}_accident.csv')
+        df.rename(
+            columns={'상세주소': 'address', '발생건수': 'occur', '사상자수': 'death_injury', '사망자수': 'death', '중상자수': 's_injury',
+                     '경상자수': 'l_injury', '경도': 'lot', '위도': 'lat'}, inplace=True)
+        df = df.reset_index().rename(columns={"index": "id"})
+
+        df.to_csv(f'./created_data/{self.file_name}_accident.csv', encoding = 'cp949',index=False) #
         return df
 
     def add_crawling(self):
@@ -274,21 +280,21 @@ class Traffic():
 
         for YY in Traffic.Year:
             for SS in Traffic.SiDo.keys():
-                print(YY, SS)
+                # print(YY, SS)
                 count = -1
                 a = self.find_index(SS, 'default')
                 for gu_list in total_json[YY][a[0]][SS]:
                     for GG in gu_list:
                         count += 1
-                        print(GG, count)
+                        # print(GG, count)
                         a, b = self.find_index(SS, 'default')
-                        print(a, b)
+                        # print(a, b)
                         for keyword in lst:
-                            print(keyword)
+                            # print(keyword)
                             for i in total_json[YY][a][SS][count][GG]:  # 여기와 키워드 사이에 연도 ,sido,gugun 구분지어서 돌리는거,만들어진 파일,시도코드?
                                 lat_lon = [i['위도'], i['경도']]
-                                print(lat_lon)
-                                url_cra = f'https://www.google.co.kr/maps/search/{keyword}/@{lat_lon[0]},{lat_lon[1]},13.25z/'
+                                # print(lat_lon)
+                                url_cra = f'https://www.google.co.kr/maps/search/{keyword}/@{lat_lon[0]},{lat_lon[1]},15z/'
 
                                 driver.implicitly_wait(3)  # 3초 기다렸다가 url 가져오겠다
                                 driver.get(url_cra)
@@ -300,31 +306,34 @@ class Traffic():
 
                                 num_ele = len(exists_ele)
                                 if keyword == '숙박업소':
-                                    if num_ele <= 5:
-                                        # 스크롤 특정 엘리먼트로 이동  # 41
-                                        #     print('여기?3')
-                                        for x in range(5, num_ele, 2):
-                                            element = driver.find_element(By.XPATH,
-                                                                          f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
-                                            driver.execute_script('arguments[0].scrollIntoView(true);', element)
-                                    else:  # 스크롤 생기면 무조건 끝까지 내리는데 마지막 20개가 아니라 중간에 멈출경우 이제까지 생성된 num_ele만큼 내리고 로드된 모든 element에서 값 가져옴
-                                        try:
-                                            for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
-                                                # if EE.is_displayed():
-                                                element = driver.find_element(By.XPATH,
-                                                                              f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
-
-                                                driver.execute_script('arguments[0].scrollIntoView(true);', element)
-                                        except Exception as e:
-                                            # print(e)
+                                    try:
+                                        if num_ele <= 5:
+                                            # 스크롤 특정 엘리먼트로 이동  # 41
+                                            #     print('여기?3')
                                             for x in range(5, num_ele, 2):
                                                 element = driver.find_element(By.XPATH,
                                                                               f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
                                                 driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                        else:  # 스크롤 생기면 무조건 끝까지 내리는데 마지막 20개가 아니라 중간에 멈출경우 이제까지 생성된 num_ele만큼 내리고 로드된 모든 element에서 값 가져옴
+                                            try:
+                                                for x in range(5, 41, 2):  # 스크롤만 해주면 되잖아 맨 아래로 내려가기만 하면 가능
+                                                    # if EE.is_displayed():
+                                                    element = driver.find_element(By.XPATH,
+                                                                                  f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
+
+                                                    driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                            except Exception as e:
+                                                # print(e)
+                                                for x in range(5, num_ele, 2):
+                                                    element = driver.find_element(By.XPATH,
+                                                                                  f'/html/body/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[1]/div[{x}]/div/div[2]')
+                                                    driver.execute_script('arguments[0].scrollIntoView(true);', element)
+                                    except Exception :
+                                        pass
                                 else:
-                                    print('where?')
+                                    # print('where?')
                                     if num_ele <= 5:
-                                        print('here?')
+                                        # print('here?')
                                         # 스크롤 특정 엘리먼트로 이동  # 41
                                         #     print('여기?3')
                                         for x in range(5, num_ele, 2):
@@ -387,12 +396,18 @@ class Traffic():
         # colname_lst = ['year', 'sido', 'gugun', 'keyword', 'cateogory', 'name', 'address', 'center']
         df = pd.DataFrame(zip(year_lst, sido_lst, gugun_lst, key_lst, cate_lst, name_lst, addr_lst, center_lst),
                           columns=colname_lst)
-        df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv')
+        df = df.reset_index().rename(columns={"index": "id"})
+        # 특수문자 제거
+        df['category'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['category']]
+        df['address'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['address']]
+        df['name'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['name']]
+        df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv', encoding = 'cp949',index=False)
 
 
 # 아래가 자치구 위에가 연휴
 # url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 # url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+
 # 보행자 무단횡단
 url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 
@@ -400,7 +415,7 @@ url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0
 # t.Make_Json()
 
 
-t1 = Traffic(url,'jaywalking')
+# t1 = Traffic(url,'jaywalking')
 # try:
 #     t1.Make_Json()
 # except TimeoutError as e:
@@ -410,58 +425,65 @@ t1 = Traffic(url,'jaywalking')
 # print(t.find_index('충청남도','서천군'))
 
 # 연휴
-url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-
-t2 = Traffic(url,'frequentzoneTmzon')
-try:
-    t2.Make_Json()
-except TimeoutError as e:
-    t2.Make_Json()
-t2.json_to_csv()
+# url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+# sleep(10)
+# t2 = Traffic(url,'frequentzoneTmzon')
+# try:
+#     t2.Make_Json()
+# except TimeoutError as e:
+#     sleep(10)
+#     t2.Make_Json()
+# t2.json_to_csv()
 # t2.add_crawling()
 
 # 자치구
 url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 
-t3 = Traffic(url,'frequentzoneLg')
-try:
-    t3.Make_Json()
-except TimeoutError as e:
-    t3.Make_Json()
-t3.json_to_csv()
+sleep(10)
+
+# t3 = Traffic(url,'frequentzoneLg')
+# try:
+#     t3.Make_Json()
+# except TimeoutError as e:
+#     sleep(10)
+#     t3.Make_Json()
+# t3.json_to_csv()
 # t3.add_crawling()
 
 # 보행 노인
 url = 'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-
+sleep(10)
 t4 = Traffic(url,'frequentzoneOldman')
-try:
-    t4.Make_Json()
-except TimeoutError as e:
-    t4.Make_Json()
-t4.json_to_csv()
-# t4.add_crawling()
+# try:
+#     t4.Make_Json()
+# except TimeoutError as e:
+#     sleep(10)
+#     t4.Make_Json()
+# t4.json_to_csv()
+t4.add_crawling()
 
 # 보행 어린이 사고
-url = 'http://apis.data.go.kr/B552061/frequentzoneChild/getRestFrequentzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-
-t5 = Traffic(url,'frequentzoneChild')
-try:
-    t5.Make_Json()
-except TimeoutError as e:
-    t5.Make_Json()
-t5.json_to_csv()
+# url = 'http://apis.data.go.kr/B552061/frequentzoneChild/getRestFrequentzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+# sleep(10)
+# t5 = Traffic(url,'frequentzoneChild')
+# try:
+#     t5.Make_Json()
+# except TimeoutError as e:
+#     sleep(10)
+#     t5.Make_Json()
+# t5.json_to_csv()
 # t5.add_crawling()
 
 # 스쿨존 어린이 사고
-url = 'http://apis.data.go.kr/B552061/schoolzoneChild/getRestSchoolzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-
-t6 = Traffic(url,'schoolzoneChild')
-try:
-    t6.Make_Json()
-except TimeoutError as e:
-    t6.Make_Json()
-t6.json_to_csv()
+# url = 'http://apis.data.go.kr/B552061/schoolzoneChild/getRestSchoolzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+# sleep(10)
+# t6 = Traffic(url,'schoolzoneChild')
+# try:
+#     t6.Make_Json()
+# except TimeoutError as e:
+#     sleep(10)
+#     t6.Make_Json()
+# t6.json_to_csv()
 # t6.add_crawling()
 
 

@@ -57,3 +57,69 @@ def infra_data(request):
     return JsonResponse(json_dict)
 
 
+def all_infra(request):
+    lst = []
+    lst_obj = []
+    tmp = {}
+    name_lst = ['infra_sp','infra_smcro','infra_smlap','infra_yel','infra_cam','infra_chzone']
+    cnt_17,cnt_18,cnt_19,cnt_20 = 0,0,0,0
+    infra_sp = InfSpeedBump.objects.all().order_by('-id')
+    infra_smcro = InfSmartCross.objects.all().order_by('-id')
+    infra_smlap = InfSmartLamp.objects.all().order_by('-id')
+    infra_yel = InfYellowcarpet.objects.all().order_by('-id')
+    infra_cam = InfUnCamera.objects.all().order_by('-id')
+    infra_chzone = InfChildZone.objects.all().order_by('-id')
+
+    lst_obj.append(infra_sp)
+    lst_obj.append(infra_smcro)
+    lst_obj.append(infra_smlap)
+    lst_obj.append(infra_yel)
+    lst_obj.append(infra_cam)
+    lst_obj.append(infra_chzone)
+    print('------------------------------------------------')
+    # print(infra_sp)
+    print('------------------------------------------------')
+    # print(lst_obj)
+    print('------------------------------------------------')
+    for i in range(6):
+        for obj in lst_obj[i]:
+            if obj.year_code == 17:
+                cnt_17 += 1
+            elif obj.year_code == 18:
+                cnt_18 += 1
+            elif obj.year_code == 19:
+                cnt_19 += 1
+            elif obj.year_code == 20:
+                cnt_20 += 1
+        lst.append(cnt_17)
+        lst.append(cnt_18)
+        lst.append(cnt_19)
+        lst.append(cnt_20)
+        cnt_17, cnt_18, cnt_19, cnt_20 = 0, 0, 0, 0
+        tmp[name_lst[i]] = lst
+        # print(tmp)
+        lst = []
+    # print(tmp)
+    # print(lst)
+    # 연도별 사망자수 + 부상자수 sum 컬럼만
+    acc = InfCarAcc.objects.all().order_by('id')
+    for i in acc:
+        sum_cg = 0
+        if (i.cg == '사망자수' or i.cg == '부상자수') and i.year_code == 17:
+            # print(i.sum)
+            sum_cg = i.sum
+        elif (i.cg == '사망자수' or i.cg == '부상자수') and i.year_code == 18:
+
+            sum_cg = i.sum
+        elif (i.cg == '사망자수' or i.cg == '부상자수') and i.year_code == 19:
+
+            sum_cg+= i.sum
+        elif (i.cg == '사망자수' or i.cg == '부상자수') and i.year_code == 20:
+
+            sum_cg = i.sum
+
+        lst.append(sum_cg)
+
+    tmp['CG'] = lst
+    print(tmp)
+    return JsonResponse(tmp)
