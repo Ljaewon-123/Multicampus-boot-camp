@@ -167,17 +167,7 @@ class Traffic():
 
                         lst.append(tmp)   ## 두번 담김
 
-                    # 데이터 없으면 에러 발생
-                    # try:
-                    #     new_tmp['총합발생건수'] = total_occrrnc_cnt
-                    #     new_tmp['총합사상자수'] = total_caslt_cnt
-                    #     new_tmp['총합사망자수'] = total_dth_dnv_cnt
-                    #     new_tmp['총합중상자수'] = total_se_dnv_cnt
-                    #     new_tmp['총합경상자수'] = total_sl_dnv_cnt
-                    #     lst.append(new_tmp)    ## 두번 담김
-                    # except NameError as e:
-                    #     # print('데이터가 없음')
-                    #     pass
+
 
                     # print(lst)
                     gu = {gugun: lst}
@@ -224,10 +214,7 @@ class Traffic():
             cnt_g = -1
         return cnt_s, cnt_g
 
-    # 팀원 동준 https://github.com/GoodJeon 님이 만든
-    # json_to_csv 함수
-    # 가져와서 class 에 맞게 일부 수정
-    # json형태(년도가 key)의 데이터를 넣어주면 csv파일로 바꿔준다.
+
     def json_to_csv(self):
         with open(f'./created_data/{self.file_name}.json', 'r', encoding='utf-8') as j:
             x= json.loads(j.read())  #  UnboundLocalError: local variable 'json' referenced before assignment
@@ -401,8 +388,8 @@ class Traffic():
         df['category'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['category']]
         df['address'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['address']]
         df['name'] = [re.sub('[^A-Za-z0-9가-힣]', '', str(s)) for s in df['name']]
-        df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv', encoding = 'cp949',index=False)
-
+        df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv', index=False) # 인코딩 문제
+        # df.to_csv(f'./created_data/{self.file_name}_keywordSearch.csv', encoding = 'cp949',index=False)
 
 # 아래가 자치구 위에가 연휴
 # url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
