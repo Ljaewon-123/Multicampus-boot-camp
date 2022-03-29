@@ -395,82 +395,80 @@ class Traffic():
 # url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 # url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 
+
+
 # 보행자 무단횡단
 url = 'http://apis.data.go.kr/B552061/jaywalking/getRestJaywalking?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 
-# t = Traffic(url,'namename')
-# t.Make_Json()
-
-
-# t1 = Traffic(url,'jaywalking')
-# try:
-#     t1.Make_Json()
-# except TimeoutError as e:
-#     t1.Make_Json()
-# t1.json_to_csv()
-# t1.add_crawling()
+t1 = Traffic(url,'jaywalking')
+try:
+    t1.Make_Json()
+except TimeoutError as e:
+    t1.Make_Json()
+t1.json_to_csv()
+t1.add_crawling()
 # print(t.find_index('충청남도','서천군'))
 
 # 연휴
-# url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-# sleep(10)
-# t2 = Traffic(url,'frequentzoneTmzon')
-# try:
-#     t2.Make_Json()
-# except TimeoutError as e:
-#     sleep(10)
-#     t2.Make_Json()
-# t2.json_to_csv()
-# t2.add_crawling()
+url = 'http://apis.data.go.kr/B552061/frequentzoneTmzon/getRestFrequentzoneTmzon?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+sleep(10)
+t2 = Traffic(url,'frequentzoneTmzon')
+try:
+    t2.Make_Json()
+except TimeoutError as e:
+    sleep(10)
+    t2.Make_Json()
+t2.json_to_csv()
+t2.add_crawling()
 
 # 자치구
 url = 'http://apis.data.go.kr/B552061/frequentzoneLg/getRestFrequentzoneLg?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 
 sleep(10)
 
-# t3 = Traffic(url,'frequentzoneLg')
-# try:
-#     t3.Make_Json()
-# except TimeoutError as e:
-#     sleep(10)
-#     t3.Make_Json()
-# t3.json_to_csv()
-# t3.add_crawling()
+t3 = Traffic(url,'frequentzoneLg')
+try:
+    t3.Make_Json()
+except TimeoutError as e:
+    sleep(10)
+    t3.Make_Json()
+t3.json_to_csv()
+t3.add_crawling()
 
 # 보행 노인
 url = 'http://apis.data.go.kr/B552061/frequentzoneOldman/getRestFrequentzoneOldman?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
 sleep(10)
 t4 = Traffic(url,'frequentzoneOldman')
-# try:
-#     t4.Make_Json()
-# except TimeoutError as e:
-#     sleep(10)
-#     t4.Make_Json()
-# t4.json_to_csv()
+try:
+    t4.Make_Json()
+except TimeoutError as e:
+    sleep(10)
+    t4.Make_Json()
+t4.json_to_csv()
 t4.add_crawling()
 
 # 보행 어린이 사고
-# url = 'http://apis.data.go.kr/B552061/frequentzoneChild/getRestFrequentzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-# sleep(10)
-# t5 = Traffic(url,'frequentzoneChild')
-# try:
-#     t5.Make_Json()
-# except TimeoutError as e:
-#     sleep(10)
-#     t5.Make_Json()
-# t5.json_to_csv()
-# t5.add_crawling()
+url = 'http://apis.data.go.kr/B552061/frequentzoneChild/getRestFrequentzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+sleep(10)
+t5 = Traffic(url,'frequentzoneChild')
+try:
+    t5.Make_Json()
+except TimeoutError as e:
+    sleep(10)
+    t5.Make_Json()
+t5.json_to_csv()
+t5.add_crawling()
 
 # 스쿨존 어린이 사고
-# url = 'http://apis.data.go.kr/B552061/schoolzoneChild/getRestSchoolzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
-# sleep(10)
-# t6 = Traffic(url,'schoolzoneChild')
-# try:
-#     t6.Make_Json()
-# except TimeoutError as e:
-#     sleep(10)
-#     t6.Make_Json()
-# t6.json_to_csv()
-# t6.add_crawling()
+url = 'http://apis.data.go.kr/B552061/schoolzoneChild/getRestSchoolzoneChild?serviceKey={0}&searchYearCd={1}&siDo={2}&guGun={3}&type=json&numOfRows=9999&pageNo=1'
+sleep(10)
+t6 = Traffic(url,'schoolzoneChild')
+try:
+    t6.Make_Json()
+except TimeoutError as e:
+    sleep(10)
+    t6.Make_Json()
+t6.json_to_csv()
+t6.add_crawling()
 
 
