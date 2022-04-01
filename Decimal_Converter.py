@@ -28,9 +28,9 @@ def binary(num):
             print(1, end="")
             b.append(1)
             break
-    print()
+    # print()
     string = "".join([str(_) for _ in b])
-    print(string[::-1])     # 뒤집어줌  현재 string는 문자열 상태
+    print(string[::-1])     # 뒤집어줌  현재 string는 문자열 상태  최종결과
     return b    # 무엇을 리턴해야 할까?
 
 
@@ -43,12 +43,13 @@ def Re_converter(return_num):
            y.append(0)
         else:
            y.append(2**i)
-    print(y)
+    # print(y)
     cnt = 0
     for i in y:             # lambda? # 리스트 컴프리헨션(list comprehension) ?? 리스트가 필요없음
         cnt += i
     print(cnt)
 
+binary(286)
 Re_converter(binary(286))
 
 
