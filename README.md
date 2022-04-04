@@ -168,6 +168,15 @@ wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz
 
 
 
+bashrc 설정 모음
+
+```
+```
+
+
+
+
+
 `cd $HADOOP_CONF_DIR` 이후
 
 `vim hadoop-env.sh `  하둡 환경  # 주석표시 풀고 추가 설정 해줌 들어가서 확인
@@ -2630,7 +2639,7 @@ sudo 없이 사용하도록
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;  # 모든 권한 root@localhost 에줌
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 
-flush privileges; 저장
+flush privileges; # 저장
 
 CREATE TABLE test(id int, name VARCHAR(30));
 
@@ -2727,6 +2736,8 @@ mongodb test 데이터베이스 사용
 만일 데이터베이스를 계속 바꿔야 하는 상황이라면
 해당 설정 안하고
 코드에서 옵션으로 바꿔야함 
+
+`cd $SPARK_HOME/conf`
 
 `vim spark-defaults.conf`
 
