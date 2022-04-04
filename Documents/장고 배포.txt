@@ -1,0 +1,158 @@
+python -V
+
+pip -V
+
+python3 -V
+
+cd 
+
+django-admin startproject test
+도 안됨
+
+django
+pip list
+conda list
+conda insatll django
+
+while (i := lang_code.rfind('-', 0, i)) > -1:
+
+
+django 4.0은 python 3.8부터 지원
+
+django 지우고 버전 내리자 
+pip uninstall django
+conda uninstall django
+
+3.2 
+conda install django==3.2
+
+--
+gunicorn 설치 했으면 
+그냥 환경변수 파일 만들기 
+
+rm -f 텍스트명 
+
+sudo 
+
+
+sudo service mysite start
+sudo service mysite status
+
+rm mysite.env
+
+sudo service mysite start
+sudo service mysite status
+
+team3에서
+vim mysite.env
+DJANGO_SETTINGS_MODULE=settings
+
+sudo service mysite start
+sudo service mysite status
+
+----
+
+sudo systemctl daemon-reload
+
+왜 안 돼 !!!!!!!!!!!!!!!
+
+vim mysite.env
+#DJANGO_SETTINGS_MODULE=settings (주석처리하고
+
+-------
+
+sudo vim /etc/systemd/system/mysite.service
+
+config.wsgi:application -> team3
+
+ds
+
+
+--
+sudo vim /etc/systemd/system/mysite.service
+
+dd
+한 줄 올라가서 역슬래시 지우기 
+
+- 실패 
+
+
+
+
+mysql -udi -h211.172.73.14 -p
+
+---------------
+conda activate
+which gunicorn
+경로 복사
+sudo vim /etc/systemd/system/mysite.service
+execstar~ -> 지우고 방금 복사한 경로 넣기
+environmentfile 날리고
+프로젝트명 team3 써주고
+gunicorn gks 칸 띄고
+team/wsgi:application
+저장
+
+sudo systemctl daemon-reload
+
+sudo service mysite start
+sudo service mysite status
+
+
+--------------------------
+settings.py
+아래 슬래쉬 지우고
+장고 서버 올리고 
+
+sudo systemctl restart nginx
+sudo service mysite restart 
+
+웹서버랑 와스서버 따로 만들었고 
+그거를 올려줬으니까 
+python manage.py runserver를 안 해줘도 접근이 되어야하거든
+
+vim manage.py 
+
+주소에
+/static/css/pie.css
+
+터미널에서
+요청이 들어왔는ㄴ데 404 not found
+
+
+cd ../
+cd templates
+vim index/html
+
+type="text/css"
+다시 서버켜서 다시 접속
+
+
+
+안돼애애애앵
+sudo service nginx stop
+sudo service mysite stop
+
+pytnon manage.py runserver 0.0.0.0:8083
+
+---
+settings 가서 debug true로 바꿔보면 
+
+---- 
+구니콘 설정부터 다시 가자
+sudo vim /etc/systemd/system/mysite.service
+
+엔진엑스 설정 
+cd /etc/nginx/sites-available
+sudo vim mysite
+
+port를 8083으로 바꾸고 
+
+------ 최종
+
+
+
+
+
+
+

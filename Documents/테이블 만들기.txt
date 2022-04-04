@@ -1,0 +1,330 @@
+create table test( id int primary key,
+	sido text,gugun text,gubun int ,Type text, year_code int);
+
+# 대문자 유지
+
+create table inf_car_acc(id int primary key,
+	CG text,sum int, CtoP int ,CtoC int ,CAlone int, year_code int);
+
+create table inf_child_zone(id int primary key,
+	gugun text,address text, s_name text ,stype text ,  year_code int, sido text);
+
+
+create table inf_ele_display(id int primary key,
+	sido text,gugun text, year_code int);
+
+create table inf_population(id int primary key,
+	year_code int,gugun text, 
+	household int ,
+	pop_sum int ,
+	male int ,
+	female int ,
+	sumKor int ,
+	korM int ,
+	korF int ,
+	sumFor int ,
+	forM int ,
+	forF int ,
+	HousePerPerson double ,
+	over65 int);
+	
+
+create table inf_smart_cross(id int primary key,
+	year_code int,sido text,gugun text, address text );
+
+
+
+create table inf_smart_lamp(id int primary key,
+	gugun text, sido text,year_code int);
+
+create table inf_speed_bump(id int primary key,
+	sido text,gugun text, type text, year_code int);
+
+
+
+create table inf_un_camera( id int primary key,
+	sido text,gugun text,gubun int ,Type text, year_code int);
+
+
+create table inf_yellowcarpet(id int primary key,
+	address text,year_code int , sido text, gugun text);
+
+
+
+create table frequentzonechild_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+
+create table frequentzonelg_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+create table frequentzoneoldman_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+
+
+create table frequentzonetmzon_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+
+create table schoolzonechild_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+
+create table jaywalking_accident( id int primary key,
+address text ,
+occur int ,
+death_injury int ,
+death int ,
+s_injury int, 
+l_injury int ,
+lot double ,
+lat double ,
+year int);
+
+
+create table year(id int primary key,
+	year int);
+
+
+# 크롤링은 나중에 총합하자 
+create table frequentzoneOldman_keywordSearch(id int primary key,
+year int ,
+sido text ,
+gugun text ,
+keyword text ,
+category text ,
+name text ,
+address text ,
+center text);
+
+create table frequentzoneChild_keywordSearch(id int primary key,
+year int ,
+sido text ,
+gugun text ,
+keyword text ,
+category text ,
+name text ,
+address text ,
+center text);
+
+create table frequentzoneTmzon_keywordSearch(id int primary key,
+year int ,
+sido text ,
+gugun text ,
+keyword text ,
+category text ,
+name text ,
+address text ,
+center text);
+
+create table jaywalking_keywordSearch(id int primary key,
+year int ,
+sido text ,
+gugun text ,
+keyword text ,
+category text ,
+name text ,
+address text ,
+center text);
+
+create table schoolzoneChild_keywordSearch(id int primary key,
+year int ,
+sido text ,
+gugun text ,
+keyword text ,
+category text ,
+name text ,
+address text ,
+center text);
+
+
+mysql
+pyspark
+
+
+
+
+
+csv_file01 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_car_acc.csv')
+
+csv_file02 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_child_zone.csv')
+
+csv_file03 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_ele_display.csv')
+
+csv_file04 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_population.csv')
+
+csv_file05 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_smart_cross.csv')
+
+csv_file06 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_smart_lamp.csv')
+
+csv_file07 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_speed_bump.csv')
+
+csv_file08 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_yellowcarpet.csv')
+
+csv_file9 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/inf_un_camera.csv')
+
+csv_file10 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/year.csv')
+
+csv_file04 = csv_file04.selectExpr('id','year_code','gugun','household','male','female','sumKor','korM','korF','sumFor','forM','forF','HousePerPerson','over65')
+
+csv_file03 = csv_file03.selectExpr('id','sido','gugun','year_code')
+
+csv_file11 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzonechild_accident.csv')
+
+csv_file12 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/schoolzonechild_accident.csv')
+
+csv_file13 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzonelg_accident.csv')
+
+csv_file14 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzoneoldman_accident.csv')
+
+csv_file15 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzonetmzon_accident.csv')
+
+csv_file16 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/jaywalking_accident.csv')
+
+csv_file17 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzonechild_keywordsearch .csv')
+
+csv_file18 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/schoolzonechild_keywordsearch.csv')
+
+csv_file19 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzonetmzon_keywordsearch .csv')
+
+csv_file20 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/jaywalking_keywordSearch.csv')
+
+csv_file21 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/created_data/frequentzoneOldman_keywordSearch.csv')
+
+
+
+user='root'                                                                 
+password='1234' 
+url="jdbc:mysql://localhost:3306/stone"
+driver = 'com.mysql.cj.jdbc.Driver'
+
+
+csv_file01.write.jdbc(url,'inf_car_acc','append',properties={'driver':driver,'user':user,'password':password})
+csv_file02.write.jdbc(url,'inf_child_zone','append',properties={'driver':driver,'user':user,'password':password})
+csv_file03.write.jdbc(url,'inf_ele_display','append',properties={'driver':driver,'user':user,'password':password})
+csv_file04.write.jdbc(url,'inf_population','append',properties={'driver':driver,'user':user,'password':password})
+csv_file05.write.jdbc(url,'inf_smart_cross','append',properties={'driver':driver,'user':user,'password':password})
+csv_file06.write.jdbc(url,'inf_smart_lamp','append',properties={'driver':driver,'user':user,'password':password})
+csv_file07.write.jdbc(url,'inf_speed_bump','append',properties={'driver':driver,'user':user,'password':password})
+csv_file08.write.jdbc(url,'inf_un_camera','append',properties={'driver':driver,'user':user,'password':password})
+csv_file09.write.jdbc(url,'inf_yellowcarpet','append',properties={'driver':driver,'user':user,'password':password})
+csv_file10.write.jdbc(url,'inf_car_acc','append',properties={'driver':driver,'user':user,'password':password})
+
+csv_file11.write.jdbc(url,'frequentzonechild_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file12.write.jdbc(url,'schoolzonechild_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file13.write.jdbc(url,'frequentzonelg_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file14.write.jdbc(url,'frequentzoneoldman_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file15.write.jdbc(url,'frequentzonetmzon_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file16.write.jdbc(url,'jaywalking_accident','append',properties={'driver':driver,'user':user,'password':password})
+csv_file17.write.jdbc(url,'frequentzonechild_keywordsearch','append',properties={'driver':driver,'user':user,'password':password})
+csv_file18.write.jdbc(url,'schoolzonechild_keywordsearch','append',properties={'driver':driver,'user':user,'password':password})
+csv_file19.write.jdbc(url,'frequentzonetmzon_keywordsearch','append',properties={'driver':driver,'user':user,'password':password})
+csv_file20.write.jdbc(url,'jaywalking_keywordSearch','append',properties={'driver':driver,'user':user,'password':password})
+csv_file21.write.jdbc(url,'frequentzoneOldman_keywordSearch','append',properties={'driver':driver,'user':user,'password':password})
+
+
+
+
+
+
+-----------------------------------------
++-----------------------------+
+| Tables_in_stone             |
++-----------------------------+
+| frequentzonechild_accident  |
+| frequentzonelg_accident     |
+| frequentzoneoldman_accident |
+| frequentzonetmzon_accident  |
+| inf_car_acc                 |
+| inf_child_zone              |
+| inf_ele_display             |
+| inf_population              |
+| inf_smart_cross             |
+| inf_smart_lamp              |
+| inf_speed_bump              |
+| inf_un_camera               |
+| inf_yellowcarpet            |
+| schoolzonechild_accident    |
+| year                        |
++-----------------------------+
+
+몽고디비 
+--------------------------------------------------------------------------------------------------------------------------
+
+
+json_file01 = spark.read.format('json').load('/home/jaewon/data/created_data/jaywalking.json')
+
+json_file01.write.format('mongo').option('database','test').option('collection','jaywalking').mode('overwrite').save()
+
+
+json_file02 = spark.read.format('json').load('/home/jaewon/data/created_data/frequentzoneChild.json')
+
+json_file02.write.format('mongo').option('database','test').option('collection','frequentzoneChild').mode('overwrite').save()
+
+json_file03 = spark.read.format('json').load('/home/jaewon/data/created_data/frequentzoneLg.json')
+
+json_file03.write.format('mongo').option('database','test').option('collection','frequentzoneLg').mode('overwrite').save()
+
+json_file04 = spark.read.format('json').load('/home/jaewon/data/created_data/frequentzoneOldman.json')
+
+json_file04.write.format('mongo').option('database','test').option('collection','frequentzoneOldman').mode('overwrite').save()
+
+json_file05 = spark.read.format('json').load('/home/jaewon/data/created_data/frequentzoneTmzon.json')
+
+json_file05.write.format('mongo').option('database','test').option('collection','frequentzoneTmzon').mode('overwrite').save()
+
+json_file06 = spark.read.format('json').load('/home/jaewon/data/created_data/schoolzoneChild.json')
+
+json_file06.write.format('mongo').option('database','test').option('collection','schoolzoneChild').mode('overwrite').save()
+
+mongo_start.sh
+insert_mongo.py
+
+
+create_table.sql
+create_table2.sql
+create_table3.sql
+
+----
+
