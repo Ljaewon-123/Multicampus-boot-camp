@@ -379,3 +379,9 @@ python manage.py inspectdb
 crontab -e   edit
 
 crontab -l 크론탭설명 보겠다
+
+
+
+# git
+
+처음으로 브렌치를 나눠서 작업해봤다 브렌치를 나눴는데도 서로 충돌에러가 났고 그걸 해결하면서 깃의 사용법을 조금더 익히게 된거같다.
