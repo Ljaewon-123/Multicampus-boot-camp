@@ -43,6 +43,10 @@ yarn - 리소스,노드관리 해주는 관리자
 
 
 
+2.9대 버전까지는 port가 50070이었으나 3.x대 부터는 9870으로 바뀌었다.
+
+
+
 **싱글모드로 구현**
 
 > 싱글모드는 한컴퓨터에 namenode,datanode가 있으며 서로 다른컴퓨터로 인식해 정보를 저장하게한다.
@@ -2764,3 +2768,16 @@ insert_df.write.format('mongo').option('database','test').option('collection','t
 
 ```
 
+
+
+# webhdfs
+
+**새로 깔았는데 어째선지 home이 아니라 user이다 이거 유의할것**
+
+curl -s http://127.0.0.1:9870/webhdfs/v1/user/jaewon/?op=LISTSTATUS
+
+해당경로에 상태확인 
+
+2.9대 버전까지는 port가 50070이었으나 3.x대 부터는 9870으로 바뀌었다.
+
+3.대 버전부터는 따로 주소 지정안해줘도된다 
