@@ -2774,6 +2774,8 @@ insert_df.write.format('mongo').option('database','test').option('collection','t
 
 **새로 깔았는데 어째선지 home이 아니라 user이다 이거 유의할것**
 
+하둡경로로 쓰는거
+
 curl -s http://127.0.0.1:9870/webhdfs/v1/user/jaewon/?op=LISTSTATUS
 
 해당경로에 상태확인 
@@ -2781,3 +2783,82 @@ curl -s http://127.0.0.1:9870/webhdfs/v1/user/jaewon/?op=LISTSTATUS
 2.9대 버전까지는 port가 50070이었으나 3.x대 부터는 9870으로 바뀌었다.
 
 3.대 버전부터는 따로 주소 지정안해줘도된다 
+
+
+
+datanode 포트 확인
+
+jps 에서 번호 확인
+
+sudo apt install net-tools  // netstat 다운
+
+netstat -v  버전확인
+
+netstat -antup | grep LISTEN | sort -n
+
+## webhdfs를 이용한 파일 업로드
+
+post ? ,get,put 중에 하나를 연습해봄
+
+curl -i -X POST "http://127.0.0.1:9870/webhdfs/v1/user/jaewon/data?op=APPEND"
+
+POST는 Forbidden 에러로 안되니 PUT으로 해보자 
+
+put도 안됐고
+
+pywebhdfs 쓰니까 한번에됨... 내 하루는 어디로 갔는지
+
+vim pyweb.py
+
+**create_file**
+
+```python
+from pywebhdfs.webhdfs import PyWebHdfsClient
+
+hdfs = PyWebHdfsClient(host='127.0.0.1',port='9870',user_name='jaewon')
+my_data = '01010101010101010101010101010101'
+my_file = '/home/jaewon/test.txt'
+hdfs.create_file(my_file, my_data,overwrite=True)
+# 하지만 옮기는게 아니라 완전히 새로 만든는것
+```
+
+**append_file**
+
+결국필요한 요청은 이미지파일 이기에 이미지를 이진수로 열어서 보내줌 
+
+```python
+from pywebhdfs.webhdfs import PyWebHdfsClient
+
+
+with open('/home/jaewon/wwww.png','rb') as f:
+    data = f.read()
+
+hdfs = PyWebHdfsClient(host='127.0.0.1',port='9870',user_name='jaewon')
+my_data = data
+my_file = '/home/jaewon/wwww.png'
+hdfs.create_file(my_file, my_data,overwrite=True)
+
+```
+
+잘 올라간거 확인
+
+**read_file**
+
+다운받을때 이진수 형태로 바꿔줘서 다운해줌 
+
+```python
+from pywebhdfs.webhdfs import PyWebHdfsClient
+
+
+hdfs = PyWebHdfsClient(host='127.0.0.1',port='9870',user_name='jaewon')
+
+my_file = '/home/jaewon/wwww.png'
+
+image = hdfs.read_file(my_file)
+
+# print(image)
+
+with open('/home/jaewon/wwww2.png','wb') as f:
+    f.write(image)
+```
+
