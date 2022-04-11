@@ -2806,6 +2806,105 @@ POST는 Forbidden 에러로 안되니 PUT으로 해보자
 
 put도 안됐고
 
+
+
+GET 방식은 되는데 POST나 PUT이 안됨 
+
+get은 되니 webhdfs의 문제는 아니라고 생각해서 403에러인 권한 설정을 더 찾아봤다
+
+**HADOOP 파일 접근권한과 append기능을 사용할수있게 hdfs-site.xml에 권한변경을 해줌**
+
+```python
+<property>
+
+    <name>dfs.webhdfs.enabled</name>
+    <value>true</value>
+
+</property>
+<property>
+    <name>dfs.support.append</name>
+    <value>true</value>
+</property>
+
+<property>
+    <name>dfs.permissions</name>
+    <value>false</value>
+</property>
+
+```
+
+이후 하둡 재시작
+
+PUT의 CREATE
+
+curl -i -X PUT "http://localhost:9870/webhdfs/v1/home/jaewon/test.txt?op=CREATE"
+HTTP/1.1 307 Temporary Redirect
+
+```PYTHON
+curl -i -X PUT -T ./test.txt "http://ubuntu:9864/webhdfs/v1/home/jaewon/test.txt?op=CREATE&namenoderpcaddress=localhost:9000&createflag=&createparent=true&overwrite=false"
+HTTP/1.1 100 Continue
+
+HTTP/1.1 201 Created
+Location: hdfs://localhost:9000/home/jaewon/test.txt
+Content-Length: 0
+Access-Control-Allow-Origin: *
+Connection: close
+
+# 이후 하둡에 잘 들어간것을 확인
+```
+
+![image-20220411150101226](README.assets/image-20220411150101226.png)
+
+POST 의 APPEND
+
+curl -i -X POST "http://localhost:9870/webhdfs/v1/home/jaewon/test.txt?op=APPEND"
+HTTP/1.1 307 Temporary Redirect
+
+```PYTHON
+curl -i -X POST -T /home/jaewon/test.txt "http://ubuntu:9864/webhdfs/v1/home/jaewon/test.txt?op=APPEND&namenoderpcaddress=localhost:9000"
+HTTP/1.1 100 Continue
+
+HTTP/1.1 200 OK
+Content-Length: 0
+Connection: close
+
+# APPEND는 TXT파일같은경우 원래 파일의 새로운 내용을 추가 덮어씌우기는 아님 
+```
+
+![image-20220411150112695](README.assets/image-20220411150112695.png)
+
+똑같은 text가 추가가된 모습
+
+webhdfs 같은경우 소유자가 dr.who 라고 나옴
+
+-rw-r--r--   1 dr.who supergroup         26 2022-04-10 22:54 /home/jaewon/test.txt
+-rw-r--r--   1 jaewon supergroup      21158 2022-04-10 05:52 /home/jaewon/wwww.png
+
+기존 wwww.png파일 hdfs dfs -rm 으로 지우고 webhdfs로 다시 해보자
+
+이미지 파일인 png도 넣어봄
+
+-rw-r--r--   1 dr.who supergroup         26 2022-04-10 22:54 /home/jaewon/test.txt
+-rw-r--r--   1 dr.who supergroup      21158 2022-04-10 23:05 /home/jaewon/wwww.png
+
+소유자가 바뀌었지만 bin데이터로 잘들어간 모습 
+
+
+
+중요한건 장고에서 이미지를 다운해야 하기 때문에 
+
+curl -i -L -o- "http://localhost:9870/webhdfs/v1/home/jaewon/wwww.png?op=OPEN"
+
+의 Location:http://ubuntu:9864/webhdfs/v1/home/jaewon/wwww.png?op=OPEN&namenoderpcaddress=localhost:9000&offset=0
+
+을 브라우저에 url에 입력을 하면 바로 다운이 된다 문제는  저장되는 이미지의 파일 경로를 어디로 해줄수있느냐가 될것같다 
+
+아니 저장이 필요없나? 하둡에서 바로 장고로 이미지로를 불러줄수있다면 상관 없을거 같다 
+
+
+
+#### pywebhdfs 는 모듈이라 직접 해볼것 
+
 pywebhdfs 쓰니까 한번에됨... 내 하루는 어디로 갔는지
 
 vim pyweb.py
@@ -2862,3 +2961,28 @@ with open('/home/jaewon/wwww2.png','wb') as f:
     f.write(image)
 ```
 
+ 
+
+REST API
+
+요청할때는 GET 방식으로 요청 뭔가 저장하고싶으면 POST방식으로 요청
+
+무언가 수정하고싶다 PUT/PATCH
+
+삭제 DELETE
+
+403 이면 권한
+
+하둡의 사용권한
+
+bashrc 랑 권한일아 다름 
+
+하둡 네임노드 데이터 노드 
+
+세컨더리 네임노드 네임노드관련 정보들 폴더가 어떻게 만들어지고 
+
+~~만들어졌습니다 
+
+완전분산모드 
+
+포멧하면 네임노드따라 데이터노드 따로 
