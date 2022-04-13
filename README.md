@@ -272,7 +272,9 @@ conda install django==3.2
 
  http://ec2-35-77-242-184.ap-northeast-1.compute.amazonaws.com:8083
 
+그외 에러들은 [BD_Project/Documents at master · Ljaewon-123/BD_Project (github.com)](https://github.com/Ljaewon-123/BD_Project/tree/master/Documents)
 
+폴더에 정리해둠
 
 # Django
 
