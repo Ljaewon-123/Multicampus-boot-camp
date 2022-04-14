@@ -2774,6 +2774,8 @@ insert_df.write.format('mongo').option('database','test').option('collection','t
 
 **새로 깔았는데 어째선지 home이 아니라 user이다 이거 유의할것**
 
+직접 쓸때는 장고에 ajax를통한 url 전달
+
 하둡경로로 쓰는거
 
 curl -s http://127.0.0.1:9870/webhdfs/v1/user/jaewon/?op=LISTSTATUS
