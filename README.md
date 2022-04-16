@@ -3007,3 +3007,25 @@ bashrc 랑 권한일아 다름
 특성상 제공 인스턴스가 하나였다
 
 ----------------------------------------------------------------------------------------------------
+
+# Airflow
+
+
+
+airflow 설정에러
+
+```terminal
+airflow db init
+ModuleNotFoundError: No module named '_cffi_backend'
+jaewon@ubuntu:~$ python -m pip install cffi
+
+```
+
+bash: airflow dags test air01 2022-04-15
+
+
+
+task볼려면 실행된 dag_id나  날짜 누르고 네모 -> log네모
+
+
+
