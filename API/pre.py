@@ -33,7 +33,7 @@ print(now.strftime('%Y%m%d'))
 '''
 VM에서 추가
 from pyspark.sql import SparkSession
-spark = SparkSession.builder.master("yarn").appName("파일명").getOrCreate() 
+# spark = SparkSession.builder.master("yarn").appName("파일명").getOrCreate() // 하둡을 안써서 스파크 셰션을 사용못함  
 
 저장 해줄 json 변수하나에 담고 ex) data = json_data['result']
 
@@ -45,7 +45,8 @@ spark = SparkSession.builder.master("yarn").appName("파일명").getOrCreate()
 "wave_height": "0.96”}}
 
 최종 
-{''2020-04-17":{관측소_코드:[{아무튼값임}],관측소_코드2:[{아무튼값음2,3,4,5,}]}}
+{'2020-04-17':{관측소_코드:[{아무튼값임}],관측소_코드2:[{아무튼값음2,3,4,5,}]}}
+이후 추가로 값이 들어가게 하는거는 카프카에서 처리??
 
 '''
 
