@@ -47,10 +47,11 @@ print(now.strftime('%Y%m%d'))
 
 def marine_weather(obs_lst,kind_weather):
     url = 'http://www.khoa.go.kr/api/oceangrid/{0}/search.do?ServiceKey=CndQ9ayWwjk5aH/aT22Bzw==&ObsCode={1}&Date={2}&ResultType=json'
-    tmp = {now.strftime("%Y%m%d"): {}}
+    # tmp = {now.strftime("%Y%m%d"): {}}
     # print(tmp)
+    lst_data = []
     for obs_id in obs_lst:
-        lst_data = []
+        # lst_data = []
         pago_url = url.format(kind_weather, obs_id, now.strftime('%Y%m%d'))
         # print(pago_url)
         resp = requests.get(pago_url)
@@ -63,8 +64,13 @@ def marine_weather(obs_lst,kind_weather):
         else:
             # print(json_data['result']['data'][-1])
             # print(json_data['result']['meta'])
-            lst_data.append(json_data['result']['data'][-1])
-            tmp[now.strftime("%Y%m%d")][obs_id] = lst_data
+            # lst_data.append(json_data['result']['data'][-1])
+            # tmp[now.strftime("%Y%m%d")][obs_id] = lst_data
+            tmp_ex = json_data['result']['data'][-1]
+            tmp_ex['obs'] = obs_id
+            lst_data.append(tmp_ex)
+
+    tmp = lst_data
     return tmp
 
 obs_lst = find_obs('파고')  # 매개변수 해당하는 관측소들 뽑음

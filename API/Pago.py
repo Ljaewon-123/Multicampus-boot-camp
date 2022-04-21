@@ -36,7 +36,7 @@ def marine_weather(obs_lst):
             lst_data.append(tmp_ex)
             # lst_data.append(json_data['result']['data'][-1])
             # tmp[now.strftime("%Y%m%d")][obs_id] = lst_data
-    tmp[now.strftime("%Y%m%d")] = lst_data
+    tmp = lst_data
 
     print(tmp)
 
