@@ -29,7 +29,7 @@ print(now.strftime('%Y%m%d'))
 #
 # print(json_data['result'])
 
-
+print('asdf',)
 '''
 VM에서 추가
 from pyspark.sql import SparkSession
