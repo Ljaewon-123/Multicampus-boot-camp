@@ -31,4 +31,4 @@ for obs_id in obs_lst:
         lst_data.append(json_data['result']['data'][-1])
         tmp[now.strftime("%Y%m%d")][obs_id] = lst_data
 print(tmp)
-print(tmp['20220416']['TW_0079'])
+# print(tmp['20220416']['TW_0079'])
