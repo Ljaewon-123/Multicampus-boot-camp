@@ -28,8 +28,8 @@ def find_obs(obs_type):
                 lst_type.append(obs['obs_post_id'])
 
     # print(lst_type)
-    print(lst_type)
+    # print(lst_type)
     return lst_type
 
-find_obs('파고')
-find_obs('풍향')
+# find_obs('파고')
+# find_obs('풍향')
