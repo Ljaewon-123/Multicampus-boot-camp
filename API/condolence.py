@@ -50,4 +50,7 @@ def marine_weather(obs_lst,kind_weather):
 
     return tmp
 
-marine_weather(obs_lst,'tideObsPre')
+result = marine_weather(obs_lst,'tideObsPre')
+
+with open('../data/jo_temp.json', 'w', encoding='utf-8') as file:
+    json.dump(result, file, ensure_ascii=False)
