@@ -29,6 +29,7 @@ def marine_weather(obs_lst,kind_weather):
     for obs_id in obs_lst:
         # lst_data = []
         for date in dt.strftime('%Y%m%d'):
+            print(date)
             pago_url = url.format(kind_weather,obs_id,date)
             # print(pago_url)
             resp = requests.get(pago_url)
