@@ -31,5 +31,23 @@ def find_obs(obs_type):
     # print(lst_type)
     return lst_type
 
+def full_obs():
+    url = 'http://www.khoa.go.kr/api/oceangrid/ObsServiceObj/search.do?ServiceKey=CndQ9ayWwjk5aH/aT22Bzw==&ResultType=json'
+
+    # print(url)
+    # print(url2)
+
+    resp = requests.get(url)
+    # print(resp)
+    json_data = resp.json()
+    # print(json_data['result']['data'])
+
+    json_data = resp.json()
+    # print(json_data)
+    return json_data['result']['data']
+
+
+# print(full_obs())
+
 # find_obs('파고')
 # find_obs('풍향')

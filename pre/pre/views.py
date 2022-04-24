@@ -7,3 +7,6 @@ from datetime import datetime
 
 def index(request):
     return render(request,'index.html',{'TT':datetime.now()})
+
+def clock(request):
+    return  render(request,'clock.html')
