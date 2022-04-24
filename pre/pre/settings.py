@@ -128,4 +128,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # crontab
 CRONJOBS = [
     ('* * * * *','pre.cron.hello_every_minute','>> schedule.log'),
+    ('* * * * *','pre.views.index','>> schedule.log'),
 ]
