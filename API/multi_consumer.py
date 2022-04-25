@@ -112,10 +112,11 @@ def bu_temp():
         url = api_url + f'?ServiceKey={service_key}&ObsCode={obs_code}&Date={date}&ResultType={result_type}'
         temp_resp = requests.get(url)
         temp_data = temp_resp.json()
-        cnt = len(temp_data["result"]["data"])
+
         if list(temp_data['result'].keys())[0] == 'error': # 해당함수 에러 키 처리 안되있어서 추가
             continue
         else:
+            cnt = len(temp_data["result"]["data"])
             data = temp_data["result"]["data"][cnt - 1]
             data_dict = {}
             # data_dict['obs_code'] = obs_code
@@ -136,7 +137,7 @@ def jo_actual_condel():
                   'DT_0024',
                   'DT_0004', 'DT_0028', 'DT_0021', 'DT_0050', 'DT_0014', 'DT_0002', 'DT_0091', 'DT_0066', 'DT_0011',
                   'DT_0035']
-    temp_dict = dict()
+
     condolence_list = list()
     Key = 'PcaRy7HmUIAEp7FrsZX3hg=='
     for k in range(0, len(obs_post_id_list)):
@@ -144,6 +145,7 @@ def jo_actual_condel():
         resp = requests.get(url).json()
 
         try:
+            temp_dict = dict()
             # print(resp)
             # temp_dict['obs_post_id']=obs_post_id_list[k]
             temp_dict['record_time'] = resp["result"]["data"][-1]["record_time"]
@@ -170,7 +172,7 @@ def jo_actual_wind():
                         'DT_0004', 'DT_0028', 'DT_0021', 'DT_0050', 'DT_0014', 'DT_0002', 'DT_0091', 'DT_0066',
                         'DT_0011',
                         'DT_0035']
-    temp_dict = dict()
+
     wind_list = list()
     Key = 'PcaRy7HmUIAEp7FrsZX3hg=='
     for k in range(0, len(obs_post_id_list)):
@@ -178,6 +180,7 @@ def jo_actual_wind():
         resp = requests.get(url).json()
 
         try:
+            temp_dict = dict()
             # temp_dict['obs_post_id']=obs_post_id_list[k]
             temp_dict['record_time'] = resp["result"]["data"][-1]["record_time"]
             temp_dict['wind_dir'] = resp["result"]["data"][-1]["wind_dir"]
