@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(function () {
+    weather()
+  })
+  function weather(){
+      $.ajax({
+            url:'obs_weather/',
+            // data: {'what':what,},
+            dataType: 'json',
+            success: function(msg){
+                //alert('나와바')
+                //alert(msg['time'])
+                var tt = msg
+                $('#container').html(msg['time'] + "<p> 중간 html</p>" + msg['IE_0061'])
+                setTimeout(weather(msg),1000);
+
+
+        }
+    })
+
+  }
+
+  </script>
+</head>
+<body>
+    <h1>힣헿</h1>
+    <h2>일단 임시로 나오는건 현재시간으로함 (db만으로는 변화하는거 못찍음 )</h2>
+
+    <div id = 'container'></div>
+
+</body>
+</html>

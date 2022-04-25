@@ -77,8 +77,13 @@ WSGI_APPLICATION = 'pre.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME' : 'fish',
+        'USER' : 'root',
+        'PASSWORD' : 'dlwodnjs74101!',
+        'HOST' : 'localhost',
+        # ip주소 변경? 같은 db사용
+        'PORT' : '3306'
     }
 }
 
