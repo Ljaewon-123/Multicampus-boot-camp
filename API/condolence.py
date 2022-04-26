@@ -13,7 +13,7 @@ print(now.strftime('%Y%m%d'))
 
 now_back = now -  relativedelta(months=1)
 # print(now_back.strftime('%Y%m%d'))
-now_front = now + relativedelta(months=3)
+now_front = now + relativedelta(months=1)
 
 dt = pandas.date_range(start=now_back,end=now_front)
 print(dt.strftime('%Y%m%d'))
