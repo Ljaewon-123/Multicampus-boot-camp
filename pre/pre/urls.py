@@ -23,4 +23,6 @@ urlpatterns = [
     path('clock/',views.clock),
     path('weather/',views.weather),
     path('weather/obs_weather/',views.obs_w),
+    path('login/',views.login),
+    path('register/',views.regitster),
 ]

@@ -26,8 +26,13 @@
 
   <h1>WA! hahahahahhahaha</h1>
   <span>{{ TT }}</span>
-
   <button>send webhdfs</button>
+
+  <h1>Hello,{{ request.session.myname | default:"Django" }} with mysql</h1>
+
+  <a href="login/">로그인</a>
+
+  <a href="/register/">회원가입</a>
 
 </body>
 </html>
