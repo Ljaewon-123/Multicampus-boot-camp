@@ -61,3 +61,14 @@ def regitster(request):
         return redirect('/')
 
     return redirect('/')
+
+def update_db(request):
+    # 두가지 방법이 있는데 일단 둘다 해봄 하나는왜 update가 안도ㅜㅐ??
+    data = Mymember.objects.get(myname='jj')  # 이거는 all()로해서 if for로 처리해도됨
+    print(data.myemail)
+    data.myemail = 'naver@1234'
+    data.save()
+
+    # mymember.myemail.update(myemail='naver@1234')
+
+    return HttpResponse('mymember')

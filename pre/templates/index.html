@@ -8,7 +8,8 @@
         $(function(){
             $('button').click(function(){
                     $.ajax({
-                        url: "http://ubuntu:9864/webhdfs/v1/home/jaewon/wwww.png?op=OPEN&namenoderpcaddress=localhost:9000&offset=0",
+                        url: "update_db/",
+                        // data: {},
                         dataType: "html",
                         success:function(msg){
                            alert('alert')
@@ -26,7 +27,7 @@
 
   <h1>WA! hahahahahhahaha</h1>
   <span>{{ TT }}</span>
-  <button>send webhdfs</button>
+  <button>DB UPDATE</button>
 
   <h1>Hello,{{ request.session.myname | default:"Django" }} with mysql</h1>
 

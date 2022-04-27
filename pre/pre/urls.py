@@ -25,4 +25,5 @@ urlpatterns = [
     path('weather/obs_weather/',views.obs_w),
     path('login/',views.login),
     path('register/',views.regitster),
+    path('update_db/',views.update_db),
 ]
