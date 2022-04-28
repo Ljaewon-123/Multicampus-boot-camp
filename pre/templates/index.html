@@ -30,6 +30,7 @@
   <button>DB UPDATE</button>
 
   <h1>Hello,{{ request.session.myname | default:"Django" }} with mysql</h1>
+  <h1 style = "display:none">Hello,{{ request.session.myname | default:"Django" }} with mysql</h1>
 
     {% if not request.session.myname %}
     <a href="login_django/">로그인</a>

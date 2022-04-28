@@ -3,20 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function(){
+            $('#double_check').click(function(){
+                    var xyz = $('input[name=myname]').val()
+                    $.ajax({
+                        url: "double_check/",
+                        data: {'ID':xyz},
+                        dataType: "json",
+                        success:function(msg){
+                           alert(xyz)
+                           alert(msg['alert'])
+                           //history.back()
+
+                           $('input[name=myname]').val('')
+
+                        }
+                    })
+            });
+
+            // 회원가입
+            $('#register').click(function(){
+                    var x = $('input[name=myname]').val()
+                    $.ajax({
+                        url: "double_check/",
+                        data: {'ID':x,'PW':y,'EM':z},
+                        dataType: "json",
+                        success:function(msg){
+                           alert(x)
+                           //alert(msg['alert'])
+                           //history.back()
+
+                           //$('input[name=myname]').val('')
+
+                        }
+                    })
+            });
+
+
+        });
+
+    </script>
 </head>
 <body>
 
     <h1>Register</h1>
 
-    <form action="/register/" method="post">{% csrf_token %}
-        NAME : <input type="text" name = 'myname'>
-        <br>
-        PASSWORD : <input type="password" name = 'mypassword'>
-        <br>
-        EMAIL : <input type="text" name = myemail>
-        <br>
-        <input type="submit" value="회원가입">
-    </form>
+
+    NAME : <input type="text" name = 'myname'>
+    <button id = 'double_check'>중복 확인</button>
+    <br>
+    PASSWORD : <input type="password" name = 'mypassword'>
+    <br>
+    EMAIL : <input type="text" name = myemail>
+    <br>
+    <button id = 'register'>회원가입</button>
+
 
 
 </body>

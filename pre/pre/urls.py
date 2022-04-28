@@ -29,6 +29,7 @@ urlpatterns = [
     path('logout_django/',views.logout),
     path('register/',views.regitster),
     path('update_db/',views.update_db),
+    path('register/double_check/',views.double_check),
 
     # 구글
     path('accounts/',include('allauth.urls')),

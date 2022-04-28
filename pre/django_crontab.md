@@ -21,3 +21,5 @@ python3 manage.py crontab run <hash_id> #id 값은 show했을때 나오는 id값
 
 값이 계속 나오지는 않음 해당값을 어떻게 html 에 보여주지 ???
 
+SetTime() 함수 사용으로 해결 
+
