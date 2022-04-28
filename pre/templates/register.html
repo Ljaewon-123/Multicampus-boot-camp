@@ -16,8 +16,12 @@
                            alert(xyz)
                            alert(msg['alert'])
                            //history.back()
-
-                           $('input[name=myname]').val('')
+                           if(msg['code'] == 0){
+                            $('input[name=myname]').val('')
+                           }
+                           else if (msg['code'] == 1){
+                               $('#hide').text(msg['code'])
+                           }
 
                         }
                     })
@@ -26,14 +30,16 @@
             // 회원가입
             $('#register').click(function(){
                     var x = $('input[name=myname]').val()
+                    var y = $('input[name=mypassword]').val()
+                    var z = $('input[name=myemail]').val()
+
                     $.ajax({
-                        url: "double_check/",
+                        url: "new_register/",
                         data: {'ID':x,'PW':y,'EM':z},
                         dataType: "json",
                         success:function(msg){
-                           alert(x)
-                           //alert(msg['alert'])
-                           //history.back()
+                           //alert(msg['a'])
+                           history.back()
 
                            //$('input[name=myname]').val('')
 
@@ -49,8 +55,9 @@
 <body>
 
     <h1>Register</h1>
+    <span id = 'hide' style = 'display:none'></span>
 
-
+    <p>아이디 대소문자 구분안함 </p>
     NAME : <input type="text" name = 'myname'>
     <button id = 'double_check'>중복 확인</button>
     <br>

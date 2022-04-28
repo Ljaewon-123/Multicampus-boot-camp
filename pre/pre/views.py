@@ -65,6 +65,40 @@ def regitster(request):  # 2 alert 가 먼저나오고 2순위로 작동
     #
     # return redirect('/')
 
+def new_register(request):
+    myname = request.GET['ID']
+    mypassword = request.GET['PW']
+    myemail = request.GET['EM']
+
+    mymember = Mymember(myname = myname,mypassword=make_password(mypassword),myemail=myemail)
+    mymember.save()
+
+    a = {'a':1}
+    return JsonResponse(a)
+
+def double_check(request):  # 1
+    user_id = request.GET['ID']
+    Id = Mymember.objects.all()
+
+    try:
+        if user_id[0].isspace():
+            print('제대로 나온거 맞지??')
+            message = {'alert': '아이디의 첫번째는 공백이 될수없습니다.','code':0}
+            return JsonResponse(message)
+    except IndexError:
+        message = {'alert': '아이디를 입력해주세요 ','code':0}
+        return JsonResponse(message)
+
+    for II in Id:
+        if II.myname.isalpha:
+            if II.myname.lower() == user_id.lower():
+                message = {'alert': '중복된 아이디 입니다.','code':0}
+                return JsonResponse(message)
+
+    message = {'alert': '사용가능한 ID 입니다.','code':1}
+    # a = {'id':user_id,'no_alert':'중복된 아이디 입니다.','yse_alert':'사용 가능한 ID 입니다.'}  # 실험용 json
+    return JsonResponse(message)
+
 def update_db(request):  # DB가 값에 대한 대소문자 구분을 안함 똑같은거 있으며 덮어씌움
     # 두가지 방법이 있는데 일단 둘다 해봄 하나는왜 update가 안도ㅜㅐ??
     data = Mymember.objects.get(myname='jj')  # 이거는 all()로해서 if for로 처리해도됨
@@ -76,24 +110,3 @@ def update_db(request):  # DB가 값에 대한 대소문자 구분을 안함 똑
 
     return HttpResponse('mymember')
 
-def double_check(request):  # 1
-    user_id = request.GET['ID']
-    Id = Mymember.objects.all()
-
-    try:
-        if user_id[0].isspace():
-            print('제대로 나온거 맞지??')
-            message = {'alert':'아이디의 첫번째는 공백이 될수없습니다.'}
-            return JsonResponse(message)
-    except IndexError:
-        message = {'alert': '아이디를 입력해주세요 '}
-        return JsonResponse(message)
-
-    for II in Id:
-        if II.myname == user_id:
-            message = {'alert':'중복된 아이디 입니다.'}
-            return JsonResponse(message)
-
-    message = {'alert':'사용가능한 ID 입니다.'}
-    # a = {'id':user_id,'no_alert':'중복된 아이디 입니다.','yse_alert':'사용 가능한 ID 입니다.'}  # 실험용 json
-    return JsonResponse(message)

@@ -30,6 +30,7 @@ urlpatterns = [
     path('register/',views.regitster),
     path('update_db/',views.update_db),
     path('register/double_check/',views.double_check),
+    path('register/new_register/',views.new_register),
 
     # 구글
     path('accounts/',include('allauth.urls')),
