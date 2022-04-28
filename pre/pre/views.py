@@ -46,6 +46,9 @@ def login(request):
         else:
             return redirect('/login')
 
+def logout(request):
+    del request.session['myname']  # 요청받으면 db에 있는 알맞는값 가져와서 세션에 저장 del하면 세션내용만 삭제
+    return redirect('/')
 
 def regitster(request):
     if request.method == 'GET':

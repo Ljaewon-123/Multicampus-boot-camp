@@ -33,12 +33,21 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',         # 요녀석도 추가
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pre',
     'django_crontab',
+
+    # allauth
+    'allauth',       # allauth 앱 설치
+    'allauth.account', # 소셜로그인한 계정 관리
+    'allauth.socialaccount',  # 소셜 account 정보관리
+
+    # provider
+    'allauth.socialaccount.providers.google', # 소셜 로그인 구글 제공
 ]
 
 MIDDLEWARE = [
@@ -135,3 +144,12 @@ CRONJOBS = [
     ('* * * * *','pre.cron.hello_every_minute','>> schedule.log'),
     ('* * * * *','pre.views.index','>> schedule.log'),
 ]
+
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',     # Django 시스템 사용자로 로그인
+    'allauth.account.auth_backends.AuthenticationBackend' # 소셜로그인 인증체계
+)
+
+SITE_ID = 1   # django.contrib.sites 에 첫번째 인증체계    mygrate 해줘야함
+LOGIN_REDIRECT_URL = '/'

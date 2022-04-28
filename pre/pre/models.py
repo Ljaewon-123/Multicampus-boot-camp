@@ -8,6 +8,28 @@
 from django.db import models
 
 
+class AccountEmailaddress(models.Model):
+    email = models.CharField(unique=True, max_length=254)
+    verified = models.IntegerField()
+    primary = models.IntegerField()
+    user = models.ForeignKey('AuthUser', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailaddress'
+
+
+class AccountEmailconfirmation(models.Model):
+    created = models.DateTimeField()
+    sent = models.DateTimeField(blank=True, null=True)
+    key = models.CharField(unique=True, max_length=64)
+    email_address = models.ForeignKey(AccountEmailaddress, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'account_emailconfirmation'
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -132,6 +154,15 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class DjangoSite(models.Model):
+    domain = models.CharField(unique=True, max_length=100)
+    name = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'django_site'
+
+
 class JoActualCondelData(models.Model):
     obs_code = models.CharField(primary_key=True, max_length=20)
     record_time = models.TextField(blank=True, null=True)
@@ -164,9 +195,16 @@ class JoTempData(models.Model):
 
 
 class Mymember(models.Model):
-    myname = models.CharField(max_length=100, blank=True, null=True)
-    mypassword = models.TextField( primary_key=True, blank=True, )
+    myname = models.CharField(primary_key=True, max_length=100)
+    mypassword = models.TextField(blank=True, null=True)
     myemail = models.TextField(blank=True, null=True)
+    plaice = models.IntegerField(blank=True, null=True)
+    rockfish = models.IntegerField(blank=True, null=True)
+    schlegelii = models.IntegerField(blank=True, null=True)
+    striped_beakfish = models.IntegerField(blank=True, null=True)
+    pagrus_major = models.IntegerField(blank=True, null=True)
+    length = models.TextField(blank=True, null=True)
+    score = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -194,6 +232,56 @@ class Pago(models.Model):
     class Meta:
         managed = False
         db_table = 'pago'
+
+
+class SocialaccountSocialaccount(models.Model):
+    provider = models.CharField(max_length=30)
+    uid = models.CharField(max_length=191)
+    last_login = models.DateTimeField()
+    date_joined = models.DateTimeField()
+    extra_data = models.TextField()
+    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialaccount'
+        unique_together = (('provider', 'uid'),)
+
+
+class SocialaccountSocialapp(models.Model):
+    provider = models.CharField(max_length=30)
+    name = models.CharField(max_length=40)
+    client_id = models.CharField(max_length=191)
+    secret = models.CharField(max_length=191)
+    key = models.CharField(max_length=191)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp'
+
+
+class SocialaccountSocialappSites(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    socialapp = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
+    site = models.ForeignKey(DjangoSite, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialapp_sites'
+        unique_together = (('socialapp', 'site'),)
+
+
+class SocialaccountSocialtoken(models.Model):
+    token = models.TextField()
+    token_secret = models.TextField()
+    expires_at = models.DateTimeField(blank=True, null=True)
+    account = models.ForeignKey(SocialaccountSocialaccount, models.DO_NOTHING)
+    app = models.ForeignKey(SocialaccountSocialapp, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'socialaccount_socialtoken'
+        unique_together = (('app', 'account'),)
 
 
 class Tidalbuwind(models.Model):
