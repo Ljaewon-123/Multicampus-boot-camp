@@ -25,6 +25,8 @@ urlpatterns = [
     path('clock/',views.clock),
     path('weather/',views.weather),
     path('weather/obs_weather/',views.obs_w),
+
+    # 로그인 관련
     path('login_django/',views.login),
     path('logout_django/',views.logout),
     path('register/',views.regitster),

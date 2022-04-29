@@ -175,9 +175,8 @@ def getIn_uid(request):
             confirm = 'F'
             # mymember = Mymember(myname=soc.uid)
             # mymember.save()
-
-
-
-    print(request.user.id)
+    # mymember = Mymember.objects.get(myname=myname)
+    # request.session['myname'] = mymember.myname
 
     return HttpResponse(confirm)
+
