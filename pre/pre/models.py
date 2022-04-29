@@ -195,7 +195,7 @@ class JoTempData(models.Model):
 
 
 class Mymember(models.Model):
-    myname = models.CharField(primary_key=True, max_length=100)
+    myname = models.CharField(primary_key=True,max_length=100, db_collation='utf8mb4_bin')
     mypassword = models.TextField(blank=True, null=True)
     myemail = models.TextField(blank=True, null=True)
     plaice = models.IntegerField(blank=True, null=True)

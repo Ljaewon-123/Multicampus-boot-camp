@@ -90,10 +90,9 @@ def double_check(request):  # 1
         return JsonResponse(message)
 
     for II in Id:
-        if II.myname.isalpha:
-            if II.myname.lower() == user_id.lower():
-                message = {'alert': '중복된 아이디 입니다.','code':0}
-                return JsonResponse(message)
+        if II.myname == user_id:
+            message = {'alert': '중복된 아이디 입니다.','code':0}
+            return JsonResponse(message)
 
     message = {'alert': '사용가능한 ID 입니다.','code':1}
     # a = {'id':user_id,'no_alert':'중복된 아이디 입니다.','yse_alert':'사용 가능한 ID 입니다.'}  # 실험용 json
