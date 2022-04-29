@@ -69,12 +69,65 @@ def new_register(request):
     myname = request.GET['ID']
     mypassword = request.GET['PW']
     myemail = request.GET['EM']
+    hide_code = request.GET['hide']
+    print(hide_code)
+    print(type(hide_code))
+    if hide_code == '0':
+        message = {'alert':'아이디 중복을 확인해주세요 ','code':0,'code2':2}
+        return JsonResponse(message)
+    try:
+        if mypassword[0].isspace() or myemail[0].isspace():
+            message = {'alert': '첫번째는 공백이 될수없습니다.','code':0,'code2':2}
+            return JsonResponse(message)
+    except IndexError:
+        message = {'alert': '비밀번호나 이메일을 입력해주세요 ','code':0,'code2':2}
+        return JsonResponse(message)
+    b = myemail.find('@')
+    c = myemail.find('.')
+    e = myemail.count('@')
+    f = myemail.count('.')
+    g = myemail.find(' ')
+    cnt = 0
+    if g == -1:
+        if b == -1 or c ==-1:
+            print('이메일 형식이 아닙니다')
+            # @ . 없는경우
+        elif b > c:
+            print('이메일 형식이 아닙니다')
+            # 바뀐경우
+        elif b - c == -1 :
+            print('이메일 형식이 아닙니다')
+            # 사이에 문자가 없는경우
+        elif e >= 2:
+            print('이메일 형식이 아닙니다')
+            # @2번이상
+        elif f >= 2:
+            print('이메일 형식이 아닙니다')
+            # . 두번이상
+        elif b == 0:
+            print('이메일 형식이 아닙니다')
+            # @ 앞에 문자
+        elif c == 0:
+            print('이메일 형식이 아닙니다')
+            # . 앞에 문자
+        else:
+            print('이매일 확인')
+            cnt = 1
+    else:
+        print('이메일 형식이 아닙니다')
+    if hide_code == '1' and cnt == 0:
+        message = {'alert': '이메일을 확인해주세요 \n admin@admin.~~ ', 'code': 0,'code2':2}
+        return JsonResponse(message)
+    elif hide_code == '1' and cnt == 1:
+        message = {'alert': '회원가입 완료', 'code': 1,'code2':1}
 
-    mymember = Mymember(myname = myname,mypassword=make_password(mypassword),myemail=myemail)
-    mymember.save()
+        mymember = Mymember(myname=myname, mypassword=make_password(mypassword), myemail=myemail)
+        mymember.save()
 
-    a = {'a':1}
-    return JsonResponse(a)
+        return JsonResponse(message)
+
+    message = {'alert': '입력해주세요 ','code':0,'code2':2}
+    return JsonResponse(message)
 
 def double_check(request):  # 1
     user_id = request.GET['ID']
@@ -109,3 +162,18 @@ def update_db(request):  # DB가 값에 대한 대소문자 구분을 안함 똑
 
     return HttpResponse('mymember')
 
+def getIn_uid(request):
+    # print('잘 들어오는지 일단 확인')
+
+    social_user = SocialaccountSocialaccount.objects.all()
+    confirm = ''
+    for soc in social_user:
+        print(soc.uid)
+        if Mymember.objects.get(myname=soc.uid).exists():
+            confirm = 'T'
+        else:
+            confirm = 'F'
+            mymember = Mymember(myname=soc.uid)
+            mymember.save()
+
+    return HttpResponse(confirm)

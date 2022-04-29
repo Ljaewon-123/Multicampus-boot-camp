@@ -198,11 +198,11 @@ class Mymember(models.Model):
     myname = models.CharField(primary_key=True,max_length=100, db_collation='utf8mb4_bin')
     mypassword = models.TextField(blank=True, null=True)
     myemail = models.TextField(blank=True, null=True)
-    plaice = models.IntegerField(blank=True, null=True)
-    rockfish = models.IntegerField(blank=True, null=True)
-    schlegelii = models.IntegerField(blank=True, null=True)
-    striped_beakfish = models.IntegerField(blank=True, null=True)
-    pagrus_major = models.IntegerField(blank=True, null=True)
+    plaice = models.IntegerField(blank=True, null=True)             # 넙치, 광어
+    rockfish = models.IntegerField(blank=True, null=True)           # 조피볼락 ,우럭
+    schlegelii = models.IntegerField(blank=True, null=True)         # 감성돔
+    striped_beakfish = models.IntegerField(blank=True, null=True)   # 돌돔
+    pagrus_major = models.IntegerField(blank=True, null=True)       # 참돔
     length = models.TextField(blank=True, null=True)
     score = models.IntegerField(blank=True, null=True)
 

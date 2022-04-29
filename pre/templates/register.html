@@ -33,16 +33,23 @@
                     var x = $('input[name=myname]').val()
                     var y = $('input[name=mypassword]').val()
                     var z = $('input[name=myemail]').val()
-
+                    var hide = $('#hide').text()
                     $.ajax({
                         url: "new_register/",
-                        data: {'ID':x,'PW':y,'EM':z},
+                        data: {'ID':x,'PW':y,'EM':z,'hide':hide},
                         dataType: "json",
                         success:function(msg){
-                           //alert(msg['a'])
-                           history.back()
+                            //alert(hide)
+                            alert(msg['alert'])  // 이거 지우지 말것
 
-                           //$('input[name=myname]').val('')
+                            if (msg['code2'] == 2){
+                                //$('input[name=myname]').val('')
+                                $('input[name=mypassword]').val('')
+                                $('input[name=myemail]').val('')
+                            }
+                            else if (msg['code2'] == 1){
+                                history.back()
+                            }
 
                         }
                     })
@@ -56,9 +63,9 @@
 <body>
 
     <h1>Register</h1>
-    <span id = 'hide' style = 'display:none'></span>
+    <span id = 'hide' style = 'display:none'>0</span>
 
-    <p>아이디 대소문자 구분안함 </p>
+    <p>아이디 대소문자 구분안함 -> 이제함  </p>
     NAME : <input type="text" name = 'myname'>
     <button id = 'double_check'>중복 확인</button>
     <br>
