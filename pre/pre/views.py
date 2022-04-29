@@ -6,7 +6,7 @@ from collections import Counter
 from datetime import datetime
 from .models import *
 from django.contrib.auth.hashers import make_password , check_password
-
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 def index(request):
     return render(request,'index.html',{'TT':datetime.now()})
@@ -35,9 +35,9 @@ def login(request):
     else:
         myname = request.POST['myname']
         mypassword = request.POST['mypassword']
-        print('--------------------------------')
-        print(myname)
-        print(mypassword)
+        # print('--------------------------------')
+        # print(myname)
+        # print(mypassword)
         mymember = Mymember.objects.get(myname = myname)
 
         if check_password(mypassword, mymember.mypassword):
@@ -164,16 +164,20 @@ def update_db(request):  # DB가 값에 대한 대소문자 구분을 안함 똑
 
 def getIn_uid(request):
     # print('잘 들어오는지 일단 확인')
-
+    # request.session['myname'] = mymember.myname
     social_user = SocialaccountSocialaccount.objects.all()
     confirm = ''
     for soc in social_user:
-        print(soc.uid)
-        if Mymember.objects.get(myname=soc.uid).exists():
+        # print(soc.uid)
+        if Mymember.objects.get_or_create(myname=soc.uid):
             confirm = 'T'
         else:
             confirm = 'F'
-            mymember = Mymember(myname=soc.uid)
-            mymember.save()
+            # mymember = Mymember(myname=soc.uid)
+            # mymember.save()
+
+
+
+    print(request.user.id)
 
     return HttpResponse(confirm)
