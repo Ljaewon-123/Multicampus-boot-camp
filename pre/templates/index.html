@@ -23,7 +23,7 @@
             if($('#google_id').is(":visible"))
             {
                 //alert("노출되고있음.");
-                getIn_uid();
+                //getIn_uid();
             }
             else{
                 //alert("숨겨져있음.");
@@ -53,13 +53,15 @@
 <body >
 
   <h1>WA! hahahahahhahaha</h1>
-  <span>{{ TT }}</span>
+
   <button>DB UPDATE</button>
 
-  <h1>Hello {{ request.session.myname | default:"Django" }} with mysql</h1>
-  <h1 style = "display:none">Hello,{{ request.session.myname | default:"Django" }} with mysql</h1>
-
-    {% if not request.session.myname %}
+  {% if social_id == '' %}
+  <h1>Hello {{ request.session.user_id | default:"Django" }} with mysql</h1>
+  {% else %}
+  <h1>Hello user_{{ social_id }} with google</h1>
+  {% endif %}
+    {% if not request.session.user_id %}
     <a href="login_django/">로그인</a>
     {% else %}
     <a href="logout_django/">로그아웃</a>
@@ -72,7 +74,7 @@
   {% providers_media_js %}
   <h1>google login</h1>
 
-  <a href="/accounts/signup">회원가입</a>
+<!--  <a href="/accounts/signup">회원가입</a>-->
   <br>
 
   {% if user.is_authenticated %}
@@ -92,6 +94,9 @@
   <p id = 'fish_kind'>감성돔</p>
   <p id = 'length'>35</p>
   <p id = 'score'>50</p>
+
+
+
 
 
 </body>

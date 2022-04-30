@@ -8,23 +8,34 @@ from .models import *
 from django.contrib.auth.hashers import make_password , check_password
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
+# auth_user 의 id 가 socialaccount_socialaccount 의 user_id 가됨 user6 이라고뜸 왜??근데 id는 4임
+
+def asdf(request):
+    return render(request,'pratice.html')
+
 def index(request):
-    print(request.user)
-    print(request.session)
-    print(dir(request.session))
-    print(request.session.keys())
-    print(request.session.values())
-    print(request.session.items())
-    print(type(request.session))
+    # print(request.user)
+    # print(request.session)
+    # print(dir(request.session))
+    # print(request.session.keys())
+    # print(request.session.values())
+    # print(request.session.items())
+    # print(type(request.session))
+    # print(request.session.exists)
+    # print(request.session.get('user_id')) # 현재 세션을 키로 확인 없으면 none
     # print(request.session['_auth_user_id'])
 
+    if 'user_id' in request.session:
+        social_id = ''
+    elif '_auth_user_id' in request.session:
+        social_id = request.session['_auth_user_id']
+    else:
+        social_id = ''
 
-    return render(request,'index.html',{'TT':datetime.now()})
+    return render(request,'index.html',{'social_id':social_id})
 
 def clock(request):
-    print(request.user)
-    print(request.session)
-    print(dir(request.session))
+
     print(request.session.keys())
     print(request.session.values())
     return  render(request,'clock.html')
@@ -53,32 +64,29 @@ def login(request):
         # print('--------------------------------')
         # print(myname)
         # print(mypassword)
+
+        try:
+            if mypassword[0].isspace() or mypassword[0].isspace():
+                return redirect('/login_django')
+        except IndexError:
+            return redirect('/login_django')
+
         mymember = Mymember.objects.get(myname = myname)
 
         if check_password(mypassword, mymember.mypassword):
-            request.session['myname'] = mymember.myname
+            request.session['user_id'] = mymember.myname
             return redirect('/')
         else:
             return redirect('/login_django')
 
 def logout(request):
-    del request.session['myname']  # 요청받으면 db에 있는 알맞는값 가져와서 세션에 저장 del하면 세션내용만 삭제
+    del request.session['user_id']  # 요청받으면 db에 있는 알맞는값 가져와서 세션에 저장 del하면 세션내용만 삭제
     return redirect('/')
 
 def regitster(request):  # 2 alert 가 먼저나오고 2순위로 작동
     if request.method == 'GET':
         return render(request,'register.html')
-    # elif request.method == 'POST':
-    #     myname = request.POST['myname']
-    #     mypassword = request.POST['mypassword']
-    #     myemail = request.POST['myemail']
-    #
-    #     mymember = Mymember(myname = myname,mypassword=make_password(mypassword),myemail=myemail)
-    #     mymember.save()
-    #
-    #     return redirect('/')
-    #
-    # return redirect('/')
+
 
 def new_register(request):
     myname = request.GET['ID']

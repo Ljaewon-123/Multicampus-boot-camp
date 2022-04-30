@@ -26,14 +26,20 @@ urlpatterns = [
     path('weather/',views.weather),
     path('weather/obs_weather/',views.obs_w),
 
+    path('aa/',views.asdf),
+
     # 로그인 관련
     path('login_django/',views.login),
     path('logout_django/',views.logout),
     path('register/',views.regitster),
+    path('register/double_check/', views.double_check),
+    path('register/new_register/', views.new_register),
+
+    # etc
     path('update_db/',views.update_db),
-    path('register/double_check/',views.double_check),
-    path('register/new_register/',views.new_register),
     path('get_in_uid/',views.getIn_uid),
+
+    # 구글 로그인 관련
 
     # 구글
     path('accounts/',include('allauth.urls')),

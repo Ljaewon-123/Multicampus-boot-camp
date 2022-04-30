@@ -1,7 +1,13 @@
-{% extends "socialaccount/base.html" %}
-{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
 
-{% block content %}
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
@@ -121,29 +127,20 @@ body {
   text-decoration: none;
 }
     </style>
+</head>
+<body>
 
-
-{% if process == "connect" %}
-<h1 >{% blocktrans with provider.name as provider %}Connect {{ provider }}{% endblocktrans %}</h1>
-
-<p>{% blocktrans with provider.name as provider %}You are about to connect a new third party account from {{ provider }}.{% endblocktrans %}</p>
-{% else %}
-<h1>{% blocktrans with provider.name as provider %}Sign In Via {{ provider }}{% endblocktrans %}</h1>
-
-<p>{% blocktrans with provider.name as provider %}You are about to sign in using a third party account from {{ provider }}.{% endblocktrans %}</p>
-{% endif %}
 
 
     <section class="login-form">
         <h1>Login</h1>
-        <form action="/login_django/" method="post">{% csrf_token %}
+        <form action="">
             <div class="int-area">
                 <input type="text" name = 'myname' id = 'id'>
                 <label for="id">USER NAME</label>
-                <span>아이디와 비밀번호를 올바르게 입력해주세요.</span>
             </div>
             <div class="int-area">
-                <input type="password" name = 'mypassword' id = 'pw'>
+                <input type="text" name = 'mypassword' id = 'pw'>
                 <label for="pw">PASSWORD</label>
             </div>
             <div class="btn-area">
@@ -157,16 +154,13 @@ body {
             <br>
             <br>
             <div class="btn-area">
-                <form method="post">
-                  {% csrf_token %}
-                  <button id = 'send' type="submit">{% trans "Continue" %}</button>
-                </form>
+                <button id = 'send'>asdf</button>
             </div>
         </div>
     </section>
 
-<!--<form method="post">-->
-<!--  {% csrf_token %}-->
-<!--  <button type="submit">{% trans "Continue" %}</button>-->
-<!--</form>-->
-{% endblock %}
+
+
+
+</body>
+</html>
