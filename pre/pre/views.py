@@ -9,9 +9,24 @@ from django.contrib.auth.hashers import make_password , check_password
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 def index(request):
+    print(request.user)
+    print(request.session)
+    print(dir(request.session))
+    print(request.session.keys())
+    print(request.session.values())
+    print(request.session.items())
+    print(type(request.session))
+    # print(request.session['_auth_user_id'])
+
+
     return render(request,'index.html',{'TT':datetime.now()})
 
 def clock(request):
+    print(request.user)
+    print(request.session)
+    print(dir(request.session))
+    print(request.session.keys())
+    print(request.session.values())
     return  render(request,'clock.html')
 
 def weather(request):
@@ -44,7 +59,7 @@ def login(request):
             request.session['myname'] = mymember.myname
             return redirect('/')
         else:
-            return redirect('/login')
+            return redirect('/login_django')
 
 def logout(request):
     del request.session['myname']  # 요청받으면 db에 있는 알맞는값 가져와서 세션에 저장 del하면 세션내용만 삭제
