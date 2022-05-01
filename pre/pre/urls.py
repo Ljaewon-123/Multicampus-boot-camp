@@ -37,7 +37,7 @@ urlpatterns = [
 
     # etc
     path('update_db/',views.update_db),
-    path('get_in_uid/',views.getIn_uid),
+    path('get_in_score/',views.getIn_score),
 
     # 구글 로그인 관련
 

@@ -33,14 +33,16 @@
 
 
 
-      function getIn_uid(){
+      function getIn_score(){
+          var fish_kind = $('#fish_kind').text()
+          var length = $('#length').text()
+          var score = $('#score').text()
           $.ajax({
-              url: "get_in_uid/",
-              // data: {},
+              url: "get_in_score/",
+              data: {'fish_kind':fish_kind,'length':length,'score':score},
               dataType: "html",
               success:function(msg){
-                //alert('나와바')
-                //alert(msg)
+                alert(fish_kind)
 
 
 
@@ -62,7 +64,7 @@
   <h1>Hello user_{{ social_id }} with google</h1>
   {% endif %}
     {% if not request.session.user_id %}
-    <a href="login_django/">로그인</a>
+    <a href="login_django/"></a>
     {% else %}
     <a href="logout_django/">로그아웃</a>
     {% endif %}
@@ -91,7 +93,7 @@
   {% endif %}
 
   <p> 점수복사 버그 안나게 모델링 도입하고 생각 지금 당장은 로드될때 db에 넣기 근데? 로그인 되어야함  </p>
-  <p id = 'fish_kind'>감성돔</p>
+  <p id = 'fish_kind' onclick="getIn_score()">감성돔</p>
   <p id = 'length'>35</p>
   <p id = 'score'>50</p>
 

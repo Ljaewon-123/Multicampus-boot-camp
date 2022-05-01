@@ -11,14 +11,17 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 # auth_user 의 id 가 socialaccount_socialaccount 의 user_id 가됨 user6 이라고뜸 왜??근데 id는 4임
 
 def asdf(request):
+    print(request.session.keys())
+    print(request.session.values())
+    print(request.session.items())
     return render(request,'pratice.html')
 
 def index(request):
     # print(request.user)
     # print(request.session)
     # print(dir(request.session))
-    # print(request.session.keys())
-    # print(request.session.values())
+    print(request.session.keys())
+    print(request.session.values())
     # print(request.session.items())
     # print(type(request.session))
     # print(request.session.exists)
@@ -29,6 +32,8 @@ def index(request):
         social_id = ''
     elif '_auth_user_id' in request.session:
         social_id = request.session['_auth_user_id']
+        if Mymember.objects.get_or_create(myname=social_id):
+            confirm = 'T'
     else:
         social_id = ''
 
@@ -185,21 +190,86 @@ def update_db(request):  # DB가 값에 대한 대소문자 구분을 안함 똑
 
     return HttpResponse('mymember')
 
-def getIn_uid(request):
-    # print('잘 들어오는지 일단 확인')
-    # request.session['myname'] = mymember.myname
-    social_user = SocialaccountSocialaccount.objects.all()
+def getIn_score(request):
     confirm = ''
-    for soc in social_user:
-        # print(soc.uid)
-        if Mymember.objects.get_or_create(myname=soc.uid):
-            confirm = 'T'
+    fish_kind = request.GET['fish_kind']
+    length = request.GET['length']
+    score = request.GET['score']
+    if 'user_id' in request.session:
+        user_id = request.session['user_id']
+        myname = Mymember.objects.get(myname=user_id)
+        if fish_kind == '광어':
+            if myname.plaice is None:
+                myname.plaice = 1
+            else:
+                myname.plaice =  myname.plaice+1
+        elif fish_kind == '우럭':
+            if myname.rockfish  is None:
+                myname.rockfish  = 1
+            else:
+                myname.rockfish  =  myname.rockfish +1
+        elif fish_kind == '감성돔':
+            if myname.schlegelii  is None:
+                myname.schlegelii  = 1
+            else:
+                print(myname.schlegelii )
+                print(type(myname.schlegelii ))
+                myname.schlegelii  =  myname.schlegelii +1
+        elif fish_kind == '돌돔':
+            if myname.striped_beakfish is None:
+                myname.striped_beakfish = 1
+            else:
+                myname.striped_beakfish =  myname.striped_beakfish  +1
+        elif fish_kind == '참돔':
+            if myname.pagrus_major  is None:
+                myname.pagrus_major = 1
+            else:
+                myname.pagrus_major =  myname.pagrus_major   +1
+
+        myname.length =  length
+        if myname.score is None:
+            myname.score = int(score)
         else:
-            confirm = 'F'
-            # mymember = Mymember(myname=soc.uid)
-            # mymember.save()
-    # mymember = Mymember.objects.get(myname=myname)
-    # request.session['myname'] = mymember.myname
+            myname.score = myname.score + int(score)
+
+        myname.save()
+
+    elif '_auth_user_id' in request.session:
+        user_id = request.session['_auth_user_id']
+        myname = Mymember.objects.get(myname=user_id)
+        if fish_kind == '광어':
+            if myname.plaice is None:
+                myname.plaice = 1
+            else:
+                myname.plaice = myname.plaice + 1
+        elif fish_kind == '우럭':
+            if myname.rockfish is None:
+                myname.rockfish = 1
+            else:
+                myname.rockfish = myname.rockfish + 1
+        elif fish_kind == '감성돔':
+            if myname.schlegelii is None:
+                myname.schlegelii = 1
+            else:
+                myname.schlegelii = myname.schlegelii + 1
+        elif fish_kind == '돌돔':
+            if myname.striped_beakfish is None:
+                myname.striped_beakfish = 1
+            else:
+                myname.striped_beakfish = myname.striped_beakfish + 1
+        elif fish_kind == '참돔':
+            if myname.pagrus_major is None:
+                myname.pagrus_major = 1
+            else:
+                myname.pagrus_major = myname.pagrus_major + 1
+
+        myname.length = length
+        if myname.score is None:
+            myname.score = int(score)
+        else:
+            myname.score = myname.score + int(score)
+
+        myname.save()
 
     return HttpResponse(confirm)
 
