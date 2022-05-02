@@ -78,6 +78,9 @@ def login(request):
         except IndexError:
             return redirect('/login_django')
 
+        if not Mymember.objects.filter(myname = myname).exists():
+            return redirect('/accounts/google/login/')
+
         mymember = Mymember.objects.get(myname = myname)
 
         if check_password(mypassword, mymember.mypassword):
