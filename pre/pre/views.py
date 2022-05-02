@@ -30,14 +30,16 @@ def index(request):
 
     if 'user_id' in request.session:
         social_id = ''
+        log_page = ''
     elif '_auth_user_id' in request.session:
         social_id = request.session['_auth_user_id']
+        log_page = ''
         if Mymember.objects.get_or_create(myname=social_id):
             confirm = 'T'
     else:
         social_id = ''
-
-    return render(request,'index.html',{'social_id':social_id})
+        log_page = 'no_page'
+    return render(request,'index.html',{'social_id':social_id,'log_page':log_page})
 
 def clock(request):
 
@@ -226,7 +228,12 @@ def getIn_score(request):
             else:
                 myname.pagrus_major =  myname.pagrus_major   +1
 
-        myname.length =  length
+        if not myname.length is None:
+            if length > myname.length:
+                myname.length = length
+        else:
+            myname.length = length
+
         if myname.score is None:
             myname.score = int(score)
         else:
@@ -263,7 +270,12 @@ def getIn_score(request):
             else:
                 myname.pagrus_major = myname.pagrus_major + 1
 
-        myname.length = length
+        if not myname.length is None:
+            if length > myname.length:
+                myname.length = length
+        else:
+            myname.length = length
+
         if myname.score is None:
             myname.score = int(score)
         else:
