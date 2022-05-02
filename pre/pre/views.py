@@ -112,7 +112,8 @@ def new_register(request):
     except IndexError:
         message = {'alert': '비밀번호나 이메일을 입력해주세요 ','code':0,'code2':2}
         return JsonResponse(message)
-    b = myemail.find('@')
+    # 이메일 유효성을 프론트가 아니라 백단 에서 할려는,하는 시도는 아주좋음
+    b = myemail.find('@')   #
     c = myemail.find('.')
     e = myemail.count('@')
     f = myemail.count('.')
