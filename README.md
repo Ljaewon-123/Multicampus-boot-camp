@@ -756,6 +756,16 @@ germany
 
 
 
+ **copyToLocal**
+
+Hdfs에 있는 파일을 local directory에 다운로드, get 명령어와 유사
+
+```java
+Usage: hdfs dfs -copyToLocal [-ignorecrc] [-crc] URI {localdst}
+```
+
+
+
 ##### 외부 data 하둡에 넣기
 
 `hdfs dfs -mkdir -p /home/jaewon`
