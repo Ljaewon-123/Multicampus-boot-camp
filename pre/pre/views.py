@@ -166,7 +166,9 @@ def new_register(request):
 def double_check(request):  # 1
     user_id = request.GET['ID']
     Id = Mymember.objects.all()
-
+    if len(user_id) == 1:
+        message = {'alert': '아이디는 한자리가 될수없습니다 ', 'code': 0}
+        return JsonResponse(message)
     try:
         if user_id[0].isspace():
             print('제대로 나온거 맞지??')
@@ -201,48 +203,60 @@ def getIn_score(request):
     fish_kind = request.GET['fish_kind']
     length = request.GET['length']
     score = request.GET['score']
+    length = int(length)
     if 'user_id' in request.session:
         user_id = request.session['user_id']
         myname = Mymember.objects.get(myname=user_id)
         if fish_kind == '광어':
             if myname.plaice is None:
-                myname.plaice = 1
+                myname.plaice = length
             else:
-                myname.plaice =  myname.plaice+1
+                if length > myname.plaice:
+                    myname.plaice = length
+            if myname.score is None:
+                myname.score = int(score)
+            else:
+                myname.score = myname.score + int(score)
         elif fish_kind == '우럭':
-            if myname.rockfish  is None:
-                myname.rockfish  = 1
+            if myname.rockfish is None:
+                myname.rockfish = length
             else:
-                myname.rockfish  =  myname.rockfish +1
+                if length > myname.rockfish:
+                    myname.rockfish = length
+            if myname.score2 is None:
+                myname.score2 = int(score)
+            else:
+                myname.score2 = myname.score2 + int(score)
         elif fish_kind == '감성돔':
-            if myname.schlegelii  is None:
-                myname.schlegelii  = 1
+            if myname.schlegelii is None:
+                myname.schlegelii = length
             else:
-                print(myname.schlegelii )
-                print(type(myname.schlegelii ))
-                myname.schlegelii  =  myname.schlegelii +1
+                if length > myname.schlegelii:
+                    myname.schlegelii = length
+            if myname.score3 is None:
+                myname.score3 = int(score)
+            else:
+                myname.score3 = myname.score3 + int(score)
         elif fish_kind == '돌돔':
             if myname.striped_beakfish is None:
-                myname.striped_beakfish = 1
+                myname.striped_beakfish = length
             else:
-                myname.striped_beakfish =  myname.striped_beakfish  +1
+                if length > myname.striped_beakfish:
+                    myname.striped_beakfish = length
+            if myname.score4 is None:
+                myname.score4 = int(score)
+            else:
+                myname.score4 = myname.score4 + int(score)
         elif fish_kind == '참돔':
-            if myname.pagrus_major  is None:
-                myname.pagrus_major = 1
+            if myname.pagrus_major is None:
+                myname.pagrus_major = length
             else:
-                myname.pagrus_major =  myname.pagrus_major   +1
-
-        if not myname.length is None:
-            if length > myname.length:
-                myname.length = length
-        else:
-            myname.length = length
-
-        if myname.score is None:
-            myname.score = int(score)
-        else:
-            myname.score = myname.score + int(score)
-
+                if length > myname.pagrus_major:
+                    myname.pagrus_major = length
+            if myname.score5 is None:
+                myname.score5 = int(score)
+            else:
+                myname.score5 = myname.score5 + int(score)
         myname.save()
 
     elif '_auth_user_id' in request.session:
@@ -250,41 +264,54 @@ def getIn_score(request):
         myname = Mymember.objects.get(myname=user_id)
         if fish_kind == '광어':
             if myname.plaice is None:
-                myname.plaice = 1
+                myname.plaice = length
             else:
-                myname.plaice = myname.plaice + 1
+                if length > myname.plaice:
+                    myname.plaice = length
+            if myname.score is None:
+                myname.score = int(score)
+            else:
+                myname.score = myname.score + int(score)
         elif fish_kind == '우럭':
             if myname.rockfish is None:
-                myname.rockfish = 1
+                myname.rockfish = length
             else:
-                myname.rockfish = myname.rockfish + 1
+                if length > myname.rockfish:
+                    myname.rockfish = length
+            if myname.score2 is None:
+                myname.score2 = int(score)
+            else:
+                myname.score2 = myname.score2 + int(score)
         elif fish_kind == '감성돔':
             if myname.schlegelii is None:
-                myname.schlegelii = 1
+                myname.schlegelii = length
             else:
-                myname.schlegelii = myname.schlegelii + 1
+                if length > myname.schlegelii:
+                    myname.schlegelii = length
+            if myname.score3 is None:
+                myname.score3 = int(score)
+            else:
+                myname.score3 = myname.score3 + int(score)
         elif fish_kind == '돌돔':
             if myname.striped_beakfish is None:
-                myname.striped_beakfish = 1
+                myname.striped_beakfish = length
             else:
-                myname.striped_beakfish = myname.striped_beakfish + 1
+                if length > myname.striped_beakfish:
+                    myname.striped_beakfish = length
+            if myname.score4 is None:
+                myname.score4 = int(score)
+            else:
+                myname.score4 = myname.score4 + int(score)
         elif fish_kind == '참돔':
             if myname.pagrus_major is None:
-                myname.pagrus_major = 1
+                myname.pagrus_major = length
             else:
-                myname.pagrus_major = myname.pagrus_major + 1
-
-        if not myname.length is None:
-            if length > myname.length:
-                myname.length = length
-        else:
-            myname.length = length
-
-        if myname.score is None:
-            myname.score = int(score)
-        else:
-            myname.score = myname.score + int(score)
-
+                if length > myname.pagrus_major:
+                    myname.pagrus_major = length
+            if myname.score5 is None:
+                myname.score5 = int(score)
+            else:
+                myname.score5 = myname.score5 + int(score)
         myname.save()
 
     return HttpResponse(confirm)
