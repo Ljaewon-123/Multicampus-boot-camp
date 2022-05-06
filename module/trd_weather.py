@@ -2,7 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-
+import json
 from bs4 import BeautifulSoup
 import time, copy
 
@@ -30,6 +30,7 @@ dict2 = {'/html/body/div[2]/section/div/div[2]/div[4]/div/div[2]/div[2]/div/butt
 # def donghaebuk():
 #     url = ""
 
+final_dict = {}
 
 # db = pymysql.connect(host='127.0.0.1',
 #     port=3306,
@@ -49,7 +50,7 @@ for key in dict1.keys():
         driver.implicitly_wait(3)
         driver.get(url)
         time.sleep(1)
-
+        # print(f'key:  {key}')
         dongbukbu = driver.find_element(By.XPATH,key)
         dongbukbu.send_keys(Keys.ENTER)
         driver.implicitly_wait(1)
@@ -64,7 +65,7 @@ for key in dict1.keys():
         table_contents = list()
         cnt = len(fst_table.get_attribute("innerText").split('\n'))
         table_contents.append(fst_table.get_attribute("innerText").split('\n'))
-
+        print(cnt)
         if cnt == 5:
             table_contents = table_contents[0]
             cnt = int((cnt-1)/2)
@@ -109,36 +110,71 @@ for key in dict1.keys():
             place = dict2[value]
             test_dict = dict()
             test2_dict = dict()
-            test_dict[place] = result_dict
-            test2_dict[place] = result2_dict
+            test_dict['날씨전망'] = result_dict
+            test2_dict['주간날씨'] = result2_dict
 
             print(test_dict)            
             print(test2_dict)
+
+            final_lst = [test_dict, test2_dict]
+            final_dict[place] = final_lst
+
             driver.close()
 
         else:
-
+# /html/body/div[2]/section/div/div[2]/div[4]/div/div[3]/div[2]/table/tbody/tr[6]/td[1]/span
+# /html/body/div[2]/section/div/div[2]/div[4]/div/div[3]/div[2]/table/tbody/tr[6]/td[1]/span
             table_contents = table_contents[0]
             print(table_contents)
             cnt = int((len(table_contents))/2)
-            result_dict = dict()
+            result_dict = {}
+            lst = []
+            pm = ''
+            # ['6일(금)', '비\t오후\t서-북서\t3~7\t0.5~1', '', '7일(토)', '비  맑음\t오전\t북서-북\t4~8\t0.5~1', '오후\t북서-북\t4~8\t0.5~1', '', '8일(일)', '구름많음  구름많음\t오전\t북-북동\t3~7\t0.5~0.5', '오후\t북서-북\t2~5\t0.5~0.5', '', '9일(월)', '맑음  구름많음\t오전\t북동-동\t3~6\t0.5~0.5', '오후\t남서-서\t3~6\t0.5~0.5']
+            # {'4일': [['오전', '남-남서', '7~12', '1~2.5', '맑음'], ['오후', '남-남서', '8~12', '1~2.5', '맑음']], '5일': [['오전', '남-남서', '7~11', '1~2.5', '맑음'], ['오후', '남동-남', '6~10', '1~2', '맑음']], '6일': [['오전', '남-남서', '5~9', '1~2', '비'], ['오후', '북서-북', '4~8', '0.5~1.5', '비']]}}
+            for weather in table_contents:
+                if weather in '':
+                    continue
+                # print(weather)
+                if weather[0].isdigit():
+                    weather_key = weather
+                    # print(weather_key)
+                else:
+                    info = weather.split('\t')
+                    if info[1] == '오전':
+                        info_div = info[1:]
+                        am = info[0].split()[0]
+                        pm = info[0].split()[1]
+                        info_div.append(am)
+                        lst.append(info_div)
+                    elif info[1] == '오후' or info[0] == '오후':
+                        if pm == '':
+                            result_dict[weather_key] = info
+                        else:
+                            info_div = info
+                            info_div.append(pm)
+                            lst.append(info_div)
+                            # print('----------------------------------------------------------')
+                            result_dict[weather_key] = lst
+                            lst = []
+            # print(result_dict)
+            # for k in range(0, cnt):
+            #     dhwjs = table_contents[2*k].split('\t')[1:]
+            #     print(dhwjs,'dhwjs')
+            #     # print(table_contents[2*k].split('\t')[0].split(' '))
+            #     dhwjs.append(table_contents[2*k].split('\t')[0].split(' ')[0])  # 마지막 1을 0으로 바꿈
+            #     # ['오전', '남-남서', '7~12', '1~2.5', '맑음']
+            #     dhgn = table_contents[2*k+1].split('\t')
+            #     print(dhgn,'dhgn')
+            #     dhgn.append(table_contents[2*k].split('\t')[0].split(' ')[-1])
+            #     # ['오후', '남-남서', '8~12', '1~2.5', '맑음']
+            #     day = table_contents[2*k].split('\t')[0].split(' ')[0].split('(')[0]
+            #     # '4일'
+            #     result_dict[day] = list()
+            #     result_dict[day].append(dhwjs)
+            #     result_dict[day].append(dhgn)
 
-            for k in range(0, cnt):
-                dhwjs = table_contents[2*k].split('\t')[1:]
-                print(dhwjs,'dhwjs')
-                # print(table_contents[2*k].split('\t')[0].split(' '))
-                dhwjs.append(table_contents[2*k].split('\t')[0].split(' ')[0])  # 마지막 1을 0으로 바꿈
-                # ['오전', '남-남서', '7~12', '1~2.5', '맑음']
-                dhgn = table_contents[2*k+1].split('\t')
-                print(dhgn,'dhgn')
-                dhgn.append(table_contents[2*k].split('\t')[0].split(' ')[-1])
-                # ['오후', '남-남서', '8~12', '1~2.5', '맑음']
-                day = table_contents[2*k].split('\t')[0].split(' ')[0].split('(')[0]
-                # '4일'
-                result_dict[day] = list()
-                result_dict[day].append(dhwjs)
-                result_dict[day].append(dhgn)
-
+            # print(result_dict,'asdfaewfasdf')
 
             se_table = driver.find_element(By.XPATH,'//*[@id="sea-today-mid-term"]/div[2]/div/ul[2]')
             se_table = se_table.get_attribute("innerText").split('\n')[1:-12]
@@ -158,13 +194,21 @@ for key in dict1.keys():
             place = dict2[value]
             test_dict = dict()
             test2_dict = dict()
-            test_dict[place] = result_dict
-            test2_dict[place] = result2_dict
+            test_dict['날씨전망'] = result_dict
+            test2_dict['주간날씨'] = result2_dict
 
             print(test_dict)            
             print(test2_dict)
-
+            final_lst = [test_dict,test2_dict]
+            final_dict[place] = final_lst
+            print(final_dict)
             # {'서해북부 먼바다': {'4일': [['오전', '남-남서', '7~12', '1~2.5', '맑음'], ['오후', '남-남서', '8~12', '1~2.5', '맑음']], '5일': [['오전', '남-남서', '7~11', '1~2.5', '맑음'], ['오후', '남동-남', '6~10', '1~2', '맑음']], '6일': [['오전', '남-남서', '5~9', '1~2', '비'], ['오후', '북서-북', '4~8', '0.5~1.5', '비']]}}
             # {'서해북부 먼바다': {'5월08일': [['오전', '0.5m', '1.5m', '구름많음'], ['오후', '0.5m', '1.5m', '맑음']], '5월09일': [['오전', '0.5m', '1.5m', '맑음'], ['오후', '0.5m', '1.5m', '맑음']], '5월10일': [['오전', '1m', '2m', '구름많음'], ['오후', '1m', '2m', '구름많음']], '5월11일': [['오전', '1m', '2m', '흐림'], ['오후', '1m', '2m', '흐림']]}}
 
             driver.close()
+
+
+res_json = json.dumps(final_dict,ensure_ascii=False)
+
+with open(f'weather.json','w',encoding='utf-8') as f:
+    f.write(res_json)
