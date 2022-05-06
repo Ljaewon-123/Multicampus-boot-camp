@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        {% load static %}
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding:0;
+        }
+        body {
+            font-family: plain,"Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-weight: 400;
+            color: #000;
+            font-size: 15px;
+            background-color: #eee;
+        }
+
+        .container{
+            width:100%;
+            max-width:1240px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+
+        .header {
+            padding: 0px 55px 0px 55px;
+            background-color: #fff;
+            z-index: 100;
+            position: sticky;
+            top: 0;
+            left: 0;
+            min-height: 55px;
+            text-transform: uppercase;
+        }
+        .header_div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .header a {
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        .nav_ctg {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 1 ;
+        }
+        .nav_etc {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0 ;
+            flex-shrink: 1 ;
+        }
+        .nav_ctg li {
+            display: inline block;
+            margin-right: 24px;
+            margin-bottom: 2px;
+            line-height: 55px;
+            flex-shrink: 1 ;
+            padding: 10px;
+        }
+        .nav_etc li {
+            display: inline block;
+            margin-left: 24px;
+            margin-bottom: 2px;
+            line-height: 55px;
+            text-align: right;
+            padding: 10px;
+        }
+        #logo {
+            display: flex;
+            align-items: center;
+            line-height: 55px;
+            padding: 0 ;
+            flex-shrink: 1 ;
+        }
+        #logoimg{
+            margin: 0;
+            width: 104px;
+            display: block;
+        }
+
+
+        .main{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 90vh;
+            background-color: #fff;
+            padding: 20px;
+        }
+
+        #map{
+            position: relative;
+            width:380px;
+            height: auto;
+            margin: auto;
+        }
+
+
+        @media screen and (max-width: 480px){
+
+            .container{
+                width:100%;
+                padding: 0px;
+                margin:0;
+            }
+            .header {
+                padding: 0px 15px 0px 15px;
+                min-height: 40px;
+            }
+
+            .header a {
+                font-weight: 400;
+            }
+
+            .nav_ctg li {
+                margin-right: 10px;
+                margin-bottom: 2px;
+                line-height: 35px;
+                padding: 5px;
+            }
+            .nav_etc li {
+                margin-left: 10px;
+                margin-bottom: 2px;
+                line-height: 35px;
+                text-align: right;
+                padding: 5px;
+            }
+            #logo {
+                line-height: 45px;
+            }
+            #logoimg{
+                width: 80px;
+            }
+
+            .main{
+                padding: 0px;
+            }
+        }
+
+
+        area{
+            cursor: pointer;
+        }
+
+
+        .sea{
+            font-size: 15px;
+            color: #fff;
+            line-height: 1;
+            position: absolute;
+            margin-bottom: 0;
+            font-family: 'scd-medium', sans-serif;
+            letter-spacing: 0;
+            font-weight: 400;
+        }
+
+        #s2{
+            left: 105px;
+            top: 220px;
+        }
+        #s3{
+            left: 100px;
+            top: 310px;
+        }
+        #s4{
+            left: 10px;
+            top: 330px;
+        }
+        #s5{
+            left: 175px;
+            top: 150px;
+            color:black;
+        }
+        #s6{
+            left: 215px;
+            top: 202px;
+            color:black;
+        }
+        #s7{
+            left: 215px;
+            top: 285px;
+            color:black;
+        }
+        #s8{
+            left: 242px;
+            top: 355px;
+            color:black;
+        }
+
+
+    </style>
+    <script>
+        function hover2(){
+            document.getElementById("map1").src="{% static 'image/level01_2.png' %}"
+        }
+        function hover3(){
+            document.getElementById("map1").src="{% static 'image/level01_3.png' %}"
+        }
+        function hover4(){
+            document.getElementById("map1").src="{% static 'image/level01_4.png' %}"
+        }
+        function hover5(){
+            document.getElementById("map1").src="{% static 'image/level01_5.png' %}"
+        }
+        function hover6(){
+            document.getElementById("map1").src="{% static 'image/level01_6.png' %}"
+        }
+        function hover7(){
+            document.getElementById("map1").src="{% static 'image/level01_7.png' %}"
+        }
+        function hover8(){
+            document.getElementById("map1").src="{% static 'image/level01_8.png' %}"
+        }
+        function hover9(){
+            document.getElementById("map1").src="{% static 'image/level01_9.png' %}"
+        }
+        function hover10(){
+            document.getElementById("map1").src="{% static 'image/level01_10.png' %}"
+        }
+
+        function hoverout(){
+            document.getElementById("map1").src="{% static 'image/weathermap.png' %}"
+        }
+
+    </script>
+</head>
+<body>
+
+
+<div class="container">
+        <div class="header">
+            <div class="header_div">
+                <ul class="nav_ctg">
+                    <li><a href="#" class="">배틀</a></li>
+                    <li><a href="#" class="">나의 어항</a></li>
+                </ul>
+                <div id="logo"><a href="/"><img id="logoimg" src="{% static 'image/nunukang.jpeg' %}" alt="NUNUKANG"></a></div>
+                <ul class="nav_etc">
+                    <li><a href="/weather">날씨</a></li>
+                    <li><a href="#">지도</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main">
+            <div id="map">
+                <span class="sea" id="s2">서해중부 <br>앞바다</span>
+                <span class="sea" id="s3">서해중부<br>안쪽먼바다</span>
+                <span class="sea" id="s4">서해중부 <br> 바깥먼바다</span>
+                <span class="sea" id="s5">인천,경기 북부 앞바다</span>
+                <span class="sea" id="s6">인천,경기 남부앞바다</span>
+                <span class="sea" id="s7">충남 북부 앞바다</span>
+                <span class="sea" id="s8">충남 남부 앞바다</span>
+
+
+
+                <img id="map1" src="{% static 'image/level02_2.png' %}" alt="지도" usemap="#image-map">
+
+
+                <map name="image-map" >
+                    <area  target="" alt="" title="" href="" coords="135,237,35" shape="circle">
+                    <area  target="" alt="" title="" href="" coords="129,323,36" shape="circle">
+                    <area  target="" alt="" title="" href="" coords="43,343,35" shape="circle">
+                    <area  target="" alt="" title="" href="" coords="176,143,332,172" shape="rect">
+                    <area  target="" alt="" title="" href="" coords="215,193,369,223" shape="rect">
+                    <area  target="" alt="" title="" href="" coords="212,280,365,310" shape="rect">
+                    <area onblur="this.focus()" autofocus target="" alt="" title="" href="" coords="227,345,372,377" shape="rect">
+                </map>
+
+            </div>
+
+        </div>
+        <div class="mobile_nav">
+            <div class="nav_div">
+                <ul class="nav_ctg">
+                    <li><a href="#" class="">배틀</a></li>
+                    <li><a href="#" class="">나의 어항</a></li>
+                    <li><a href="#">날씨</a></li>
+                    <li><a href="#">지도</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
