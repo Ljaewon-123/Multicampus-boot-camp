@@ -33,7 +33,7 @@ for dl in dl_list:
 # print(lst)
 res = {}
 res['webtoons'] = lst
-# print(res)
+print(res)
 res_json = json.dumps(res,ensure_ascii=False)
 print(res_json)
 

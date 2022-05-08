@@ -10,10 +10,10 @@ for doc in cursor:
     # print(doc)
     pprint(doc)
 
-# lee = score.find({'name':'이순신'})
-# pprint(lee)   # 하나만 나와도 커서객체로 나옴
-# for doc in lee:
-#     pprint(doc)
+lee = score.find({'name':'이순신'})
+pprint(lee)   # 하나만 나와도 커서객체로 나옴
+for doc in lee:
+    pprint(doc)
 
 print('score clooection 안에 있는 doc 총 개수: ',score.count_documents({}))
 
