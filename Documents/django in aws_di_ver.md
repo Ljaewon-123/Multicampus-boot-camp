@@ -124,6 +124,28 @@ DJANGO_SETTINGS_MODULE=team3.settings
 
 
 
+nginx 에러확인
+
+```terminal
+sudo nginx -t -c /etc/nginx/nginx.conf
+
+sudo service nginx restart # 재시작
+```
+
+uwsgi
+
+```terminal
+sudo service uwsgi start
+sudo service nginx start
+두 명령어로 두개의 소프트웨어를 데몬으로 작동시킵니다.
+
+sudo service uwsgi status
+sudo service nginx status
+정상 작동시 반응
+```
+
+
+
 
 
 
@@ -138,11 +160,11 @@ After=network.target
 [Service]
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/home/ubuntu/mysite
-ExecStart=/home/ubuntu/anaconda3/envs/mysite/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/Fishing/fish
+ExecStart=/home/ubuntu/anaconda3/envs/Fish/bin/gunicorn \
 --workers 2 \
 --bind unix:/tmp/gunicorn.sock \
-config.wsgi:application
+fish.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -151,7 +173,7 @@ WantedBy=multi-user.target
 
 우리꺼
 
-```
+```terminal
 [Unit]
 Description=gunicorn daemon
 After=network.target
@@ -182,6 +204,12 @@ sudo systemctl start mysite.service
 sudo systemctl status mysite.service
 ```
 
+디렉토리를 찾지 못한다고함 
+
+홈에서 which gunicorn 을 해서 해당 경로를 `ExecStart` 에 넣어줌 
+
+
+
 
 
 *nginx 설정*
@@ -197,11 +225,11 @@ cd /etc/nginx/sites-available
 
 ```terminal
 server {
-	listen 80;
-	server_name 13.114.200.183;
+	listen 8083;
+	server_name 54.65.104.126;
 	
 	location /static {
-		alias /home/ubuntu/mysite/static;
+		alias /home/ubuntu/Fishing/fish/static;
 	}
 
 	location / {
@@ -244,8 +272,20 @@ sudo ln -s /etc/nginx/sites-available/mysite
 # nginx 재시작
 sudo systemctl restart nginx
 
-# 13.114.200.183 접속해보기!
+# 13.114.200.183 접속해보기! 우리 ip
 ```
+
+`main process exited, code=exited, status=1/failure`
+
+`nginx service failed with result: exit-code`
+
+에러 발생시에는  sudo vim Fish 에서 포트번호 8083 으로 바꿔줌 http안되고 tcp포트로 해야함
+
+명령어는 ubuntu@ip:~/Fishing/fish$ 에서 gunicorn fish.wsgi:application --preload -b 0.0.0.0:8083
+
+에서 서버접속
+
+:
 
 
 
