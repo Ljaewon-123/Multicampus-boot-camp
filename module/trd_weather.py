@@ -210,5 +210,5 @@ for key in dict1.keys():
 
 res_json = json.dumps(final_dict,ensure_ascii=False)
 
-with open(f'weather.json','w',encoding='utf-8') as f:
+with open(f'../../Fishing/data/weather.json' ,'w',encoding='utf-8') as f:
     f.write(res_json)
