@@ -1,3 +1,5 @@
+# 본 프로젝트에 merge하기전 따로 작업했던 공간
+
 # 프로젝트 완성본
 
 [cshun1006/DI: 3조 : 동헌이와 아이들 (github.com)](https://github.com/cshun1006/DI)
