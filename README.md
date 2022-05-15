@@ -3039,3 +3039,13 @@ task볼려면 실행된 dag_id나  날짜 누르고 네모 -> log네모
 
 
 
+# airflow에서 mysql 설정
+
+```terminal
+airflow.cfg 파일 내 다음 설정을 변경한다.
+
+sql_alchemy_conn = mysql://[ID]:[PASSWORD]@[IP]:3306/airflow
+```
+
+
+
