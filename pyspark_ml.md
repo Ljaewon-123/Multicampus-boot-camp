@@ -10,6 +10,8 @@
 
 tool를 사용 안해서 이게 편했음
 
+분류모델
+
 ```python
 import pandas as pd
 import numpy as np
@@ -105,14 +107,16 @@ for i in indexer:
 print(type(indexer))
 
 # Pipeline을 이용해 stage에다가 실행 과정 담아 넘기기
-pipeline = Pipeline(stages=indexer)
-df = pipeline.fit(df).transform(df)
+# 이후 Estimator.fit()이나 Transformer.transform()둘중 하나 호출
+pipeline = Pipeline(stages=indexer) # 호출시 stages가 순서대로 호출 
+df = pipeline.fit(df).transform(df)  # 학습 # 입력 데이터 변환
 
 un_cols = ["PassengerId","Name","Ticket","Cabin","Embarked","Sex","Initial"]
 
 df = df.drop(*un_cols)
 print("삭제 후 남은 칼럼들:", df.columns)
 
+# VectorAssembler 여러열을 벡터열로 병합
 feature = VectorAssembler(inputCols = df.columns[1:],
                          outputCol='features')
 
@@ -159,7 +163,7 @@ from sklearn.metrics import roc_curve, auc
 # 모델 정의
 lr = LogisticRegression(labelCol='Survived')
 
-# 튜닝할 파라미터 grid 정의
+# 튜닝할 파라미터 grid 정의 (그리드 지정된 매개변수를 고정값으로)
                                     # model.parameter 식으로 정의
 paramGrid = ParamGridBuilder().addGrid(lr.regParam,
                                       (0.01, 0.1))\
@@ -169,7 +173,7 @@ paramGrid = ParamGridBuilder().addGrid(lr.regParam,
                                       (1e-4, 1e-5))\
                               .addGrid(lr.elasticNetParam,
                                       (0.25, 0.75))\
-                              .build()
+                              .build() # 그리드 지정된 모든 조합 빌드후 리턴
 
 # 교차검증 정의 - Pipeline식으로 정의
 tvs = TrainValidationSplit(estimator=lr,
