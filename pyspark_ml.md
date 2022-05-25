@@ -204,6 +204,169 @@ print('Precision:',
 
 
 
+# Regression 모델
+
+일단 따라 해봤는데 ....... 
+
+```python
+import os
+import pandas as pd
+import numpy as np
+
+# pyspark for objecy, sql
+from pyspark import SparkConf, SparkContext
+from pyspark.sql import SparkSession, SQLContext
+
+from pyspark.sql.types import *
+import pyspark.sql.functions as F
+from pyspark.sql.functions import udf, col
+
+# pyspark for ML
+from pyspark.ml.regression import LinearRegression
+from pyspark.mllib.evaluation import RegressionMetrics
+from pyspark.ml.evaluation import RegressionEvaluator
+
+from pyspark.ml.tuning import ParamGridBuilder, CrossValidator, CrossValidatorModel
+from pyspark.ml.feature import VectorAssembler, StandardScaler
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Setting for visualization
+from IPython.core.interactiveshell import InteractiveShell
+InteractiveShell.ast_node_interactivity = 'all'
+
+from matplotlib import rcParams
+sns.set(context='notebook', style='whitegrid',
+       rc={'figure.figsize': (18, 4)})
+rcParams['figure.figsize'] = 18, 4
+
+# 재실행을 대비하기 위해 랜덤 시드 설정해놓기
+rnd_seed = 23
+np.random.seed = rnd_seed
+np.random.set_state = rnd_seed
+
+## 데이터 스미카 직접 명시해주기 ##
+data_path = '/user/jaewon/data/cal_housing.data'
+# data의 칼럼명을 스키마로 정의해주기
+schema_string = 'long lat medage totrooms totbdrms pop houshlds medinc medhv'
+
+fields = [StructField(field, FloatType(), True)for field in schema_string.split()]
+schema = StructType(fields)
+
+spark = SparkSession.builder.master('yarn')\
+        .appName('Regression')\
+        .getOrCreate()
+
+
+# 데이터파일 로드
+# cache 메소드를 이용해서 메모리에 keep해놓기
+housing_df = spark.read.csv(path=data_path, schema=schema).cache()
+
+# 상위 5개 행 미리 보기 -> 하나의 Row가 namedTuple 형태로 되어 있음..!
+housing_df.take(5)
+
+
+
+# 그룹핑해서 집계해보기
+result_df = housing_df.groupBy('medage').count()
+# 값 정렬 기준 설정해주고 내림차순으로 정렬
+result_df.sort('medage', ascending=False).show(5)
+
+# 수치형 변수들 기술통계량 살펴보기
+housing_df.describe().show(10)
+
+# 반환되는 통계량 값들을 소수점 제거하거나 하는 등 커스터마이징해서 출력
+(housing_df.describe()).select('summary',
+                              F.round('medage', 4).alias('medage'),
+                              F.round('totrooms', 4).alias('totrooms'),
+                              F.round('totbdrms', 4).alias('totbdrms'),
+                              F.round('pop', 4).alias('pop'),
+                              F.round('houshlds', 4).alias('houshlds'),
+                              F.round('medinc', 4).alias('medinc'),
+                              F.round('medhv', 4).alias('medhv')).show(10)
+# 파생변수 생성하기
+housing_df = (housing_df.withColumn('rmsperhh',
+                                   F.round(col('totrooms')/col('houshlds'), 2))\
+                        .withColumn('popperhh',
+                                   F.round(col('pop')/col('houshlds'), 2))\
+                        .withColumn('bdrmsperrm',
+                                   F.round(col('totbdrms')/col('totrooms'), 2)))
+housing_df.show(5)
+
+
+
+# 사용하지 않을 변수 제외하고 필요한 변수들만 select
+housing_df = housing_df.select('medhv',
+                              'totbdrms',
+                              'pop',
+                              'houshlds',
+                              'medinc',
+                              'rmsperhh',
+                              'popperhh',
+                              'bdrmsperrm')
+
+featureCols = ['totbdrms', 'pop', 'houshlds', 'medinc',
+              'rmsperhh', 'popperhh', 'bdrmsperrm']
+
+# VectorAssembler로 feature vector로 변환
+# Scaling을 적용시키기 이전에 필요한 Feature들을 Vector로 변환하는 작업이 선행
+assembler = VectorAssembler(inputCols=featureCols, outputCol='features')
+assembled_df = assembler.transform(housing_df)
+assembled_df.show(10, truncate=True)
+
+
+# 위에서 만든 Feature vector인 'features' 넣기
+standardScaler = StandardScaler(inputCol='features',
+                               outputCol='features_scaled')
+# fit, transform
+scaled_df = standardScaler.fit(assembled_df).transform(assembled_df)
+
+# scaling된 피처들만 추출해보기
+scaled_df.select('features', 'features_scaled').show(10,
+                                                    truncate=True)
+
+
+# 데이터 분할 학습 8, 테스트 2
+train_data, test_data = scaled_df.randomSplit([0.8, 0.2], seed=rnd_seed)
+
+# Elastic Net 모델 정의
+lr = LinearRegression(featuresCol='features_scaled',
+                     labelCol='medhv',
+                     predictionCol='predmedhv',
+                     maxIter=10,
+                     regParam=0.3,
+                     elasticNetParam=0.8,
+                     standardization=False)
+# 모델 학습
+linearModel = lr.fit(train_data)
+
+
+# transoform 사용하면 모델 정의할 때 설정한 "예측 값 변수"를 새로 만들어 생성한 데이터프레임 반환
+predictions = linearModel.transform(test_data)
+
+print(type(predictions)) # 예측 결과값이 PySpark의 데이터프레임 형태로 반환됨!
+
+
+# predictions 데이터프레임에서 y값과 예측값만 추출해 비교
+pred_labels = predictions.select('predmedhv', 'medhv')
+pred_labels.show()
+
+print(f"RMSE:{linearModel.summary.rootMeanSquaredError}")
+print(f"MAE: {linearModel.summary.meanAbsoluteError}")
+print(f"R2 score: {linearModel.summary.r2}")
+
+```
+
+>RMSE:78116.2564798975
+>MAE: 56925.44456037988
+>R2 score: 0.5435224404301482
+
+
+
+사이킥런이랑 형태가 좀 비슷한거 같은데 비교해 보면서 다시 한번 보자
+
+
+
 # Error
 
 ## pillow 관련에러 인듯
