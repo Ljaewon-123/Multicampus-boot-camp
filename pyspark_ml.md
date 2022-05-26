@@ -363,6 +363,69 @@ print(f"R2 score: {linearModel.summary.r2}")
 
 
 
+# pipeline
+
+```python
+from sklearn.datasets import load_iris
+import pandas as pd
+import numpy as np
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
+iris = load_iris()
+data = iris.data
+label = iris.target
+
+iris_df = pd.DataFrame(data, columns=iris.feature_names)
+iris_df['target'] = label
+
+spark_df = spark.createDataFrame(iris_df)
+
+
+
+# 1. Train/Test 데이터로 분할
+train_df, test_df = spark_df.randomSplit(weights=[0.8, 0.2], seed=42)
+
+# 2. Feature Vector로 만들기
+ftr_columns = train_df.columns[:-1]
+vec_assembler = VectorAssembler(inputCols=ftr_columns, outputCol='features')
+
+train_ftr_vec = vec_assembler.transform(train_df)
+test_ftr_vec = vec_assembler.transform(test_df)  # 테스트 데이터에 대해도 동일한 객체 사용
+
+print('# 학습 원본 데이터:')
+train_df.limit(5).show()
+
+print('# Feature Vectorization 후 학습 데이터:')
+train_ftr_vec.limit(5).show()
+
+
+# 모델 정의
+dt_clf = DecisionTreeClassifier(featuresCol='features', labelCol='target', maxDepth=10)
+
+# 학습
+dt_model = dt_clf.fit(train_ftr_vec)
+
+# 학습, 테스트 데이터에 대해 예측
+train_pred = dt_model.transform(train_ftr_vec)
+test_pred = dt_model.transform(test_ftr_vec)
+
+evaluator = MulticlassClassificationEvaluator(predictionCol='prediction', labelCol='target', metricName='accuracy')
+
+train_acc = evaluator.evaluate(train_pred)
+test_acc = evaluator.evaluate(test_pred)
+
+print('Train Accuracy:', train_acc)
+print('Test Accuracy:', test_acc)
+```
+
+
+
+
+
+
+
 사이킥런이랑 형태가 좀 비슷한거 같은데 비교해 보면서 다시 한번 보자
 
 
