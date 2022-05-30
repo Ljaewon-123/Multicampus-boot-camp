@@ -3018,7 +3018,7 @@ bashrc 랑 권한일아 다름
 
 ----------------------------------------------------------------------------------------------------
 
-# Airflow
+# Airflow_Error
 
 
 
@@ -3036,6 +3036,95 @@ bash: airflow dags test air01 2022-04-15
 
 
 task볼려면 실행된 dag_id나  날짜 누르고 네모 -> log네모
+
+
+
+포트번호 겹칠 때
+
+```terminal
+airflow.cfg 에서 
+
+486
+base_url = http://localhost:포트번호
+바꿔주기 
+
+479
+web_server_port = 8081
+
+```
+
+
+
+자꾸 sqllite를 지정해서 mysql을 지정하게 airflow.cfg를 바꿔줌 
+
+```
+sql_alchemy_conn =  mysql://root:1234@localhost:3306/airflow
+```
+
+airflow 에서 mysql 쓸려는데 안됨
+
+```terminal
+compilation terminated.
+      error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: legacy-install-failure
+
+× Encountered error while trying to install package.
+╰─> mysqlclient
+
+```
+
+```terminal
+sudo apt-get install gcc -y
+sudo apt-get install python3-dev -y
+
+error: subprocess-exited-with-error
+× python setup.py bdist_wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [44 lines of output]
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for mysqlclient
+  Running setup.py clean for mysqlclient
+Failed to build mysqlclient
+Installing collected packages: mysqlclient
+  Running setup.py install for mysqlclient ... error
+  error: subprocess-exited-with-error
+  
+  × Running setup.py install for mysqlclient did not run successfully.
+  │ exit code: 1
+  ╰─> [44 lines of output]
+
+```
+
+새로운 에러 발생
+
+```terminal
+sudo apt-get install python3-dev
+sudo apt-get upgrade # 업그레이드 안된게 많아서 해줌
+
+: Sub-process /usr/bin/dpkg returned an error code (1) 
+마지막 에러 그이후 
+pip install mysqlclient
+ModuleNotFoundError: No module named '_sysconfigdata_m_linux_x86_64-linux-gnu'
+심볼링 써봤으나 해결안됨
+sudo ln -s   /usr/lib/python3.7/_sysconfigdata__linux_x86_64-linux-gnu.py  /usr/lib/python3.7/_sysconfigdata__x86_64-linux-gnu.py
+ln: failed to create symbolic link '/usr/lib/python3.7/_sysconfigdata__x86_64-linux-gnu.py'
+
+# sub-process 부터 해결해야함 
+```
+
+
+
+
+
+
+
+
 
 
 
