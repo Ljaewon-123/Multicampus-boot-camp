@@ -3107,7 +3107,12 @@ Installing collected packages: mysqlclient
 sudo apt-get install python3-dev
 sudo apt-get upgrade # 업그레이드 안된게 많아서 해줌
 
+sudo apt --fix-broken install
+dpkg-deb: error: paste subprocess was killed by signal (Broken pipe)
+Errors were encountered while processing:
+ /var/cache/apt/archives/libpython3.7-stdlib_3.7.13-1+focal3_amd64.deb
 : Sub-process /usr/bin/dpkg returned an error code (1) 
+
 마지막 에러 그이후 
 pip install mysqlclient
 ModuleNotFoundError: No module named '_sysconfigdata_m_linux_x86_64-linux-gnu'
@@ -3117,6 +3122,48 @@ ln: failed to create symbolic link '/usr/lib/python3.7/_sysconfigdata__x86_64-li
 
 # sub-process 부터 해결해야함 
 ```
+
+시도
+
+```terminal
+udo apt --fix-broken install  # 이후
+The following additional packages will be installed:
+  libpython3.7-stdlib
+The following packages will be upgraded:
+  libpython3.7-stdlib
+# 에있는 libpython3.7-stdlib 삭제
+
+sudo apt remove libpython3.7-stdlib # fix-broken 하라고함
+
+# 수동 삭제 (일시적으로 이동시킴)
+jaewon@ubuntu:~$ ls -l /var/lib/dpkg/info | grep -i libpython3.7-stdlib
+-rw-r--r-- 1 root root   14454 Mar 31 19:34 libpython3.7-stdlib:amd64.list
+-rw-r--r-- 1 root root   24005 Mar 16 10:35 libpython3.7-stdlib:amd64.md5sums
+-rwxr-xr-x 1 root root    1155 Mar 16 10:35 libpython3.7-stdlib:amd64.prerm
+jaewon@ubuntu:~$ sudo mv /var/lib/dpkg/info/libpython3.7-stdlib:amd64.* /tmp
+
+## -fix-broken로 재설치 안됨  다시 원상복구 시킴 
+
+```
+
+시도2
+
+```terminal
+sudo dpkg -i --force-overwrite /var/cache/apt/archives/libpython3.7-stdlib_3.7.13-1+focal3_amd64.deb
+이후
+sudo apt -f install
+sudo apt autoremove
+이후
+pip install mysqlclient
+# 처음 문제는 해결 이후 
+ModuleNotFoundError: No module named 'distutils.cmd'
+에러 발생
+
+sudo apt-get install python3-distutils # 해결 안됨 
+
+```
+
+
 
 
 
