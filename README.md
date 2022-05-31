@@ -3055,9 +3055,9 @@ web_server_port = 8081
 
 
 
-자꾸 sqllite를 지정해서 mysql을 지정하게 airflow.cfg를 바꿔줌 
+자꾸 sqllite를 지정해서 mysql을 지정하게 airflow.cfg를 바꿔줌 31
 
-```
+```terminal
 sql_alchemy_conn =  mysql://root:1234@localhost:3306/airflow
 ```
 
@@ -3160,28 +3160,61 @@ ModuleNotFoundError: No module named 'distutils.cmd'
 에러 발생
 
 sudo apt-get install python3-distutils # 해결 안됨 
+sudo apt-get install python3.7-distutils # 버전지정후 distutils.cmd는 해결
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-# airflow에서 mysql 설정
+다시 에러
 
 ```terminal
-airflow.cfg 파일 내 다음 설정을 변경한다.
+MySQLdb/_mysql.c:46:10: fatal error: Python.h: No such file or directory
+error: command 'x86_64-linux-gnu-gcc' failed with exit status 1
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+error: legacy-install-failure
 
-sql_alchemy_conn = mysql://[ID]:[PASSWORD]@[IP]:3306/airflow
+× Encountered error while trying to install package.
+╰─> mysqlclient
+
 ```
 
+```terminal
+파이썬 dev에 대한 파일과 lib 다운 안되어있다고 생각 다시 다운 시도
+sudo apt-get install python3.7-dev
+# 무사히 다운 성공!
+Successfully built mysqlclient
+Installing collected packages: mysqlclient
+Successfully installed mysqlclient-2.1.0
+```
 
+### airflow mysql 연결
+
+```terminal
+ERROR - DB Creation and initialization failed: (MySQLdb._exceptions.OperationalError) (1049, "Unknown database 'airflow  #sqlite:////home/jaewon/airflow/airflow.db'")
+(Background on this error at: http://sqlalche.me/e/13/e3q8)
+
+```
+
+에러 발생으로 다시 연결 (원래 잘됐었는데.....)
+
+```terminal
+pip3 install 'apache-airflow[mysql]'
+```
+
+에러 원인 찾음
+
+```terminal
+(1049, "Unknown database 'airflow  #sqlite:////home/jaewon/airflow/airflow.db'")
+
+원래 설정이 sqllite로 되어있어 되던거였음 mysql에서 airflow라는 데이터 베이스를 찾지 못한거 같다 설정을 바꿨는데 디비를 만들어 주던가 지정된 디비를 프로젝트 디비명으로 바꿔주던가 해야할듯 
+```
+
+airflow.cfg 재설정
+
+```terminal
+sql_alchemy_conn =  mysql://root:1234@localhost:3306/fish
+# sqllite설정 안지우려고 '#' 남겨뒀었는데 그러면 그 부분까지 DB이름으로 지정함 그래서 한줄 아래로 내려줌 DB를 airflow에서 fish로 바꿔주는건 맞는 선택이였음
+~ airflow db init
+```
 
