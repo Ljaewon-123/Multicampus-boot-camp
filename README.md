@@ -3218,3 +3218,30 @@ sql_alchemy_conn =  mysql://root:1234@localhost:3306/fish
 ~ airflow db init
 ```
 
+
+
+### 실행중 에러
+
+```terminal
+airflow dags test kafka 2022-05-31 # 이후로는 웹에서 진행함
+
+명령어로 실행 
+
+
+During handling of the above exception, another exception occurred:
+
+Message: 'Failed to execute task: %s.'
+Arguments: ("\x1b[1mHTTPConnectionPool(host='localhost', port=9870): Max retries exceeded with url: /webhdfs/v1/?user.name=jaewon&op=GETHOMEDIRECTORY (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fec73785a50>: Failed to establish a new connection: [Errno 111] Connection refused'))\x1b[22m",)
+
+
+hdfs.util.HdfsError: Failed to find datanode, suggest to check cluster health. excludeDatanodes=null
+
+# 하둡 재시작 해보니 잘됨
+# insert_mysql 에서도 에러가 발생하는데 하둡 파일정리한다고 파일 지워서 그런듯 다시만들어줌 그러니 해결 
+
+# 에러발생 너무크거나 순서가 맞지 않을때? 그러나 sql부분만 해보면 문제없이 돌아감
+MySQLdb._exceptions.OperationalError: (2013, 'Lost connection to MySQL server during query')
+
+import MySQLdb # 이거 필요없는거라 한번 지우고 시도해봄
+```
+
