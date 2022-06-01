@@ -3242,6 +3242,31 @@ hdfs.util.HdfsError: Failed to find datanode, suggest to check cluster health. e
 # 에러발생 너무크거나 순서가 맞지 않을때? 그러나 sql부분만 해보면 문제없이 돌아감
 MySQLdb._exceptions.OperationalError: (2013, 'Lost connection to MySQL server during query')
 
-import MySQLdb # 이거 필요없는거라 한번 지우고 시도해봄
+import MySQLdb # 이거 필요없는거라 한번 지우고 시도해봄  
+# 안됨
 ```
+
+`pip apache-airflow-providers-apache-spark`
+
+ airflow에서 spark쓸려면 필요하다고함 ;
+
+```python
+SparkSubmitOperator # airflow와 spark의 연결은 sparksubmitoperator 필요함 그래서 해봤는데 
+
+# 에러발생
+ERROR - Failed to execute job 41 for task spark_submit_task (Cannot execute: spark-submit --master yarn --name arrow-spark /home/jaewon/airflow/dags/using_sql.py. Error code is: -9.; 18031)
+
+# 되던것도 안됨 다른문젠가... 
+
+airflow 에서 spark 세션 연결해서 mysql 이 원래 되던 파일이 있는데 kafka쪽 코드 돌리고 나면 똑같이 안됨
+아마 pip hdfs를 사용했는데 이거 다음에 spark로 hadoop data꺼내오는게 안되는거 같음
+
+아님
+# 아님
+
+spark구문에 첫번째는 실행됨 다른 문제같음 
+
+```
+
+
 
