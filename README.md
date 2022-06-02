@@ -3272,3 +3272,74 @@ spark구문에 첫번째는 실행됨 다른 문제같음
 
 고생한거에 비해 남는 메시지는 별로 없다...
 
+?? sql 구문 코드만 따로 돌려봤는데 잘됨 
+
+근데왜 합치면 그부분에서 에러가 날까?
+
+
+
+따로 파이선 코드로 돌리면 잘됨 
+
+
+
+계속 똑같은 에러
+
+근데 됐다가 안됐다가함 왜일까..? 일단 한번 성공시켜보자 
+
+```
+2022-06-02, 06:09:49 UTC] {standard_task_runner.py:98} ERROR - Failed to execute job 70 for task spark_submit_task (Cannot execute: spark-submit --master yarn --name arrow-spark /home/jaewon/airflow/dags/using_sql.py. Error code is: -9.; 14619)
+
+
+During handling of the above exception, another exception occurred:
+
+Exception Handling이란? : 정상적인 프로그램 흐름을 중단하고 주변의 컨텍스트 또는 코드 블록에서 계속하기위한 메커니즘
+```
+
+예외 처리중 또다른 예외 발생....... 대체 무슨 예외?? 
+
+### 마지막 문제 원인 찾은거 같음 (메모리 부족..)
+
+```terminal
+py4j.protocol.Py4JNetworkError: Answer from Java side is empty
+
+# 중간중간에 나오는 에러.... 다른것만 찾아보다가 처음 찾아봤는데 메모리 에러라는 말이 있다.. 4gb가 넘게 있는데 벌써??
+
+. 프로세스 목록 확인 
+ 
+~$ ps 
+ 
+ 
+2. 프로세스 목록 확인 - 자세한 정보
+ 
+~$ ps -f
+ 
+ 
+3. 모든 프로세스 리스트 확인
+ 
+~$ ps -e
+~$ ps -ef
+ 
+python 이름으로 실행중인 process
+ps aux
+
+kill -9 PID  # 중지
+
+
+# 메모리 남은거 확인 
+free -h
+
+확인 하고 그럼 1기가로 부족하다는 말인데..
+
+아니그럼 될때가 있고 안될때가 있는데 무슨기준??
+
+Hadoop 키기전 2.2Gi  키고나면 3.2Gi 정도 Swap: use 가 95 ~ 98%?정도됨
+sql구문 실행시 마지막 확인으로는 4.5Gi 에서 간당간당함 Swap: 0
+가끔 airflow실행시 멈췄는데 메모리 부족이였던거 같음
+다 끝나면 돌아옴
+
+sql구문만해도 메모리 꽉 찰라그럼 
+그렇다면 kafka가 있는 파일은??
+
+메모리 증설부터 시도해보자... 생각보다 더 오래 걸릴듯 하다.
+```
+
