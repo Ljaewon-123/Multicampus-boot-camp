@@ -406,7 +406,7 @@ def insert_mysql():
     obs_list_file.write.option('truncate', True).jdbc(url, 'obs_list', 'overwrite',
                                                       properties={'driver': driver, 'user': user, 'password': password})
 
-
+# 크롤링코드는 팀원이 만든거에 내가 몇개만 수정함
 def crawling():
     # 서해북부
     dict1 = {'/html/body/div[2]/section/div/div[2]/div[4]/div/div[2]/div[1]/div/div[2]/button': [
