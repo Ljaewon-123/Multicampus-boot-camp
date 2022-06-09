@@ -1,4 +1,4 @@
-프로젝트때 급하게 한거라 아직 
+프로젝트때 급하게 한거라 정리할겸 다시 해보기 
 
 ---
 
@@ -123,5 +123,140 @@ BashOperator를 사용했었으니까 쉘 스크립트 sh 파일도 해보자
 
 > 쉘 스크립트도 많이 까먹었다 재밌었는데.. 기본문법 간단하게 잡고 BashOperator에 써보자 
 
+사용한 sh파일 쉘 스크립트 
+
+간단하긴 한데 read반응이 airflow에서 어떨지 궁금해서 한번해봄 
+
+```sh
+#!/bin/sh
 
 
+
+echo "Welcom to shell practice File!!
+        This Files desigined by Ljaewon  asdhfae"
+
+echo "Select maybe? item: item1,item2 or item3  so simply"
+
+
+a=0
+
+while [ "$a" -lt 5 ]
+do
+        a=$(expr $a + 1)
+        echo $a
+done
+
+
+# while true ; do
+#   echo "Please type something in (^C to quit)"
+#   read INPUT_STRING
+#   echo "You typed: $INPUT_STRING"
+# done
+
+echo "select item1 or item2 or item3"
+
+while true ; do
+        echo "hihi"
+        read item
+        case $item in
+                "item1")
+                        echo " you want stop? "
+                        echo "(y/n)" # Yes|yes|y|Y) case 하나 더 사용해서 이런식도 나쁘지 않을듯
+                        read a
+
+                        if [ "$a" = "y" ]; then
+                                break
+                        else
+                                continue
+                        fi
+                ;;
+                "item2" | "item3")
+                        echo "2 or 3"
+                        echo "???"
+
+                        cd /home/jaewon
+                        cat starbucks_all.json
+                ;;
+
+                *) echo "Jush default"
+                   echo " Try Again"
+                ;;
+        esac
+done
+```
+
+실행하면 대충 아래와 같이 된다
+
+![image-20220610042249611](README.assets/image-20220610042249611.png)
+
+요건 적용코드 
+
+```python
+from airflow import DAG
+from pendulum import yesterday
+from airflow.operators.bash import BashOperator
+
+dag = DAG(
+    dag_id='air02',
+    schedule_interval=None,
+    start_date=yesterday('Asia/Seoul')
+)
+
+templated_command="sh /home/jaewon/sh_code/while_pre.sh"
+# 'sh /home/jaewon/sh_code/while_pre.sh'
+
+# bash script start
+task02=BashOperator(
+    task_id='hello',
+#    bash_command='echo Hello, airflow',
+    bash_command=templated_command,
+    dag=dag
+)
+
+```
+
+`TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: sh /home/jaewon/sh_code/while_pre.sh`
+
+근데 요런 에러떠서 안됨 
+
+읽어보니 templated_command 즉 sh파일의 경로를 찾지 못했다는 거였음 그래서 공식문서 확인해봄
+
+[BashOperator — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
+
+sh라고 명령어 그대로 쓰는게 아니였음 
+
+바꾼후에 코드
+
+```python
+from airflow import DAG
+from pendulum import yesterday
+from airflow.operators.bash import BashOperator
+
+dag = DAG(
+    dag_id='air02',
+    schedule_interval=None,
+    start_date=yesterday('Asia/Seoul'),
+    template_searchpath='/home/jaewon/sh_code',
+)
+
+# templated_command="sh /home/jaewon/sh_code/while_pre.sh"
+# 'sh /home/jaewon/sh_code/while_pre.sh'
+
+# bash script start
+task02=BashOperator(
+    task_id='hello',
+    bash_command='while_pre.sh',
+    dag=dag
+)
+```
+
+**template_searchpath** 라는걸 사용해서 위치 지정후에 사용 template_searchpath쓸게 아니라면 dags밑에 넣어야함  그래서 결과는
+
+
+
+![image-20220610041822904](README.assets/image-20220610041822904.png)
+
+read에 값을 넣을수 없었음... 혹시나 했는데 
+
+Jinja 라고 재밌어 보이는거 찾았는데 값을 전달해줄수는 있는듯 하다 나중에 공부하다 사용할 기회가 올듯 하다.
