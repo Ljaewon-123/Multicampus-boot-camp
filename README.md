@@ -14,24 +14,28 @@
 
 [Spark_문법](#Spark 문법)
 
-1. [Rdd](# Rdd)
-2. [DataFrame](# DataFrame )
+1. [Rdd](#Rdd)
+2. [DataFrame](#DataFrame )
 
-[Spark streaming](# Spark streaming 스파크 스트리밍)
+[Spark streaming](#Spark streaming 스파크 스트리밍)
 
-[파이썬,쉘스크립트](# 파이썬 파일로 실행하기)
+[파이썬,쉘스크립트](#파이썬 파일로 실행하기)
 
 [zeppelin]( #zeppelin)
 
 [Mysql](#mysql)
 
-[MongoDB](# MongoDB)
+[MongoDB](#MongoDB)
 
 전체 역할에서
 하둡은 저장과 연결
 스파크는 DB에 넣어주기전 처리
 
+추가 
 
+[Webhdfs](#webhdfs)
+
+[Airflow_Error](#Airflow_Error)  
 
 # Hadoop  3.3.1
 
