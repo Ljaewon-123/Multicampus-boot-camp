@@ -260,3 +260,41 @@ task02=BashOperator(
 read에 값을 넣을수 없었음... 혹시나 했는데 
 
 Jinja 라고 재밌어 보이는거 찾았는데 값을 전달해줄수는 있는듯 하다 나중에 공부하다 사용할 기회가 올듯 하다.
+
+
+
+[Crontab.guru - The cron schedule expression editor](https://crontab.guru/)
+
+1번에서 한건데 스케쥴 반복하는 것만 정리함
+
+start_date : time window 시작(start_date에 실행되는 것이 아님!) 
+
+end_date : time window 끝 
+
+schedule_interval : start_date부터, data를 수집하는 간격
+
+schedule_interval 
+
+- cron */1 * * * * : 1분마다
+
+-  timedelta 
+
+  timedelta(minutes=1) : 매 분 
+
+  timedelta(hours=1) : 매시간
+
+- cron presets None : 스케쥴링 하지 않음 (트리거 되는 dag에서 사용)
+
+  @once : 한번 
+
+  @hourly : 매시간 (0 * * * *) 
+
+  @daily : 매일 자정 (0 0 * * *) 
+
+  @weekly : 매주 일요일 아침 자정 (0 0 * * 0) 
+
+  @monthly : 매월 1일 자정 (0 0 1 * *) 
+
+  @quarterly : 분기별 1일 자정 (0 0 1 */3 *) 
+
+  @yearly : 매년 1월 1일 자정 (0 0 1 1 *)
