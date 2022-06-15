@@ -298,3 +298,112 @@ schedule_interval
   @quarterly : 분기별 1일 자정 (0 0 1 */3 *) 
 
   @yearly : 매년 1월 1일 자정 (0 0 1 1 *)
+
+-------
+
+`DummyOperator`  :아무 작업도 하지 않는 오퍼레이터로 그냥 작업 분류시키는데 사용
+
+```python
+from airflow import DAG
+from pendulum import today
+from airflow.operators.dummy import DummyOperator
+
+dag = DAG(
+    dag_id='air07',
+    schedule_interval=None,
+    start_date=today()
+)
+
+task1 = DummyOperator(task_id="task1", dag=dag)
+task2 = DummyOperator(task_id="task2", dag=dag)
+task3 = DummyOperator(task_id="task3", dag=dag)
+task4 = DummyOperator(task_id="task4", dag=dag)
+task5 = DummyOperator(task_id="task5", dag=dag)
+task6 = DummyOperator(task_id="task6", dag=dag)
+task7 = DummyOperator(task_id="task7", dag=dag)
+task8 = DummyOperator(task_id="task8", dag=dag)
+
+
+# fan-out (1:n)
+task1 >> [task2, task3]  # [] 를 사용해서 병렬처리 
+# fan-in (n:1)
+[task2, task3] >> task4  # 병렬처리의 결과가 task4로 
+task4 >> task5 >> task6 
+task3 >> task7   		# task3 에서 4로 
+[task6, task7] >> task8 # 병렬처리 
+```
+
+
+
+![image-20220615155258474](README.assets/image-20220615155258474.png)
+
+
+
+spark-submit  
+
+```python
+from airflow import DAG
+from pendulum import yesterday
+from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+
+
+
+dag = DAG(
+dag_id='air11',
+schedule_interval=None,
+start_date=yesterday('Asia/Seoul'),
+catchup=False
+)
+
+
+# spark-submit /home/jaewon/airflow/dags/using_spark.py 과 같은 의미
+# conn_id : browser -> Admin -> Connections 에 있음 (필요한 connection 추가나 수정 등 가능)
+
+spark_submit_task = SparkSubmitOperator(
+task_id='spark_submit_task',
+application="/home/jaewon/airflow/dags/using_sql.py", # using_spark.py using_sql.py
+conn_id='spark_default',
+dag=dag
+)
+```
+
+같이 application에 경로를 다 지정 할수있음
+
+/airflow/dags/kafka 파일에 dags와 task부분만 들고옴
+
+```python
+dag = DAG(
+    dag_id = 'kafka',
+    schedule_interval=None,
+    start_date = yesterday('Asia/Seoul'),
+    catchup=False,  # dags 실행 간격 설정?
+)
+
+
+producer_data_task = PythonOperator(
+    task_id = 'producer_data_task',
+    python_callable = producer_data,
+    dag=dag
+)
+
+
+consumer_data_tsak = PythonOperator(
+    task_id = 'consumer_data_task',
+    python_callable = consumer_data,
+    dag=dag
+)
+
+
+spark_submit_task = SparkSubmitOperator(
+    task_id='spark_submit_task',
+    application="/home/jaewon/airflow/dags/using_sql.py",
+    conn_id='spark_default',
+    dag=dag
+)
+
+
+
+
+producer_data_task >> consumer_data_tsak >> spark_submit_task 
+```
+
