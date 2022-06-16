@@ -578,3 +578,67 @@ PythonOperator 결과물
 # 전달된 변수가 잘 넘어감을 확인할수있다.
 ```
 
+
+
+`xcom` 각 task들끼리 값들을 주고받을수 있는 기능 
+
+```python
+from airflow import DAG
+from pendulum import today
+from airflow.operators.python import PythonOperator
+
+dag = DAG(
+        dag_id='air08',
+        schedule_interval=None,
+        start_date=today('Asia/Seoul')
+)
+
+
+# context의 task_instance (task 객체가 가지고 있는 xcom)
+def send_function(task_instance):
+    msg = 'xcom test'
+    # task_instance.xcom_push(key='msg',value=msg)
+    task_instance.xcom_push(key='msg',value=msg)
+    x = 'end'
+    return x  # return도 xcom식으로 되나 key가 미지정이라 부르기 힘들다
+
+# context에서 task_instance 키를 통해 객체 참조
+def receive_function(**kwargs):
+    print(f"receiv : {kwargs['task_instance'].xcom_pull(task_ids='task1',key='msg')}")
+    xcom = kwargs['task_instance'].xcom_pull(task_ids='task1',key='msg')
+    print(xcom)
+
+    return xcom 
+
+
+task1 = PythonOperator(
+task_id='task1',
+python_callable=send_function,
+dag=dag
+)
+
+
+task2 = PythonOperator(
+task_id='task2',
+python_callable=receive_function,
+dag=dag
+)
+
+task1 >> task2
+```
+
+task1의 xcom
+
+![image-20220616141844767](README.assets/image-20220616141844767.png)
+
+return으로 보낸값도 보내졌다고 한다
+
+그외 task2에서는 `xcom test`라는 값만 도착했는데 key의 여부 혹은 로드한것이 하나만이기 때문인거같다.
+
+만약 xcom이 로드가 아니라 보낸것만 보여준다면 합리적이다 마지막에 return으로 task2에서도 xcom을 해줬기 때문
+
+![image-20220616141909243](README.assets/image-20220616141909243.png)
+
+둘다 xcom test라는 값이 잘 나오고 return했다 라는 것을 알수있다
+
+![image-20220616142013376](README.assets/image-20220616142013376.png)
