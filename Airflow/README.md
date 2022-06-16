@@ -50,6 +50,16 @@ Task 실행시 Lifecycle 구간 마다 사용되는 Airflow 환경 변수를 그
 
 
 
+# Airflow-참고
+
+공식 문서  (내용좋음) 찾게된 페이지를 여기에 최대한 올려봄 
+
+[Tutorial — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/tutorial.html)
+
+이건 bashoperator 할때 봤던거
+
+[BashOperator — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
+
 # Airflow Code
 
 - bash : airflow dags test {dag_id} {date} 
@@ -339,7 +349,7 @@ task3 >> task7   		# task3 에서 4로
 
 
 
-spark-submit  
+`spark-submit ` 스파크 세션을 사용할때 에어플로 자체에서는 접속하지 못한다 그래서 따로 그런 기능을 하는 파일을 연결해야함  
 
 ```python
 from airflow import DAG
@@ -405,5 +415,166 @@ spark_submit_task = SparkSubmitOperator(
 
 
 producer_data_task >> consumer_data_tsak >> spark_submit_task 
+```
+
+
+
+`매크로 사용` {{ ds }}
+
+
+
+터미널에서 실행시켜봄 
+
+```terminal
+~/airflow/dags$ airflow dags test hello_today 2022-06-16  # 실행 
+[2022-06-15 17:28:40,016] {dagbag.py:500} INFO - Filling up the DagBag from /home/jaewon/airflow/dags
+[2022-06-15 17:28:40,465] {base_executor.py:85} INFO - Adding to queue: ['<TaskInstance: hello_today.date backfill__2022-06-16T00:00:00+00:00 [queued]>']
+[2022-06-15 17:28:45,452] {taskinstance.py:1448} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=airflow
+AIRFLOW_CTX_DAG_ID=hello_today
+AIRFLOW_CTX_TASK_ID=date
+AIRFLOW_CTX_EXECUTION_DATE=2022-06-16T00:00:00+00:00
+AIRFLOW_CTX_DAG_RUN_ID=backfill__2022-06-16T00:00:00+00:00
+
+[2022-06-15 17:28:45,459] {subprocess.py:85} INFO - Output:
+[2022-06-15 17:28:45,460] {subprocess.py:89} INFO - Hello! Today is 2022-06-16 # 결과
+
+[2022-06-15 17:28:45,502] {backfill_job.py:851} INFO - Backfill done. Exiting.
+~/airflow/dags$ airflow dags test hello_today 2019-11-27  # 실행
+
+[2022-06-15 17:29:53,852] {subprocess.py:89} INFO - Hello! Today is 2019-11-27 # 결과
+
+```
+
+직접 터미널에 입력해서 그런거긴한데 {{ ds }} 안에 내용이 들어갔다 
+
+
+
+코드 내용
+
+```python
+from airflow.operators.bash_operator import BashOperator
+from airflow.models import DAG
+from datetime import datetime, timedelta
+
+#args = {    # 한마디로 DAG에 사용할수 있는 추가적인 변수라고 여겨짐 default_args를 사용해서 연결
+#    'owner': 'airflow',
+#    'start_date': datetime(2018, 11, 1)
+#}
+
+dag = DAG(
+    dag_id='hello_today',
+#    default_args=args,
+    schedule_interval="@once",
+    start_date=datetime(2019,11,1),  # poss? 안되더라 ㅋㅋ
+    )
+
+# Bash Operator
+cmd = 'echo "Hello! Today is {{ ds }}"'
+BashOperator(task_id='date', bash_command=cmd, dag=dag)
+
+--- 결과  ---
+Hello! Today is 2022-06-16
+음.. args안쓰고 해볼려고 했는데 안됐음 start_date 이게 말이 똑같아서 될줄 알았는데 인식이 안되나봄
+args써도 안되네 시간을 정해주지 않았는데 왜....?? 현재시간일까
+```
+
+
+
+jinja 해볼려 했는데 flask의 template언어라 그런지 안먹더라.. 아직은 flask써볼 생각 없어서 전달으로만해봄
+
+아마 sh파일에 template언어 들어가서 그랬던..??
+
+`jinja2.exceptions.TemplateNotFound` 이거 그냥 bash_command='' 뒤에 공백 하나 추가하면됨
+
+추가 했다가 파일 못찾아서 다시 지우니까 갑자기됨??
+
+
+
+일단 sh파일은 여기에 적진 않는다 간단한데 쓸데없이김 
+
+```python
+from airflow.operators.bash_operator import BashOperator
+from airflow.models import DAG
+from datetime import datetime, timedelta
+from pendulum import yesterday
+from airflow.operators.python import PythonOperator
+
+dag = DAG(
+   dag_id='air_jinja',
+   schedule_interval="@once",
+   start_date=yesterday('Asia/Seoul'),
+   template_searchpath='/home/jaewon/sh_code',
+)
+
+def templated_test(d1):
+    print("{{ ds }}")
+    print("ds test:", d1)
+
+test1 = 'It would be passes, but jinja does not word {{ ds }} '
+
+task=BashOperator(
+    task_id='test_jinja',
+    bash_command='jinja.sh',
+    params={'test':test1},  # 변수 넣어주기 가능
+    dag=dag,
+)
+
+task2=PythonOperator(
+    task_id='python_task',
+    python_callable=templated_test,
+    op_args=["{{ ds }}"], # 함수에 변수 받아주기 가능 
+    dag=dag,
+)
+
+task >> task2
+
+```
+
+BashOperator 결과물 
+
+```terminal
+[2022-06-15, 18:45:11 UTC] {subprocess.py:85} INFO - Output:
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - <DAG: air_jinja>, <Task(BashOperator): test_jinja>
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ds : 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ds_nodash : 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - prev_ds : 2022-06-16 # airflow는 미래시간 못써서 그대론듯 
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - prev_ds_nodash : 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - next_ds : 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - next_ds_nodash : 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - yesterday_ds : 2022-06-15
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - yesterday_ds_nodash : 20220615
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - tomorrow_ds : 2022-06-17
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - tomorrow_ds_nodash : 20220617
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ts : 2022-06-16T01:45:09.101685+00:00
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ts_nodash : 20220616T014509
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ts_nodash_with_tz : 20220616T014509.101685+0000
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - macros.ds_add(ds, 2) : 2022-06-18
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - macros.ds_add(ds, -2) : 2022-06-14
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - macros.ds_format(ds, '%Y-%m-%d', '%Y__%m__%d'): 2022__06__16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - macros.datetime.now() : 2022061518
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - <DAG: air_jinja>, <Task(BashOperator): test_jinja>
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - It would be passes, but jinja does not word {{ ds }}
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - execution_date : 2022-06-16T01:45:09.101685+00:00
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - ds: 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - the day after tommorow with no dash format
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 20220618
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 0 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 1 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 2 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 3 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 4 2022-06-16
+[2022-06-15, 18:45:11 UTC] {subprocess.py:89} INFO - 20220616
+[2022-06-15, 18:45:11 UTC] {subprocess.py:93} INFO - Command exited with return code 0
+```
+
+PythonOperator 결과물
+
+```terminal
+2022-06-15, 18:45:13 UTC] {logging_mixin.py:109} INFO - {{ ds }}
+[2022-06-15, 18:45:13 UTC] {logging_mixin.py:109} INFO - ds test: 2022-06-16
+# 전달된 변수가 잘 넘어감을 확인할수있다.
 ```
 
