@@ -52,13 +52,23 @@ Task 실행시 Lifecycle 구간 마다 사용되는 Airflow 환경 변수를 그
 
 # Airflow-참고
 
-공식 문서  (내용좋음) 찾게된 페이지를 여기에 최대한 올려봄 
+공식 문서  
 
 [Tutorial — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/tutorial.html)
 
 이건 bashoperator 할때 봤던거
 
 [BashOperator — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/howto/operator/bash.html)
+
+FileSensor
+
+[airflow.sensors.filesystem — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/filesystem/index.html?highlight=poke#airflow.sensors.filesystem.FileSensor)
+
+[airflow.sensors.base — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/base/index.html#airflow.sensors.base.BaseSensorOperator)
+
+fs_conn_id 설정할때 본거 Managing
+
+[Managing Connections — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html)
 
 # Airflow Code
 
@@ -642,3 +652,142 @@ return으로 보낸값도 보내졌다고 한다
 둘다 xcom test라는 값이 잘 나오고 return했다 라는 것을 알수있다
 
 ![image-20220616142013376](README.assets/image-20220616142013376.png)
+
+
+
+xcom 으로 파일 만들기
+
+```python
+from pprint import pprint
+from airflow import DAG
+from pendulum import yesterday
+from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+
+dag = DAG(
+    dag_id='air09',
+    schedule_interval=None,
+    start_date=yesterday('Asia/Seoul'),
+    catchup=False
+)
+
+def print_context(**kwargs):
+    pprint(kwargs)  # """Print the Airflow context and ds variable from the context."""
+    return str(kwargs) # return을 시켜서 xcom 으로 보냄
+
+task01=PythonOperator(
+    task_id='print_context',
+    python_callable=print_context,
+    dag=dag
+)
+
+task02=BashOperator(
+    task_id='save_context',
+    bash_command='echo "{{ task_instance.xcom_pull(task_ids="print_context") }}" >> ~/context.json',
+    dag=dag
+)
+
+# ~/ 해당 경로로 나가서 파일 만들어진거 확인
+
+```
+
+```terminal
+cat context.json
+```
+
+
+
+sensor 
+
+- 한 가지 작업만 하는 operator
+- 특정 조건이 true인지 지속적으로 확인, false이면 true가 되던가 타임아웃(default : 7일)이 될 때까지 계속 확인
+
+```python
+import json
+from airflow import DAG
+from pendulum import yesterday
+from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.sensors.filesystem import FileSensor
+
+
+
+dag = DAG(
+dag_id='air10',
+schedule_interval=None,
+start_date=yesterday('Asia/Seoul'),
+catchup=False
+)
+
+def python_task():
+    dummy = {'key':'value'}
+    return json.dumps(dummy)
+
+crawling = PythonOperator(
+    task_id='crawling',
+    python_callable=python_task,
+    dag=dag
+)
+make_file = BashOperator(
+    task_id='make_file',
+    bash_command='echo "{{ task_instance.xcom_pull(task_ids="crawling") }}" >> /home/jaewon/dummy.json',
+dag=dag
+)
+
+# 30초마다 filepath에 file이 있는지 확인, 없으면 대기 있으면 다음 task 진행
+exists = FileSensor(
+    task_id="exists",
+    fs_conn_id='file_sensor',  			# ??? where?? 
+    filepath="/home/jaewon/dummy.json", # fs_conn_id ~ recursive는 필수변수인거 같다
+    recursive='False',  				# 재귀를 확인 False가 default
+    poke_interval= 30,
+    dag=dag
+)
+
+# hadoop에 파일 저장
+upload = BashOperator(
+    task_id='upload',
+    bash_command='hdfs dfs -put /home/jaewon/dummy.json user/jaewon/dummy.json',
+    dag=dag
+)
+
+
+prn = BashOperator(
+    task_id='prn',
+    bash_command='echo "success makefile & upload"',
+    dag=dag
+)
+
+
+crawling >> [make_file, exists] >> upload >> prn
+
+```
+
+filesystem 변수 확인 poke_interval이  base에서 상속받아 filesystem에서 사용함
+
+filesystem : [airflow.sensors.filesystem — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/filesystem/index.html?highlight=poke#airflow.sensors.filesystem.FileSensor)
+
+poke_interval : [airflow.sensors.base — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/sensors/base/index.html#airflow.sensors.base.BaseSensorOperator)
+
+완성
+
+![image-20220620113116060](README.assets/image-20220620113116060.png)
+
+
+
+참고 [Managing Connections — Airflow Documentation (apache.org)](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html)
+
+`fs_connid_id 등록하는법`
+
+```
+Airflow 상단의 Admin->connections->하나 add한 후에 아래처럼 만듬
+```
+
+
+
+![image-20220620112930046](README.assets/image-20220620112930046.png)
+
+
+
+
+
