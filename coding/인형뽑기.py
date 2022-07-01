@@ -6,20 +6,18 @@ def solution(board, moves):
             if board[pos][i - 1] == 0:
                 pass
             else:
-                print(board[pos][i - 1],pos,i-1)
-                stack.append(board[pos][i - 1])
+                # print(board[pos][i - 1],pos,i-1)
+                stack.append(board[pos][i - 1]) # 넣어준 순간에 터쳐야함
                 board[pos][i - 1] = 0
+                if len(stack) >= 2:
+                    if stack[-1] == stack[-2]:
+                        answer += 2
+                        del stack[-2]
+                        del stack[-1]
                 break  # 파이썬의 break는 for문 하나만 탈출한다 ' 라는 개념
     print(stack)
-    for x in range(len(moves) - 1, 0, -1):
-        # print(stack[x])
-        if stack[x] == stack[x - 1]:
-            answer += 1
-            del stack[x]
-            del stack[x - 1]
-        else:
-            del stack[x]
 
+    print(answer)
     return answer
 
 board = [
