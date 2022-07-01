@@ -1,4 +1,4 @@
-# def solution(id_list, report, k):
+# def solution(id_list, report, k): 못품
 #     dic = {}
 #     lst = []
 #     answer = []

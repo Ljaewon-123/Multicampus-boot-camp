@@ -111,3 +111,38 @@ for i in range(3):
     if cnt[i] == max_cnt:
         aa.append(i + 1)
 print(aa)
+
+lst = [1,2,3,4,5,6,7,8,9,10]
+print(lst[:-1])
+print(lst[2:6])
+
+co = '/s.ad.f...'
+co = list(co)
+print(co)
+if '.' in co:
+
+    print(co.index('.'))
+    a = 7
+    if co[a+1] == '.' or co[a-1] == '.':
+        print('incoming')
+        del co[a]
+
+    # del co[0]  # del은 str안됨 리스트 같은거만 됨
+
+print(co)
+'----------------'
+new_id = "...!@BaT#*..y.abcdef1235ghijklm"
+
+new_id = new_id.lower()
+new_id = list(new_id)
+print(new_id)
+for id in new_id:
+    if not (id.isalpha() or id.isdigit() or id == '-' or id == '_' or id == '.'):
+        a = new_id.index(id)
+        new_id[a] = ''
+
+
+
+print()
+print(new_id)
+print(''.join(new_id))
