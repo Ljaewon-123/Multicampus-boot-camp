@@ -1,4 +1,4 @@
-def solution(new_id): # 처음부터 했어야 했는데 중간 확인 안하고 쭉 달리다 보니 늦음
+def solution(new_id): # 처음부터 했어야 했는데 중간 확인 안하고 쭉 달리다 보니 늦음 예제만 맞고 정확도 낮음
     answer = ''
     new_id = new_id.lower()
     new_id = list(new_id)
