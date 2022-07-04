@@ -43,7 +43,7 @@ def solution(new_id): # 처음부터 했어야 했는데 중간 확인 안하고
         elif len(new_id) >= 3 :
             break
     print(new_id)
-    new_id = "".join(new_id)
+    new_id = "".join(new_id)  # 여기여기 join
     answer = new_id
     print(answer)
     return answer
