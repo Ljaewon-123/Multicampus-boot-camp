@@ -1,21 +1,41 @@
-def solution(scoville, K):  # 무조건 heap써야하나봄 시간때문에 ㅋㅋ
+import heapq
+
+
+def insert_heapq(lst):
+    h = []
+    # 모든 원소를 차례대로 힙에 삽임
+    for value in lst:
+        heapq.heappush(h, value)
+    # 힙에 합입도니 모든 원소를 차례대로 꺼내어 담기
+
+    return h
+
+
+def check_heap(heap, K):  # 낼름
+    a = heapq.heappop(heap)
+    if a < K:
+        heapq.heappush(heap, a)
+        return True
+    elif a >= K:
+        heapq.heappush(heap, a)
+        return False
+
+
+def solution(scoville, K):
     answer = 0
-
-    while True:
-        if len(scoville) < 2:
+    heap = insert_heapq(scoville)
+    # print(heap)
+    # print(heapq.heappop(heap))
+    # print(heap[0])
+    while check_heap(heap, K):
+        if len(heap) < 2:
             return -1
-        scoville = sorted(scoville)
-
-        a = scoville.pop(0)
-        b = scoville.pop(0)
-        c = a + b * 2
-        scoville.append(c)
+        a = heapq.heappop(heap)
+        b = heapq.heappop(heap)
+        c = a + (b * 2)
+        heapq.heappush(heap, c)
         answer += 1
-        print(answer)
-        print(scoville)
-        if scoville[0] > K:
-            break
-
+        # print(heap)
 
     return answer
 
