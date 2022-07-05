@@ -1,7 +1,9 @@
-def solution(scoville, K):
+def solution(scoville, K):  # 무조건 heap써야하나봄 시간때문에 ㅋㅋ
     answer = 0
 
-    while any(K > i for i in scoville):  # any // for문을 쭉 돌면서 너무 오래걸림
+    while True:
+        if len(scoville) < 2:
+            return -1
         scoville = sorted(scoville)
 
         a = scoville.pop(0)
@@ -9,9 +11,14 @@ def solution(scoville, K):
         c = a + b * 2
         scoville.append(c)
         answer += 1
-        if all(scoville) > K:
+        print(answer)
+        print(scoville)
+        if scoville[0] > K:
             break
-        if len(scoville) < 2:
-            return -1
+
 
     return answer
+
+scoville = [1, 2, 3, 9, 10, 12]
+K = 7
+solution(scoville,K)
