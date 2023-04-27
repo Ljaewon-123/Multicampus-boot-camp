@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+  <!-- role 만 있으면 admin 이고 role. 하나라도 있으면 admin 이 아니라 하위 값? value 를 찾는거같음  -->
+    {% if role %}
+  <!-- %} {% if role == 'admin'  ==> 이것도 가능-->
+  <!--  role 이 admin 라면-->
+    <h1>Admin Page</h1>
+    <a href="#">user list</a>
+    <a href="#">user delete</a>
+    {% elif role.manage %}
+  <!--  }%{% elif role == 'manage'  -->
+  <!--  그게 아니라 role 이 manage 라면-->
+    <h1>Manage Page</h1>
+    <a href="#">user list</a>
+    {% else %}
+  <!--  모두 아니라면-->
+    <h1>user page</h1>
+    <a href="#">my</a>
+    {% endif %}
+
+</body>
+</html>
