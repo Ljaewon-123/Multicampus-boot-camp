@@ -1,0 +1,39 @@
+a{   /* 링크의 밑줄 없애기 */
+  text-decoration-line: none;
+}
+
+
+ul{ /* 점 없애기, 들여쓰기 없애기*/
+  list-style: none;
+}
+
+
+header > div{
+  position: relative;
+  width: 54.5rem;
+  margin: 0 auto;
+}
+/*아래의 div를 float해놔서 배경색이 흰색으로 나옴
+--> 배경색 넣기 위해 :after 작성*/
+header > div:after {content: "";display: block;clear: both;}
+/*      위에             작성함              */
+
+
+.custom-select { font-family: Georgia, "맑은 고딕", serif; }
+body {
+  width: 100%;
+  /* height: 1000px; */
+  margin-top: 150px;
+  margin-bottom: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+

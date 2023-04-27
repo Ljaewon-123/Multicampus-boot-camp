@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_140af7b09dfb4f298e9a3ad1d9c30898 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_140af7b09dfb4f298e9a3ad1d9c30898" ></div>
+        
+</body>
+<script>    
+    
+            var map_140af7b09dfb4f298e9a3ad1d9c30898 = L.map(
+                "map_140af7b09dfb4f298e9a3ad1d9c30898",
+                {
+                    center: [37.5173319258532, 127.047377408384],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 14,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_79009d67f1684aa8817f66b4cd63d7c9 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+            var marker_59d7a415b2bf44f0ba4d1c3e2831021f = L.marker(
+                [37.5083210457629, 127.027203108252],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_83c9a6faeed7447baf63ee222a6a14c2 = L.popup({"maxWidth": 100});
+
+        
+            var html_9bbb64fd7a7b4c34973e57853cbda1c4 = $(`<div id="html_9bbb64fd7a7b4c34973e57853cbda1c4" style="width: 100.0%; height: 100.0%;">강아지똥 애견카페</div>`)[0];
+            popup_83c9a6faeed7447baf63ee222a6a14c2.setContent(html_9bbb64fd7a7b4c34973e57853cbda1c4);
+        
+
+        marker_59d7a415b2bf44f0ba4d1c3e2831021f.bindPopup(popup_83c9a6faeed7447baf63ee222a6a14c2)
+        ;
+
+        
+    
+    
+            var marker_15454ec712dd4384813cdb9ffd431cf1 = L.marker(
+                [37.4941111413427, 127.034316385911],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_94cf5470ba0d4975ae7501d5edcbeca8 = L.popup({"maxWidth": 100});
+
+        
+            var html_86197a62c7cc4e3a893c5bd745f0d800 = $(`<div id="html_86197a62c7cc4e3a893c5bd745f0d800" style="width: 100.0%; height: 100.0%;">카페더왈츠</div>`)[0];
+            popup_94cf5470ba0d4975ae7501d5edcbeca8.setContent(html_86197a62c7cc4e3a893c5bd745f0d800);
+        
+
+        marker_15454ec712dd4384813cdb9ffd431cf1.bindPopup(popup_94cf5470ba0d4975ae7501d5edcbeca8)
+        ;
+
+        
+    
+    
+            var marker_2882d294f28441fab9246715f065b2ee = L.marker(
+                [37.5041191659419, 127.035807497686],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_38122387a24d4fef82854d93aca1e123 = L.popup({"maxWidth": 100});
+
+        
+            var html_066d78ad4f7b4f0dacc19ab5028f777e = $(`<div id="html_066d78ad4f7b4f0dacc19ab5028f777e" style="width: 100.0%; height: 100.0%;">두젠틀</div>`)[0];
+            popup_38122387a24d4fef82854d93aca1e123.setContent(html_066d78ad4f7b4f0dacc19ab5028f777e);
+        
+
+        marker_2882d294f28441fab9246715f065b2ee.bindPopup(popup_38122387a24d4fef82854d93aca1e123)
+        ;
+
+        
+    
+    
+            var marker_68d449112c81434b94b570cd31a0fda3 = L.marker(
+                [37.5135609633067, 127.039785112531],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_75954c58cdfd406097b8e6f4f6c7ebac = L.popup({"maxWidth": 100});
+
+        
+            var html_c9d818414d14474cb14bb6a5e39b0d9f = $(`<div id="html_c9d818414d14474cb14bb6a5e39b0d9f" style="width: 100.0%; height: 100.0%;">애니멀고파크 논현점</div>`)[0];
+            popup_75954c58cdfd406097b8e6f4f6c7ebac.setContent(html_c9d818414d14474cb14bb6a5e39b0d9f);
+        
+
+        marker_68d449112c81434b94b570cd31a0fda3.bindPopup(popup_75954c58cdfd406097b8e6f4f6c7ebac)
+        ;
+
+        
+    
+    
+            var marker_4124dd7e53bc45bfa193b85398f7b2a6 = L.marker(
+                [37.5066132309043, 127.039774412942],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_f2c08f8fbddd4e66a3ac7e818b1f899e = L.popup({"maxWidth": 100});
+
+        
+            var html_7cc7650ba7764b1c96a32406dc2696c2 = $(`<div id="html_7cc7650ba7764b1c96a32406dc2696c2" style="width: 100.0%; height: 100.0%;">어야가자애견카페</div>`)[0];
+            popup_f2c08f8fbddd4e66a3ac7e818b1f899e.setContent(html_7cc7650ba7764b1c96a32406dc2696c2);
+        
+
+        marker_4124dd7e53bc45bfa193b85398f7b2a6.bindPopup(popup_f2c08f8fbddd4e66a3ac7e818b1f899e)
+        ;
+
+        
+    
+    
+            var marker_083de1ce09064f52b03d9d18a95cd712 = L.marker(
+                [37.5127249935295, 127.05585415027],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_b74c8f5822b64784a5f8e10fc4eabb5b = L.popup({"maxWidth": 100});
+
+        
+            var html_e61a317338fc40828fe510ec0b1e0c9b = $(`<div id="html_e61a317338fc40828fe510ec0b1e0c9b" style="width: 100.0%; height: 100.0%;">Cafe거부기</div>`)[0];
+            popup_b74c8f5822b64784a5f8e10fc4eabb5b.setContent(html_e61a317338fc40828fe510ec0b1e0c9b);
+        
+
+        marker_083de1ce09064f52b03d9d18a95cd712.bindPopup(popup_b74c8f5822b64784a5f8e10fc4eabb5b)
+        ;
+
+        
+    
+    
+            var marker_ca3a55eec5bf404382659335539e44f2 = L.marker(
+                [37.5058437725807, 127.046440591524],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_6c9cee5e03cb492fbe2be4346ac48923 = L.popup({"maxWidth": 100});
+
+        
+            var html_40129947ed6c48ee90fdbab9411a8cd6 = $(`<div id="html_40129947ed6c48ee90fdbab9411a8cd6" style="width: 100.0%; height: 100.0%;">세븐에이치</div>`)[0];
+            popup_6c9cee5e03cb492fbe2be4346ac48923.setContent(html_40129947ed6c48ee90fdbab9411a8cd6);
+        
+
+        marker_ca3a55eec5bf404382659335539e44f2.bindPopup(popup_6c9cee5e03cb492fbe2be4346ac48923)
+        ;
+
+        
+    
+    
+            var marker_5426fbef2b654568b81a0883f12773e8 = L.marker(
+                [37.5083210457629, 127.027203108252],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_56b1b95d53e747c7ba918ade8accb831 = L.popup({"maxWidth": 100});
+
+        
+            var html_9bce45e0ceb14d8d8d9cdd9d085163b9 = $(`<div id="html_9bce45e0ceb14d8d8d9cdd9d085163b9" style="width: 100.0%; height: 100.0%;">도기푸</div>`)[0];
+            popup_56b1b95d53e747c7ba918ade8accb831.setContent(html_9bce45e0ceb14d8d8d9cdd9d085163b9);
+        
+
+        marker_5426fbef2b654568b81a0883f12773e8.bindPopup(popup_56b1b95d53e747c7ba918ade8accb831)
+        ;
+
+        
+    
+    
+            var marker_ac9e40a3e0f6472e97153fd6805bfbfe = L.marker(
+                [37.5036785514807, 127.027484274765],
+                {}
+            ).addTo(map_140af7b09dfb4f298e9a3ad1d9c30898);
+        
+    
+        var popup_2e4f5e16bc484302b5eb50532b0c5db5 = L.popup({"maxWidth": 100});
+
+        
+            var html_0e58269185c243b6bb152129f91674b6 = $(`<div id="html_0e58269185c243b6bb152129f91674b6" style="width: 100.0%; height: 100.0%;">에이아이</div>`)[0];
+            popup_2e4f5e16bc484302b5eb50532b0c5db5.setContent(html_0e58269185c243b6bb152129f91674b6);
+        
+
+        marker_ac9e40a3e0f6472e97153fd6805bfbfe.bindPopup(popup_2e4f5e16bc484302b5eb50532b0c5db5)
+        ;
+
+        
+    
+</script>
