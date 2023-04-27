@@ -1,0 +1,153 @@
+자동으로 올리는 코드  pip 필요?
+python make_data_이름상관없음 우리가 어떤건지 알아볼수만있으면.py 
+
+아래 4개의 동작을 json_class.py가 해줄거임
+api하나당 객체하나 각객체는 url과 저장파일명을 매개변수로 가짐 
+
+객체1
+api 가져오고
+json 만드록
+csv 만들고
+크롤링 결과파일.csv 만듬
+객체2
+api 가져오고
+json 만드록
+csv 만들고
+크롤링 결과파일.csv 만듬
+.
+.
+.
+객체6
+api 가져오고
+json 만드록
+csv 만들고
+크롤링 결과파일.csv 만듬
+
+-----------------------------------------------------------------------
+여기까지가 만들어지기만 하는거고
+만들어지는 데이터 전부 일정한 폴더에 넣어서(경로 생성)
+
+쉘스크립트??? 크론탭 
+upload.sh
+
+# start-all.sh   // start를 같이쓸꺼면 해당 파일은 매일 서버시작과 같이 켜지게 
+hdfs dfs -put 올릴거 올라갈위치   (중복되나??)
+hdfs dfs -put -f 로 덮어쓰기 
+나중에 경로 맞춰줄 것 ! 
+
+--------------------------------------------------------------------------
+업로드 까지 되고
+하둡에 올라감 -=> 스파크에서 사용가능 -=>
+스파크에서 각 DB에 올릴 명령어
+
+submit-spark uploadDB.py(맞나?)
+
+/////// 몽고디비 올릴 명령어 #/ mongodb자체는 로컬에서 바로 올리는게 편하긴함 
+//#### 몽고디비 내용 확인 **!!필!!**
+## overwrite 인데 컬렉션을 다르게 해서  저장 
+
+sudo systemctl start mongod  # 몽고디비 실행 
+
+pyspark == 필요했나?? 
+
+// 바로 mongo에 넣는 작업이 아니라 스파크->몽고 이기 때문에 
+스파크에서 넣을 데이터 load하고 그다음 스파크에서 몽고디비에 insert해줘야함 
+
+
+## test = spark.read.format('mongo').option('database','test').option('collection','test').load()
+#mongo 형태를 test db에 test coll 가져옴  
+
+# json load
+json_file01 = spark.read.format('json').load('/home/user/남은경로/파일명.json')
+# 실제 
+json_file01 = spark.read.format('json').load('/home/jaewon/data/namename3.json')
+// # 저장 DB 저장 COLL 확인 !필!
+insert_df.write.format('mongo').option('database','test').option('collection','test').mode('append').save()
+# 기존 몽고 디비 데이터에 추가됨 ???? 으케했누  
+# insert_df 라는 데이터를 mongo 에 test 디비에 test 컬렉션에 append 모드로 집어넣음 
+
+# 초기화 용량이 바뀜 
+json_file01.write.format('mongo').option('database','test').option('collection','test').mode('overwrite').save()
+
+
+///////// Mysql 에도 추가하는 코드 
+# 불러오기
+csv_file01 = spark.read.format('csv').option('header','true').load('/home/jaewon/data/jaywalking_accident.csv')
+
+
+# test_df = spark.read.format('jdbc').option('user',user).option('password',password).option('url',url).option# ('driver',driver).option('dbtable',dbtable).load()
+test_df.show()
+# jdbc로  읽어와서 id,pw등등 기타 옵션 설장 하고 불러옴
+
+# 원하는 대로 편집하고 다시 저장 
+test_insert = [(3,'mysql'),(4,'zeppelin')]
+insert_df = sc.parallelize(test_insert).toDF(['id','name'])
+
+insert_df.write.jdbc(url,dbtable,'append',properties={'driver':driver,'user':user,'password':password})
+
+
+유아 관련 api 2개는 join 데이블 만들고 다시 저장 (스파크로 다시해야 하나?) 
+
+Mysql 들어가서 쳤던것들
+
+create table test1(_c0 VARCHAR(99), 상세주소 VARCHAR(99),발생건수 VARCHAR(99));
+
+
+
+------------------------------------------------------------------------------------------------------------
+TimeoutError: [WinError 10060] 연결된 구성원으로부터 응답이 없어 연결하지 못했거나, 호스트로부터 응답이 없어 연결이 끊어졌습니다
+
+
+
+
+>>> csv_file01.printSchema()
+root
+ |-- _c0: string (nullable = true)
+ |-- 상세주소: string (nullable = true)
+ |-- 발생건수: string (nullable = true)
+ |-- 사상자수: string (nullable = true)
+ |-- 사망자수: string (nullable = true)
+ |-- 중상자수: string (nullable = true)
+ |-- 경상자수: string (nullable = true)
+ |-- 폴리곤: string (nullable = true)
+ |-- 경도: string (nullable = true)
+ |-- 위도: string (nullable = true)
+ |-- 발생년도: string (nullable = true)
+
+
+>>> csv_file01.select('상세주소','경도','위도','발생년도').show()
++----------------------------------+--------------------+------------+-------------+
+|                          상세주소|                경도|        위도|     발생년도|
++----------------------------------+--------------------+------------+-------------+
+|서울특별시 강남구 논현동(신논현...|""coordinates"":[...|37.50419679]|[127.02513214|
+|서울특별시 강남구 역삼동(현대해...|""coordinates"":[...|37.50007897]|[127.03676591|
+|서울특별시 강남구 논현동(사진박...|""coordinates"":[...| 37.5183978]|[127.02727415|
+|서울특별시 강남구 대치동(은마아...|""coordinates"":[...| 37.5012498]|[127.06237259|
+|서울특별시 강남구 대치동(한나라...|""coordinates"":[...|37.50583564]|[127.05569404|
+|서울특별시 강동구 길동(길동사거...|""coordinates"":[...|37.53409046]|[127.14139056|
+|서울특별시 강동구 천호동(천호역...|""coordinates"":[...|37.54019608]|[127.12666587|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

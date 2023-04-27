@@ -1,0 +1,93 @@
+mysqldump
+di > ~/output.sql
+
+
+
+mysqldump: Error: 'Access denied; you need (at least one of) the PROCESS privilege(s) for this operation' when trying to dump tablespaces
+
+/////////////////
+* mysql 오류 해결 
+https://blog.naver.com/islove8587/221970366883
+* mysql dump 질문 
+https://xetown.com/questions/1593588
+# 
+
+
+- 1 mysql -u root -p :root로 접속시 에러
+Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+
+* mysql 데몬 실행 에러 ( port number 충돌 났을 때 )
+https://gre-eny.tistory.com/3
+* socket인데 var/lib/~ 에러
+https://myblog.opendocs.co.kr/archives/479
+* socket인데 tmp 에러
+https://hyunki1019.tistory.com/46
+* mysql-server가 잘 깔렸지만 구동이 안되어있는 경우
+https://lovelydiary.tistory.com/60
+
+- 2 service mysql start / sudo service mysql restart (mysql  서버 켜져있는지 확인  )
+Job for mysql.service failed because the control process exited with e       rror code.
+See "systemctl status mysql.service" and "journalctl -xe" for details.
+
+--------- 강사님 등장
+mysql.socket 파일 없어서 그러는거다 !
+mysql server 삭제하고 다시 만들고 enable
+
+*mysql 전부 삭제하고 
+ https://not-null.tistory.com/14
+
+* 서비스 킨 다음에 
+* 강사님 문서 그대로 따라하고 
+
+sudo systemctl enable mysql  --> server가 꺼졌다가 다시 켜줘도 서버 잡아줌 
+
+*root ㅇ드렁가기 
+
+* 전체 삭제 
+https://not-null.tistory.com/14
+
+--------------
+
+
+
+- 3 "systemctl status mysql.service"
+mysqldump: Error: 'Access denied; you need (at least one of) the PROCESS privilege(s) for this operation' when trying to dump tablespaces
+ 
+- 3.1  /var/log/mysql/error.log 
+error 없음 
+(* error("ibdata1 파일에 스기 권한이 없다") 나올시 , https://m.blog.naver.com/jkleehi/221306517957)
+(* error ( Can't open and lock privilege tables: Incorrect file format 'host' :  https://roxxy.tistory.com/entry/MYSQL-%EA%B5%AC%EB%8F%99-%EC%8B%9C-Active-failed-Result-exitcode-%ED%95%B4%EA%B2%B0%EB%B2%95
+ 
+
+-2.1 해도 안되길래 mysql-server 재설치 sudo apt-get --reinstall install mysql-server
+그래도 Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock/ 이거 뜸
+
+-2.2.1 root비번 없애고 들어가니 해결
+-2.2.2 또 같은 에러 [mysql-server] , [client] 설정 
+https://lovestudycom.tistory.com/entry/ubuntu%EC%97%90-Mysql-%EC%84%A4%EC%B9%98-%ED%9B%84-root-%EC%A0%91%EC%86%8D%EC%97%90%EB%9F%AC
+
+- mysql version
+
+
+------------
+-mysql database export and import 
+https://goodteacher.tistory.com/131
+
+-mysqldump
+https://www.hipex.io/docs/en/mysql/mysqldump/#
+https://doinge-coding.tistory.com/entry/MySQL-mysqldump-%EB%AA%85%EB%A0%B9%EC%96%B4-mysql-%ED%8A%B9%EC%A0%95-DB-%EB%8D%A4%ED%94%84-%EB%B0%8F-%EB%B3%B5%EA%B5%AC-%EB%B0%A9%EB%B2%95
+https://letitkang.tistory.com/181#:~:text=mysql%20dump%EB%8A%94%20%EC%89%BD%EA%B2%8C%EB%A7%90%ED%95%98%EB%A9%B4,dump%EB%A5%BC%20%EC%9D%B4%EC%9A%A9%ED%95%98%EB%8A%94%20%EA%B2%83%EC%9E%85%EB%8B%88%EB%8B%A4.
+
+
+- utf-8 문제
+alter database testdi character set utf8mb4 collate utf8mb4_general_ci;
+
+--vim에서 문자열 치환 
+https://gracefulprograming.tistory.com/118
+
+- 버전 문제 
+
+- 버전 높이기 
+https://codens.info/1871
+
+-
