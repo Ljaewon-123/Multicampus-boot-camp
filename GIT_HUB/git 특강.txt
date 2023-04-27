@@ -1,0 +1,197 @@
+ls -> 폴더위치
+la -a 숨김파일도 보기
+cd -> change directory
+
+clear -> 화면 지우기
+
+touch -> '파일' 을 만듬
+
+mkdir -> 폴더를 만듬
+
+start -> 파일 열기,실행
+
+rm -> 삭제 명령어
+
+mv -> 파일 이동 명령어
+mv [이동할 파일명] [이동할 위치]
+mv file1 dir1/
+(앞에 파일이 오고 뒤에 디렉토리가 오는 경우)
+file1 파일을 dir1 디렉토리로 이동합니다.
+
+파일삭제 -> rm a.txt
+폴더삭제 -> rm -r 폴더이름
+* -> asterisk
+rm *.txt 해당 파일 경로 안에 txt확장자인 파일 전부 삭제
+rm -rf * 해당 경로 폴더안에 파일 강제로 삭제
+폴더 경로 긁어 올때 / \를 바꿔줘야함
+------------------------------------
+vscode
+ctrl + backtick (`)  터미널 열기
+
+TIL -> Today I Learned
+
+MD -> Mark Down 
+개발자들의 문서 작성 양식 & 문법
+ctrl + /
+
+'-' or '*' 하고 tap 
+
+# -> 갯수로 목차를 맞추고 문서의 논리적 흐름을 맞춘다
+
+> -> 인용문 적을수 있음 엔터두번으로 나오기 가능
+
+수직선 ---
+
+```  백틱 3개 찍고 langes 블라블라에 python 하면 파이썬 문법 구문 불러오기 가능 신텍스 하이라이팅
+
+\`#`  문자열 이스케이핑   마크다운 문법에 상관없이 쓰고싶을때 
+
+`` ` `` 	백틱 안에 백틱이 블럭되는 현상
+
+원도우 + 쉬프트 + s 화면 바로 캡쳐
+
+| | |  -> |파이프 띄어쓰기 3번  으로 표만들수 있음
+
+윈도우 + .   	으로 이모티콘 가능
+
+표안에서 컨트롤+엔터로 늘리기 가능
+지우기는 컨트롤+쉬프트+ 백스페이스
+
+--------------------------
+vscode 터미널 에서
+
+0. git status -> 현재 상황을 나타내는 명령어
+
+git init  -> git initiation    가장 먼저 쳐야할 명령어
+=> 특정 폴더를 깃으로 관리를 시작하겠다
+중요!!! 홈폴더 에서는 이명령어를 사용하지 않습니다.
+-> -git
+(master)를 치면 git의 관리하에 있다는것
+.git/ 숨김폴더 생성
+
+U ?: untracked 이파일은 추적하고있지 않다.
+
+git add 올릴파일.확장자
+git add . 으로 한번에 다 add 가능
+
+git commist -m '커밋 메시지'
+
+git log
+
+M -> modefi
+
+수정후에 다시 git add 해줘야함
+
+git log --online 그간의 메시지르 ㄹ한줄로 표시해줌
+
+git 이그노어 - git에 올리면 안된는 파일을 지정해준다
+
+...............---------------------------------------------------
+
+0. git status -> 현재 상황
+
+1. git init -> 깃으로 관리 시작	폴더를 지정하는것
+주의: 홈폴더에서 하지 않음!
+주의2: 
+
+2. git add mulcam.txt
+
+3. git commit -m '커밋메시지'
+
+
+
+1. 홈폴더에서 test 디렉토리 생성
+2. vscode로 test를 연다.
+3. touch a.txt
+4. git init
+------------------
+5. 파란색 모자 씌우기
+6. a.txt 무대로 올린다 = git add a.txt
+7. git commit -m '메시지' 
+8. git log
+-> git log --oneline
+
+M -> modified
+
+
+git checkout head ~2 2개 전을 보여줘
+git checkout 12sdfasdf 커밋메시지 주소
+
+
+git log  --oneline --graph		???
+
+
+git config --global --list  현재 확인
+
+
+$ git config --global user.name "jaewon"
+$ git config --global user.email "jml6388@naver.com"
+
+---------------------------------------------------------------
+https://www.toptal.com/developers/gitignore 이그노아 홈페이지
+
+Hyeeein
+ujina123
+재정 git  아디 JungMJ322
+
+git remote add origin https://github.com/Ljaewon-123/lifecylce.git
+git remote add origin '주소'				연결다리
+
+git remote -v   = 긁어온 주소 나타남
+
+git push origin master   처음시 git에 넣기위한 인증이됨
+
+gitignore -> 올리기 싫은 파일이나 폴더를 지정함 ->허브에 안올라감 git이 추적을 하지않음
+	-> 깃의 추적을 피하고싶을때 작성한다 
+	-> add하기 전에 만들어야함
+touch .gitignore   같이만듬
+
+-----------------------------------------------------------------
+
+git clone '카피한 주소'  
+
+git init 과 clone 은 처음 한번만 찍음
+
+1.로컬에서 시작한다 -> git init -> add commit -> 온라인으로 가서 방을 받고 주소를 연결한다 ->git remote add로
+
+2. 온라인에서 시작한다 -> git clone 주소 -> 해당 클론을 받은 곳에 폴더가 생기며 그 폴더는 이미 깃의 관리를 받고 있다 
+
+결론 둘다 git init 와 git clone 는 한번만 작성하는 명령어 이다.
+
+
+--------------------------------------------------------------------------
+
+git pull origin master     깃허브에서 내려받기
+git push origin maste	깃허브에 올리기
+
+git push origin '브랜치 이름'
+git pull origin '브랜치 이름'
+
+레파즈토리 초대는 한 저장소를 같이쓰기 위함이고
+
+저장소 가져오는거 자체는 git clone 주소 이며 해당 경로에 폴더생성
+
+--------------------------------------------------------------------------
+컨클루션  == 충돌 오류 에 관해
+
+로컬이 그대로 있는데 허브를 먼저 수정했을때 와 같이 서로의 파일이 같아지지 않은 순간에
+push 를 하게 되면 나타나며 
+push 를 해버렸다면 그 이후에 pull을 하여 내용을 정리하고
+저장후 다시 add commit push를 사용해서 안정적으로 수정한다.
+
+--------------------------------------------------------------------------
+git branch -> 현재 어떤 브랜치가 내 작업공간에 있는지 확인
+
+git switch 브랜치명
+
+git branch -D {브랜치 이름}  지우는 명령어 
+
+git merge 다른 브랜치면  이거를 마스터에서 하면 다른 브랜치에 코드가 마스터로 들어옴
+
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
