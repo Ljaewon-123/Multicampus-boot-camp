@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f1c9fa7588364dfe99ed874f6c6d06bd {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_f1c9fa7588364dfe99ed874f6c6d06bd" ></div>
+        
+</body>
+<script>    
+    
+            var map_f1c9fa7588364dfe99ed874f6c6d06bd = L.map(
+                "map_f1c9fa7588364dfe99ed874f6c6d06bd",
+                {
+                    center: [37.50400583893831, 127.049690169316],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 18,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_7e9ddef9712348ea91e1fc2530c75346 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1c9fa7588364dfe99ed874f6c6d06bd);
+        
+    
+            var marker_569569d2ec9b45ef9f7637bf6ef22b81 = L.marker(
+                [37.50400583893831, 127.049690169316],
+                {}
+            ).addTo(map_f1c9fa7588364dfe99ed874f6c6d06bd);
+        
+    
+        var popup_d37a5e08747e46388b647ee8393d819e = L.popup({"maxWidth": 100});
+
+        
+            var html_dee0cc36eb8f45348d3a6e91e478bfea = $(`<div id="html_dee0cc36eb8f45348d3a6e91e478bfea" style="width: 100.0%; height: 100.0%;">멀티캠퍼스 선릉</div>`)[0];
+            popup_d37a5e08747e46388b647ee8393d819e.setContent(html_dee0cc36eb8f45348d3a6e91e478bfea);
+        
+
+        marker_569569d2ec9b45ef9f7637bf6ef22b81.bindPopup(popup_d37a5e08747e46388b647ee8393d819e)
+        ;
+
+        
+    
+</script>

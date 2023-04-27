@@ -1,0 +1,19 @@
+import matplotlib.pyplot as plt
+from random import randint
+
+fig,ax = plt.subplots()
+
+ages = list(randint(1,100) for i in range(100))
+
+child = list(x for x in ages if x < 19)
+yong = list(x for x in ages if 10 <= x < 40)
+middle = list(x for x in ages if 40 <= x < 60)
+old = list(x for x in ages if 60 <= x)
+
+labels = ['child','yong','middle','old']
+
+count = [len(child),len(yong),len(middle),len(old)]
+
+ax.pie(count,labels = labels,autopct = '%1.1f%%',startangle = 90 , counterclock = False)
+
+plt.show()
