@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    function mypage_check(){
+        var member_id = "<%=(String)session.getAttribute('user_id')%>"
+
+        console.log(member_id);
+    }
+</script>
+
+</head>
+<body>
+
+<body>
+    <ul>
+        <li class="" id="mypage"><a href="#" onClick="mypage_check();">마이 페이지</a></li>
+    </ul>
+</body>
+
+
+</body>
+</html>

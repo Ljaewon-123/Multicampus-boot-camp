@@ -1,0 +1,64 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+
+{% block content %}
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+.login-form h1 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.login-form p {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+  .btn-area {
+  margin-top: 30px;
+  text-align: center;
+}
+
+
+.btn-area #btn {
+  width: 20%;
+  height: 50px;
+  margin: 0px 10px;
+  color: #fff;
+  background: #166caa;
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+</style>
+
+
+<section class="login-form">
+
+<h1>{% trans "Sign Out" %}</h1>
+
+<p>{% trans 'Are you sure you want to sign out?' %}</p>
+<div class="btn-area">
+  <form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
+    <button id = 'btn' type="submit">{% trans 'Sign Out' %}</button>
+  </form>
+</div>
+</section>
+
+{% endblock %}

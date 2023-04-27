@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function(){
+            $('#double_check').click(function(){
+                    var xyz = $('input[name=myname]').val()
+                    $.ajax({
+                        url: "double_check/",
+                        data: {'ID':xyz},
+                        dataType: "json",
+                        success:function(msg){
+                           //alert(xyz)
+                           alert(msg['alert'])
+                           //history.back()
+                           if(msg['code'] == 0){
+                            $('input[name=myname]').val('')
+                            $('#hide').text(msg['code'])
+                           }
+                           else if (msg['code'] == 1){
+                               $('#hide').text(msg['code'])
+                           }
+
+                        }
+                    })
+            });
+
+            // 회원가입
+            $('#register').click(function(){
+                    var x = $('input[name=myname]').val()
+                    var y = $('input[name=mypassword]').val()
+                    var z = $('input[name=myemail]').val()
+                    var hide = $('#hide').text()
+                    $.ajax({
+                        url: "new_register/",
+                        data: {'ID':x,'PW':y,'EM':z,'hide':hide},
+                        dataType: "json",
+                        success:function(msg){
+                            //alert(hide)
+                            alert(msg['alert'])  // 이거 지우지 말것
+
+                            if (msg['code2'] == 2){
+                                $('input[name=myname]').val('')
+                                $('input[name=mypassword]').val('')
+                                $('input[name=myemail]').val('')
+                            }
+                            else if (msg['code2'] == 1){
+                                history.back()
+                            }
+
+                        }
+                    })
+            });
+
+
+        });
+
+    </script>
+
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.register-form h1 {
+  font-size: 32px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.int-area {
+  width: 400px;
+  position: relative;
+  margin-top: 20px;
+}
+
+.int-area:first-child {
+  margin-top: 0;
+}
+
+.int-area input {
+  width: 100%;
+  padding: 20px 10px 10px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 18px;
+  outline: none;
+}
+
+.int-area label {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  font-size: 18px;
+  transition: top 0.5s ease;
+}
+
+.int-area label.warning {
+  color: red !important;
+  animation: warning 0.3s ease;
+  animation-iteration-count: 3;
+}
+
+@keyframes warning {
+  0% {
+    transform: translateX(-8px);
+  }
+  25% {
+    transform: translateX(8px);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+.int-area input:focus + label,
+.int-area input:valid + label {
+  top: -2px;
+  font-size: 13px;
+  color: #166caa;
+}
+
+.btn-area {
+  margin-top: 30px;
+}
+
+.btn-area #register {
+  width: 100%;
+  height: 50px;
+  margin: 0px 10px;
+  color: #fff;
+  background: #166caa;
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.int-area #double_check {
+  width: 20%;
+  height: 50px;
+  margin: 0px 10px;
+  color: #fff;
+  background: #166caa;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+
+    </style>
+
+</head>
+<body>
+    <section class="register-form">
+        <h1>Register</h1>
+        <span id = 'hide' style = 'display:none'>0</span>
+
+        <p>아이디 대소문자 구분안함 -> 이제함  </p>
+        <div class="int-area">
+        <input type="text" name = 'myname' id = 'id'>
+        <label for="id">USER NAME</label>
+        <button id = 'double_check'>중복 확인</button>
+        </div>
+        <br>
+        <div class="int-area">
+            <input type="password" name = 'mypassword' id = 'pw'>
+            <label for="pw">PASSWORD</label>
+        </div>
+        <br>
+        <div class="int-area">
+        <input type="text" name = myemail id = 'em'>
+            <label for="em">E-mail</label>
+        </div>
+        <br>
+        <div class="btn-area">
+        <button id = 'register'>회원가입 완료</button>
+        </div>
+    </section>
+<!--    <section class="login-form">-->
+<!--        <h1>Login</h1>-->
+<!--        <form action="">-->
+<!--            <div class="int-area">-->
+<!--                <input type="text" name = 'myname' id = 'id'>-->
+<!--                <label for="id">USER NAME</label>-->
+<!--            </div>-->
+<!--            <div class="int-area">-->
+<!--                <input type="text" name = 'mypassword' id = 'pw'>-->
+<!--                <label for="pw">PASSWORD</label>-->
+<!--            </div>-->
+<!--            <div class="btn-area">-->
+<!--                <button id = 'register'>회원가입 완료</button>-->
+
+<!--            </div>-->
+<!--        </form>-->
+<!--        <div class="caption">-->
+<!--            <a href="">Forgot Password?</a>-->
+<!--            <a href="/register/">회원가입</a>-->
+<!--        </div>-->
+<!--    </section>-->
+
+</body>
+</html>

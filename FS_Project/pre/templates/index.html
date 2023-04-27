@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" >
+        $(function(){
+            $('button').click(function(){
+                    $.ajax({
+                        url: "update_db/",
+                        // data: {},
+                        dataType: "html",
+                        success:function(msg){
+                           alert('alert')
+
+
+
+                        }
+                    })
+            });
+
+            if($('#google_id').is(":visible"))
+            {
+                //alert("노출되고있음.");
+                //getIn_uid();
+            }
+            else{
+                //alert("숨겨져있음.");
+            }
+
+        });
+
+
+
+      function getIn_score(){
+          var fish_kind = $('#fish_kind').text()
+          var length = $('#length').text()
+          var score = $('#score').text()
+          $.ajax({
+              url: "get_in_score/",
+              data: {'fish_kind':fish_kind,'length':length,'score':score},
+              dataType: "html",
+              success:function(msg){
+                alert(fish_kind)
+
+
+
+              }
+          })
+      }
+
+    </script>
+</head>
+<body >
+
+  <h1>WA! hahahahahhahaha</h1>
+
+  <button>DB UPDATE</button>
+
+  {% if social_id == '' %}
+  <h1>Hello {{ request.session.user_id | default:"Django" }} with mysql</h1>
+  {% else %}
+  <h1>Hello user_{{ social_id }} with google</h1>
+  {% endif %}
+
+
+  {% load socialaccount %}
+  {% providers_media_js %}
+  <h1>google login</h1>
+
+<!--  <a href="/accounts/signup">회원가입</a>-->
+  <br>
+
+  {% if user.is_authenticated %}
+  <a href="/accounts/logout"   >로그아웃</a>
+  <br>
+  <span id = 'google_id'>{{ user.username }} 님이 로그인중</span>
+  <br>
+
+  {% elif request.session.user_id %}
+
+  <a href="logout_django/">로그아웃</a>
+
+  {% else %}
+
+  <a href="{% provider_login_url 'google' %}">구글 로그인</a>
+  제발 로그인점
+  <br>
+  {% endif %}
+
+  <p> 점수복사 버그 안나게 모델링 도입하고 생각 지금 당장은 로드될때 db에 넣기 근데? 로그인 되어야함  </p>
+  <p id = 'fish_kind' onclick="getIn_score()">광어</p>
+  <p id = 'length'>50</p>
+  <p id = 'score'>50</p>
+
+  {% if log_page == '' %}
+  <a href="#">구현은 나중에</a>
+  {% else %}
+  <a href="{% provider_login_url 'google' %}">마페</a>
+  {% endif %}
+
+
+
+</body>
+</html>
