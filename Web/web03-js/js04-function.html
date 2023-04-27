@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function func01(){
+            alert('함수의 이름이 있습니다')
+        }
+        // func02에 () 가 없으면 값만 가져옴 func02()가 있어야 가져오고 이게 아래 func03과 똑같음 
+        var func02 = function(){
+            alert('함수의 이름이 없어요')
+        }
+
+        // alter(func02)
+
+        function func03(){
+            // function test(){
+            //     alert('내부 함수')
+            // }
+            // test()
+                (function(){
+                    alert('즉시실행함수')
+                })()
+
+        }
+        function literalpRN(literal){
+            literal('안녕하세요 함수 형태의 값 입니다')
+        }
+
+        function func04(){
+            literalpRN(function(msg){alert(msg)})
+        }
+
+        function closureFunc(val){
+            var suffix = '님 안녕하세요'
+            function innerFunc(){
+                alert(val + suffix + '잘부탁 드립니다')
+            }
+            return innerFunc
+        }
+        var closureTest01 = closureFunc('mul')
+
+        function closureTest02(val){
+            closureFunc(val)();
+        }
+
+    </script>
+
+</head>
+<body>
+    
+    <h1>function = 기능</h1>
+
+    <h2>함수의 종류</h2>
+    <p onclick="func01()">명시적 함수</p>
+    <p onclick="func02()">익명함수</p>    <!--변수안에 함수를 넣어놔서 () 를 붙임-->
+    <p onclick="func03()">즉시실행함수</p>
+    <p onclick="func04()">함수 리터럴</p>
+    <p onclick="closureTest01()">클로져: 외부함수에 접근 가능 (변수들)</p>
+    <p onclick="closureTest02('멀티캠퍼스')">연습</p>
+    
+
+</body>
+</html>

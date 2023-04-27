@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        a>img{width: 50px; height: 50px; }
+        #gallery{width: 200px;height: 200px;}
+        p{width: 350px;height: 250px;}
+        img{vertical-align: middle;}
+        a{text-decoration: none;}
+    </style>
+
+    <script>
+        var num = 1
+        function prevGallery() {
+            num--
+            if (num <1){
+                num = 6
+            }
+            document.getElementById('gallery').src = "./rescources/img/img0"+num+'.png'
+            // tagname(img)으로 가면 안됨?? 왜안됨??  ==>>>> tagname 쓸거면 [] 노트리스트여서 괄호 써줘야함 
+            // return을 사용한 이벤트 전파 막기 (jquery때 다시)
+            return false
+        }
+
+        function nextGallery() {
+            num++
+            if(num>6){
+                num=1
+            }
+            document.getElementById('gallery').src = "./rescources/img/img0"+num+'.png' 
+
+            // return false 는 발생이벤트가 막힘 -> naver를 막기위함
+            return false
+        }
+
+    </script>
+
+</head>
+<body>
+    
+    <div id = 'gallerywrap'>
+        <p>
+            <a href="http://www.naver.com" onclick="return prevGallery()">
+                <img src="./rescources/img/arrowleft.png" alt="왼쪽 화살표">
+            </a>
+
+            <img id = 'gallery' src="./rescources/img/img01.png" alt="gallery">
+
+            <a href="#next" onclick="nextGallery()">
+                <img src="./rescources/img/arrowright.png" alt="오른쪽 화살표">
+            </a>
+
+        </p>
+    </div>
+
+
+</body>
+</html>

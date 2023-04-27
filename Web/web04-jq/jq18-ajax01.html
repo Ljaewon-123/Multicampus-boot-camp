@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='./rescources/js/jquery-3.6.0.min.js'></script>
+    <style>
+        *{margin:0px;padding: 0px;}
+        table{width: 400px;}
+        table tr:nth-child(odd){background-color: orange;}
+        fieldset{width: 400px;}
+        body{width: 1000px; margin: 50px auto;}
+    </style>
+    <script>
+        $(function(){
+            $('#emp_search').click(function(){
+                var empid = $('input[name=empid]').val()
+                if(!isNaN(empid) && (empid >= 100) && (empid <= 206)){
+                    // alert(empid)
+                    
+                    $.ajax({
+                        url:'emplist.xml',       // 통신할 경로(주소)
+                        method:'get',            // 전송방식 (gdt(default)/post)
+                        async:true,              // 비동기(default)/동기
+                        dataType:'xml',          // 전송받을 데이터의 타입 (xml,json,html,script ,.....)
+                        //data:{'key':value}     // 전송할 데이터
+                        success:function(data){  // 성공했을때
+                            // alert(data)
+                            var empInfo = $(data).find('EMPLOYEE_ID:contains('+empid+')').parent()  //contains('+empid+')'컨테어너 값 찾고 ROW////ROW위에 ROWSUM가져옴
+
+                            if((empInfo).is('ROW')){
+                                $('table input').each(function(i){
+                                    $(this).val($(empInfo).children().eq(i).text())  // ROW에 요소에 번호
+                                })
+                            }else{
+                                alert('검색 대상이 존재하지 않습니다....')
+                            }
+
+                        },
+                        error:function(request,error){   // 실패했을때
+                            alert('code:'+request.status+'\n'+'message:'+request.responseText+'\n'+'error:'+error)
+                        }
+                    })
+
+                }else {
+                    alert('사원번호를 다시 입력해 주세요!!!')
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+    
+    <h1>데이터 가져오기</h1>
+
+    <fieldset>
+        <legend>사원정보 조회</legend>
+        <input type="text" name='empid'>
+        <input type="button" id = 'emp_search' value='조회'>
+    </fieldset>
+
+    <table>
+        <tr>
+            <th>사원번호</th>
+            <td><input type="text" name="empnum" ></td>
+        </tr>
+        <tr>
+            <th>이  름</th>
+            <td><input type="text" name="lastname" ></td>
+        </tr>
+        <tr>
+            <th>이 메 일</th>
+            <td><input type="text" name="email" ></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td><input type="text" name="phone" ></td>
+        </tr>
+        <tr>
+            <th>입 사 일</th>
+            <td><input type="text" name="hire" ></td>
+        </tr>
+       
+    </table>
+
+
+</body>
+</html>

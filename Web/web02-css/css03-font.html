@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type='text/css'>
+        div > h1{
+            font-weight:bold;
+            font-style: italic;
+            font-variant: small-caps;
+
+            font-size: 25px;
+            line-height: 500%;
+
+            font-family:'궁서';
+            /* font: italic small-caps bold 25px/500% '궁서'; */
+        }
+        /* 위 폰트 한줄로 만들어 주기
+        font: italic bold 12px/30px Dotum, sans-serif   
+        style→variant→weight→size/line-height→family    */    
+        /* 폰트 등록*/
+        @font-face {
+            font-family: 'Goyang';
+            src:url('resourec/font/Goyang.ttf');
+        }
+        div+h1{
+            font-family: 'Goyang';
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>AI Bigdata 과정(ds,de): 2021년 12월 20 일 개강</h1>
+    </div>
+
+    <h1>AI Bigdata 과정(ds,de): 2021년 12월 20 일 개강</h1>
+
+</body>
+</html>

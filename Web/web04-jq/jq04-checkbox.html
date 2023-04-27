@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src = './rescources/js/jquery-3.6.0.min.js'></script>
+    <script>
+        $(function () {
+            // 전달하는 이벤트 발생시 
+            // 유효성 검사 
+            $('#signal').submit(function () {
+                if($('.infobox').val() == null || $('.infobox').val() == ''){
+                    $('.error').show()
+                    return false
+                }
+            })
+            $('#confirm').click(function () {
+                $('#result').empty()
+                // $('input:checked') 체크되어있는 애들
+                var total = 0
+                $('input[name=chk]:checked').each(function (i) {
+                    // var chk = $(this)
+                    var chk = $('input[name=chk]:checked').eq(i) // eq() 선택된 체크 인덱스
+                    console.log(i)
+                    
+                    var book = chk.next().text()  // .next 는 선택된 바로 옆 형제 
+                    var price = chk.val()
+                    $('#result').append(book + ":" + price + "<br/>")
+
+                    total += parseInt(price)
+
+
+                })
+                
+                $('#result').append(total)
+
+            })
+            // 모두 선택되어있므녀 name이 all 인 체크박스도 체크
+            // 하나라도 체크 해제되면 name이 all인 체크박스 체크 해제
+            $('input[name=chk]').click(function(){
+                // $(선택자).is(":checked");
+                // 클릭될때마다 검사 if에서 통과 하면 체크되있는한 항상 true
+                var a = $('input[name=chk]')
+                if(a.eq(0).is(':checked')&& a.eq(1).is(':checked') &&a.eq(2).is(':checked')  ){    // if($('input[name=chk]').length == $('input[name=chk]:checked').length)
+                    // alert('aef')
+                    $('input[name=all]:checkbox').prop('checked',true)
+                }else{
+                    $('input[name=all]:checkbox').prop('checked',false)
+                }
+
+
+            })
+
+            
+            
+        })
+
+        // 
+        function allChk(bool){
+            // var checkAll = $('input[name=all]:checked')   
+            var checkAll = $('input[name=all]') 
+            if (checkAll.is(':checked')){
+                $('input[name=chk]:checkbox').prop('checked',true)
+                
+            }else{
+                $('input[name=chk]:checkbox').prop('checked',false)
+            }
+
+            // $('input[name=chk]').each(function(){   // each() 하나하나 각각의 function을 적용시켜줌 == map()
+            //     $(this).prop('checked',bool)
+            // })
+
+        }
+
+    </script>
+</head>
+<body>
+    
+    <form id="signal">
+        <div>
+            <span class = 'label'>User ID</span>
+            <input type="text" class = 'infobox' name = 'userid'>
+            <span class = 'error' hidden style="color:red">반드시 입력하세요</span>
+        </div>
+        <input type="submit"class='submit'value='입력'>
+    </form>
+
+    <hr>
+
+    <fieldset style="width: 300px;">
+        <legend>체크 여부 확인</legend>
+        <input type="checkbox" name="all" onclick="allChk(this.checked)">전체선택
+        <br>
+        <input type="checkbox" name="chk" value='20000'><b>python</b>
+        <br>
+        <input type="checkbox" name="chk" value='25000'><b>pandas</b>
+        <br>
+        <input type="checkbox" name="chk" value = '30000'><b>django</b>
+        <br>
+
+        <input type="button" id="confirm" value = '확인'>
+        <br>
+
+        <span>선택한 책 가격</span>
+        <div id = 'result'></div>
+    </fieldset>
+
+</body>
+</html>

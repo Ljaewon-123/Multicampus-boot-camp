@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{border: 1px  solid red;}
+    </style>
+    <script src='./rescources/js/jquery-3.6.0.min.js'></script>
+    <script>
+        $(function(){
+            // 기준차이?
+            // 2개의 동작 자체는 같음
+            $('button:eq(0)').click(function(){
+                $('#base').after('<div>새로운 엘리먼트(after)</div>')
+            })
+            $('button:eq(1)').click(function(){
+                $('<div>새로운 엘리먼트(insertAfter)</div>').insertAfter('#base')
+            })
+            $('button:eq(2)').click(function(){
+                // target이 앞 해당함수에서 리턴하는 값도 가능 미리 target을 잡아논거니까
+                $('#base').before('<div>새로운 엘리먼트(before)</div>')
+            })
+            $('button:eq(3)').click(function(){
+                // target이 뒤 만들어져있는거를 target뒤에 넣어주기때문에 함수는 안들어감 
+                $('<div>새로운 엘리먼트(insertBefore)</div>').insertBefore('#base')
+            })
+        })
+    </script>
+</head>
+<body>
+    
+    <button>after()</button>
+    <button>insetAfter()</button>
+    <button>before()</button>
+    <button>insertBefore()</button>
+
+    <div id = 'base'>
+        <p>외부 삽입</p>
+    </div>
+
+
+</body>
+</html>

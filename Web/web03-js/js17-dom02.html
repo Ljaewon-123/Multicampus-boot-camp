@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function searchaPar() {
+            var child02 = document.getElementsByTagName('p')[1]
+            var div = child02.parentNode  // 여기서 이미 가지고있으니까 필요없다 바로 엑세스 가능
+            alert(div)
+            alert(typeof(div))
+            alert(div.nodeName)
+            div.style.backgroundColor =  'violet'
+            
+        }
+        function searchChi() {
+            var div = document.getElementsByTagName('div')[0]
+
+            var divChildren = div.childNodes
+            divChildren[3].style.backgroundColor = 'blue'
+            // div 다음 공백 다음 p 다음 공백 다음 p 다음 공백 다음 p  
+            // div 와 p사이 띄어쓰기 같은 공백칸이 없으면 7칸이 아닌 3칸이다 
+            
+            for (var i = 0; i< divChildren.length;i++){
+                console.log(divChildren[i].tagName)
+                
+            }
+            
+            
+        }
+    </script>
+
+</head>
+<body>
+    
+    <h1>부모탐색 , 자식탐색</h1>
+
+    <div>
+        <p>child01</p>
+        <p>child02</p>
+        <p>child03</p>
+    </div>
+
+    <button onclick="searchaPar()">부모탐색</button>
+    <br>
+    <button onclick="searchChi()">자식탐색</button>
+</body>
+</html>

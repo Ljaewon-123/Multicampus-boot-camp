@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='./rescources/js/jquery-3.6.0.min.js'></script>
+    <style>
+        .main_menu{width: 300px;}
+        .sub_menu1{cursor: pointer;}
+        .sub_menu2{display: none ;cursor:default}
+    </style>
+    <script>
+        $(function(){
+            var cnt = 2
+    /*        $('.sub_menu1 > b').click(function(){
+                // $(this).next().css('display','block').slideUp(300)
+                // $(this).next().slideDown(300)
+                // alert(cnt)
+                if(cnt ==2 ){
+                    $(this).next().slideDown(300)
+                    cnt++
+                    
+                }else{
+                    // $('.sub_menu2 > li') // this 가 바뀌나??
+                    // $(this).parent().nextAll().children('.sub_menu2 ').slideUp(300) 
+                    $(this).parent().next().children('.sub_menu2 ').slideUp(300) 
+                    // $(this).next().slideUp(300)
+                    cnt = 2
+                    
+                    // if($(this) == true){
+                    //     alert('asfd')
+                    // }
+                }
+                // alert(cnt)
+               
+            })
+    */        
+
+            $('b').click(function(){
+                // $(this).next().slideDown(300)
+
+                // $(this).parent().siblings().find('ul').slideUp(300)
+
+                $(this).next().slideDown(300).end().parent().siblings().find('ul').slideUp(300)
+                $(this).next().slideDown(300).end().parent().siblings().children('ul').slideUp(300)
+
+            })
+            // siblings() 형제들 전부
+
+        })
+    </script>
+</head>
+<body>
+    
+    <p>메뉴 만들기</p>
+    <ul  type='square' class ='main_menu'>
+        <li class = 'sub_menu1'>
+            <b>css선택자</b>
+            <ul type='circle' class='sub_menu2'>
+                <li>tag 선택</li>
+                <li>id 선택</li>
+                <li>class 선택</li>
+                <li>parent child 선택</li>
+                <li>parent &gt; child 선택</li>
+                <li>:nth-child 선택</li>
+                <li>:first-child 선택</li>
+                <li>:last-child 선택</li>
+
+            </ul>
+        </li>
+        <li class = 'sub_menu1'><b>2)속성 선택자</b>
+            <ul type='circle' class='sub_menu2'>
+                <li>[attr]</li>
+                <li>[attr=value]</li>
+                <li>[attr!=value]</li>
+            </ul>
+        </li>
+        <li class = 'sub_menu1'><b>3)폼 선택자</b>
+            <ul type='circle' class = 'sub_menu2'>
+                <li>input:type</li>
+            </ul>
+        </li>
+        <li class = 'sub_menu1'><b>4) 사용자 정의</b>
+            <ul type='circle' class = 'sub_menu2'>
+                <li>:eq</li>
+                <li>:first</li>
+                <li>:even</li>
+                <li>:odd</li>
+                <li>:parent</li>
+            </ul>
+        </li>
+    </ul>
+
+</body>
+</html>

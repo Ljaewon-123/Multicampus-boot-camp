@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='./rescources/js/jquery-3.6.0.min.js'></script>
+    <script>
+        $(function(){
+            $('button:first').click(function(){
+                // target 앞
+                // 이미 만들어져있는애 가져와서  
+                $('p').replaceWith('<p><b>replaceWith()</b></p>')
+            })
+
+
+            $('button:last').click(function(){
+                // target 뒤 
+                // p 태그만 넣어줌 
+                $('<p><b>replaceAll()</b></p>').replaceAll('p')
+            })
+
+        }) 
+    </script>
+
+</head>
+<body>
+    
+    <div>
+        <p>DOM 객체</p>
+    </div> 
+
+    <button>바꾸기(replaceWith)</button>
+    <button>바꾸기(replaceAll)</button>
+
+</body>
+</html>

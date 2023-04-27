@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p{
+            border: 1px solid red;
+        }
+    </style>
+    <script>
+        function addAppend() {
+            var fieldset = document.getElementById('addele')
+            var p = document.createElement('p')
+            
+            p.textContent = '자식 태그들 중 가장 마지막에 넣어진다'
+
+            fieldset.appendChild(p)
+            
+        }
+        var count = 1
+        function addInsert() {
+            var newP = document.createElement('p')
+            var fieldset = document.getElementById('addele')
+
+            newP.textContent = '엘리먼트의 앞에 넣어진다'+ (count++)
+
+            var oldDiv = document.querySelector('fieldset > div')   // document.query 명령어들은 기본적으로 하위 자식같은거 > 가능
+            fieldset.insertBefore(newP,oldDiv)   // 변수는 따옴표가 필요없다 
+            // 자식노드를 oldDiv 앞으로
+        }
+        function moveElement() {
+            var moveEle = document.querySelector('fieldset').children[1]
+            var addEle = document.body
+            addEle.appendChild(moveEle)
+            /* 
+            childNodes 와 children 차이점
+            childNodes: 자식 노드에 접근 노드리스트로 리턴
+            주석 텍스트(띄어쓰기 포함) 요소 등등 전부 가져옴
+            children: 자식 요소에 접근 
+            현재 요소의 자식 요소가 포함된 HTMLCollection을 반환합니다. 비 요소 노드는 모두 제외됩니다.
+            ==> 현재 fieldset.children의 요소는 legend 와 div 밖에 없음 fieldset.children[1] == div
+             */
+            
+        }
+    </script>
+</head>
+<body>
+    
+    <h1>태그 추가하기</h1>
+
+    <button onclick="addAppend()">appendChild()</button>
+    <button onclick="addInsert()">insertBefore()</button>
+    <button onclick="moveElement()">element 이동</button>
+
+     <fieldset id = 'addele'>
+         <legend>부모태그</legend>
+         <div>div</div>
+     </fieldset>
+
+
+</body>
+</html>

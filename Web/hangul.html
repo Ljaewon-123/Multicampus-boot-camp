@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"></meta>
+<title>한글시계</title>
+<style type="text/css">
+    *{margin: 0; padding: 0;}
+    p{display: inline; margin: 10px;}
+    .wrapper{text-align: center; font-size: 500%;}
+
+</style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $div = $(".wrapper > div");  // 태그들 지정하고
+        $div.css("color","gray");
+        $p = $("p");
+
+        setInterval(function(){
+            var now = new Date();    // 각 시간을 지정함 
+            var hh = now.getHours();
+            var mm = now.getMinutes();
+            var ss = now.getSeconds();
+            var time = isTwo(hh) + " : " + isTwo(mm) + " : " + isTwo(ss); 
+            clear($p);
+            hourColor(hh,$p);
+            minuteColor(mm,$p);
+            $("#numtime").html(time).css({"color":"black","opacity":"1"});
+        },1000);
+
+        setInterval(function(){
+            function ran(){
+                return Math.floor(Math.random()*255);
+            }
+            $p.eq(18).css({"color":"rgb("+ran()+","+ran()+","+ran()+")","opacity":"1"});
+        },100);
+    });
+
+    function isTwo(num){
+        if(num.toString().length < 2){
+            return "0"+num;
+        }
+        return num;
+    }
+
+    function hourColor(hh,$p){
+        if(hh > 12){
+            hh = hh-12;
+        }
+        switch(hh){
+        case 1: $p.eq(0).css({"color":"red","opacity":"1"}); break;
+        case 2: $p.eq(1).css({"color":"red","opacity":"1"}); break;
+        case 3: $p.eq(2).css({"color":"red","opacity":"1"}); break;
+        case 4: $p.eq(3).css({"color":"red","opacity":"1"}); break;
+        case 5: $p.eq(4).add("p:eq(5)").css({"color":"red","opacity":"1"}); break;
+        case 6: $p.eq(6).add("p:eq(7)").css({"color":"red","opacity":"1"}); break;
+        case 7: $p.eq(8).add("p:eq(9)").css({"color":"red","opacity":"1"}); break;
+        case 8: $p.eq(10).add("p:eq(11)").css({"color":"red","opacity":"1"}); break;
+        case 9: $p.eq(12).add("p:eq(13)").css({"color":"red","opacity":"1"}); break;
+        case 10: $p.eq(14).css({"color":"red","opacity":"1"}); break;
+        case 11: $p.eq(14).add("p:eq(15)").css({"color":"red","opacity":"1"}); break;
+        case 12: $p.eq(14).add("p:eq(16)").css({"color":"red","opacity":"1"}); break;
+        }
+        $p.eq(17).css({"color":"red","opacity":"1"});
+    }
+    function minuteColor(mm,$p){
+        if(mm == 0){
+            $p.eq(24).add("p:eq(30)").css({"color":"blue","opacity":"1"});
+        } else {
+            switch(parseInt(mm/10)){
+                case 1: $p.eq(23).css({"color":"blue","opacity":"1"}); break;
+                case 2: $p.eq(19).add("p:eq(23)").css({"color":"blue","opacity":"1"}); break;
+                case 3: $p.eq(20).add("p:eq(23)").css({"color":"blue","opacity":"1"}); break;
+                case 4: $p.eq(21).add("p:eq(23)").css({"color":"blue","opacity":"1"}); break;
+                case 5: $p.eq(22).add("p:eq(23)").css({"color":"blue","opacity":"1"}); break;
+            }
+            switch(mm%10){
+                case 1: $p.eq(25).css({"color":"blue","opacity":"1"}); break;
+                case 2: $p.eq(26).css({"color":"blue","opacity":"1"}); break;
+                case 3: $p.eq(27).css({"color":"blue","opacity":"1"}); break;
+                case 4: $p.eq(28).css({"color":"blue","opacity":"1"}); break;
+                case 5: $p.eq(29).css({"color":"blue","opacity":"1"}); break;
+                case 6: $p.eq(31).css({"color":"blue","opacity":"1"}); break;
+                case 7: $p.eq(32).css({"color":"blue","opacity":"1"}); break;
+                case 8: $p.eq(33).css({"color":"blue","opacity":"1"}); break;
+                case 9: $p.eq(34).css({"color":"blue","opacity":"1"}); break;
+            }
+            $p.eq(35).css({"color":"blue","opacity":"1"});
+        }
+    }
+    function clear($p){
+        $p.css({"color":"gray","opacity":"0.3"});
+    }
+</script>
+</head>
+<body>
+<!--
+    한 둘 세 네 다 섯
+    여 섯 일 곱 여 덟
+    아 홉 열 한 두 시
+    ♡ 이 삼 사 오 십
+    정 일 이 삼 사 오 
+    각 육 칠 팔 구 분 
+-->
+<div class="wrapper">
+    <div>
+        <p>한</p><p>두</p><p>세</p><p>네</p><p>다</p><p>섯</p>
+    </div>
+    <div>
+        <p>여</p><p>섯</p><p>일</p><p>곱</p><p>여</p><p>덟</p>
+    </div>
+    <div>
+        <p>아</p><p>홉</p><p>열</p><p>한</p><p>두</p><p>시</p>
+    </div>
+    <div>
+        <p>♡</p><p>이</p><p>삼</p><p>사</p><p>오</p><p>십</p>
+    </div>
+    <div>
+        <p>정</p><p>일</p><p>이</p><p>삼</p><p>사</p><p>오</p>
+    </div>
+    <div>
+        <p>각</p><p>육</p><p>칠</p><p>팔</p><p>구</p><p>분</p>
+    </div>
+    <div id="numtime"></div>
+</div>
+</body>
+</html>
